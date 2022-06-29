@@ -4,10 +4,8 @@ import localStrategy from 'passport-local';
 localStrategy.Strategy;
 
 export default function(passport){
-    console.log("Girdi4")
     passport.use(
         new localStrategy((username,password,done)=>{
-            console.log("Girdi5")
             User.findOne({username: username},(err,user)=>{
                 if(err) {return done(err);}
                 if(!user) return done(null,false,{ message: 'Incorrect username or password.' });

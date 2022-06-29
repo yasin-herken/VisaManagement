@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 function Login() {
     const [loginUsername,setLoginUsername] = useState("")
     const [loginPassword,setLoginPassword] = useState("")
-    const [msg,setmsg] = useState("")
+    const [role,setRole] = useState("")
     const navigate = useNavigate()
     const loginPage = async (event) => {
         event.preventDefault()
@@ -18,7 +18,7 @@ function Login() {
             url: "http://localhost:8000/login"
         }).then((res)=>{
             navigate(res.data.direct)
-            setmsg(res.data.message)
+            setRole(res.data.role)
         })
         .catch((err)=>{console.log("login Page")})
     }
@@ -78,7 +78,7 @@ function Login() {
                                         </div>
                                         <div className='text-center'>
                                             {
-                                                <p style={{backgroundColor: 'red'}}>{msg}</p>
+                                                <p style={{backgroundColor: 'red'}}></p>
                                             }
                                         </div>
 								</div>

@@ -55,21 +55,21 @@ app.get("/",(req,res)=>{
 });
 app.post("/login",(req,res,next)=>{
     const msg ={
-        message: "",
-        direct: ""
+        role: "Client",
+        direct: "/"
     };
     passport.authenticate("local",{ failureRedirect: '/getUser', failureMessage: true },(err,user,info)=>{
         if(err) throw err;
         if(!user) {
-            msg.message= "Password is wrong";
+            msg.role= "Restricted";
             msg.direct="/login";
             res.json(msg)
         }
         else{
             req.logIn(user,err=>{
                 if(err) throw err;
-                msg.message="";
-                msg.direct="/admin";
+                msg.role= user.role;
+                user.role ==="Admin" ? msg.direct="/admin": msg.direct="/";
                 res.json(msg);
             })
         }
@@ -77,7 +77,7 @@ app.post("/login",(req,res,next)=>{
 });
 app.post("/register",(req,res)=>{
     const msg = {
-        message: "",
+        msg: "",
         direct: ""
     }
     User.findOne({
@@ -86,7 +86,7 @@ app.post("/register",(req,res)=>{
         if(err) throw err;
         if(data){
             
-        msg.message="User is already exists";
+        msg.msg="User is already exists";
         msg.direct="/register";
         
         res.json(msg)
@@ -96,39 +96,47 @@ app.post("/register",(req,res)=>{
             const salt1 = await bcrypt.genSalt(saltRounds);
             const hashedPassword = await bcrypt.hash(req.body.password, salt1);
             const newUser = new User({
-                name: req.body.name,
-                surname: req.body.surname,
                 username: req.body.username,
                 password: hashedPassword,
                 email: req.body.email,
-                role: req.body.role,
+                role: "Client",
             });
             await newUser.save();
             const msg ={
                 message: "User Created",
-                direct: "/admin"
+                direct: "/"
             }
+            newUser.role ==="Admin" ? msg.direct="/admin": msg.direct ="/"
             res.json(msg);
         }
     })
 });
 app.get("/getUser",(req,res)=>{
-    res.json(req.user)
+    if(req.user!=="" || req.user!==null)
+        res.json(req.user)
 });
 app.get("/admin",(req,res) => {
-    console.log(req.user)
     if (req.user.role!=="Admin" || req.user==="")
-        res.status(403).send("Restricted area");
+        {
+            console.log("ASD")
+            res.status(403).send("Restricted area");
+        }
     else{
         const msg ={
-            data: req.user,
+            role: req.user.role,
             direct: "/admin"
         }
+        console.log("admin")
         res.json(msg);
     }
     
 })
+app.post("/admin",(req,res)=>{
+    console.log(req)
+    console.log("Here")
+})
 app.post("/newApplication",(req,res)=>{
+    console.log("HEERE")
     const msg ={
         data: req.user,
         direct: "/admin"
@@ -143,11 +151,13 @@ app.post("/logout",(req,res)=>{
         data: "Succesfully Logout",
         direct: "/login"
     }
-    console.log("HEre")
     res.json(msg)
 })
 app.post("/visa",(req,res) =>{
-    
+    console.log("here")
+})
+app.get("/visa",(req,res)=>{
+    console.log("Here")
 })
 //listener
 app.listen(port,()=>console.log("Listening on "+port));
