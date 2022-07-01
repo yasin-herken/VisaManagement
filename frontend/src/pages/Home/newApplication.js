@@ -4,6 +4,7 @@ import Sidebar from './sidebar';
 import Footer from './footer';
 import {useNavigate} from 'react-router-dom';
 import Navbar from './navbar';
+import { color, textAlign } from '@mui/system';
 function NewApplication() {
     const [username,setUsername] = useState("")
     const [role,setRole] = useState("")
@@ -44,11 +45,6 @@ function NewApplication() {
             <Navbar username={username} role={role} setColl={setCollapse}/>
             <main className="content">
             <div className="container-fluid p-0">
-
-<div className="mb-3">
-    <h1 className="h3 d-inline align-middle"> </h1>
-    <a className="badge bg-dark text-white ms-2" href="upgrade-to-pro.html"> </a>
-</div>
 <div className="row">
     <div className="col-12 col-lg-7">
         <div className="card">
@@ -262,95 +258,146 @@ function NewApplication() {
     </div>
     <div className="col-12 col-lg-5">
         <div className="card">
-            <div className="card-body">
-               <div  className="row">
-                    <h5 className="card-title">Visa Prices</h5>
-                        <div style={{border: "0.5px solid #233232"}} className='mb-3 col-sm'>Visa Name</div>
-                        <div style={{border: "0.5px dashed #233232"}} className='mb-3 col-sm'>Trip Name</div>
-                        <div style={{border: "0.5px dashed #233232"}} className='mb-3 col-sm'>Single Price</div>
-                        <div style={{border: "0.5px dashed #233232"}} className='mb-3 col-sm'>Multi Price</div>
-                        <div style={{border: "0.5px dashed #233232"}} className='mb-3 col-sm'>Service Price Fee</div>
+            <div className="card-header">
+                <div className="row">
+                    <h4 className="card-title">Visa Prices</h4>
                </div>
-               
             </div>
+            <div className='card-body'>
+                <table class="table">
+                    <thead>
+                        <th style={{width:"18%"}}>Visa Name</th>
+                        <th style={{width:"18%"}}>Trip Name</th>
+                        <th style={{width:"18%"}}>Single Price</th>
+                        <th style={{width:"20%"}}>Multi Price</th>
+                        <th className="d-none d-md-table-cell" style={{width:"26%"}}>Service Fee Price</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>..</td>
+                            <td>..</td>
+                            <td>..</td>
+                            <td>..</td>
+                            <td>..</td>
+                        </tr>
+                    </tbody>
+                </table>
+             </div>
+
         </div>
         <div className="card">
             <div className="card-header">
-                <h5 className="card-title">Blockquotes</h5>
-                <h6 className="card-subtitle text-muted">For quoting blocks of content from another source within your document.</h6>
+                <div className="row">
+                    <h4 className="card-title">Additional Prices</h4>
+               </div>
             </div>
-            <div className="card-body">
-                <blockquote>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                    </p>
-                    <footer>
-                        Someone famous in <cite title="Source Title">Source Title</cite>
-                    </footer>
-                </blockquote>
-                <p className="text-muted m-b-15 m-t-20 font-13">
-                    Add <code>.blockquote-reverse</code> for a blockquote with right-aligned content.
-                </p>
-                <blockquote className="blockquote-reverse m-b-0">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                    </p>
-                    <footer>
-                        Someone famous in <cite title="Source Title">Source Title</cite>
-                    </footer>
-                </blockquote>
+           <div className='card-body'>
+                <table className="table table-striped table-sm table-bordered table-responsive">
+                    <thead>
+                        <th style={{width:"10%"}}></th>
+                        <th style={{width:"50%"}}>Service Name</th>
+                        <th style={{width:"40%",textAlign:"right"}}>Price</th>
+                    </thead>
+                    <tbody>
+                        <tr >
+                            <td>
+                                <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="option1" />
+                                <span class="form-check-label">
+                                </span>
+								</label>
+                            </td>
+                            <td>1 MONTH INSURANCE</td>
+                            <td style={{textAlign:"right"}}>25000 CFA</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="option1" />
+                                <span class="form-check-label">
+                                </span>
+								</label>
+                            </td>
+                            <td>12 MONTH INSURANCE</td>
+                            <td style={{textAlign:"right"}}>90000 CFA</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+           </div>
+        </div>
+        <div className="card">
+            <div className="card-header">
+                <div className="row">
+                    <h4 className="card-title">Total</h4>
+               </div>
+            </div>
+            <div className='card-body'>
+                <table className="table table-striped">
+                    <thead>
+                        <th sytle={{width:"40%"}}></th>
+                        <th style={{width:"40%"}}></th>
+                        <th style={{width:"20%",textAlign:"right"}}></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ministry Fee</td>
+                            <td>:</td>
+                            <td style={{textAlign:"right"}} >0</td>
+                        </tr>
+                        <tr>
+                            <td>Additinal & Service Fee</td>
+                            <td>:</td>
+                            <td style={{textAlign:"right"}}>50000.00 CFA</td>
+                        </tr>
+                        <tr>
+                            <td style={{fontWeight:"bold"}} >Total</td>
+                            <td>:</td>
+                            <td style={{textAlign:"right",fontWeight:"bold"}}>50000.00 CFA</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <div className="card">
             <div className="card-header">
-                <h5 className="card-title">List unordered</h5>
-                <h6 className="card-subtitle text-muted">The unordered list items will are marked with bullets.</h6>
+                <h5 className="card-title">Accompaniment Purpose Multiple Visa Requirements</h5>
             </div>
             <div className="card-body">
                 <ul>
                     <li>
-                        Lorem ipsum dolor sit amet
+                        Valid Passport
                     </li>
                     <li>
-                        Consectetur adipiscing elit
+                        One biometrix photo
                     </li>
                     <li>
-                        Nulla volutpat aliquam velit
+                        Business license
                     </li>
                     <li>
-                        Phasellus iaculis neque
+                        Bank stantment with letter
                     </li>
                     <li>
-                        Eget porttitor lorem
+                        Company Letter
                     </li>
+                    <li>
+                        Invitation from host company
+                    </li>
+                    <li>
+                        Other visas copies (Turkey,Schengen,Uk,Abd,Canada,Ireland)
+                    </li>
+                    <li>
+                        Fly reservation
+                    </li>
+                    <li>
+                        Hotel reservation
+                    </li>
+                    <li>Travel Insurance</li>
                 </ul>
             </div>
-        </div>
-
-        <div className="card">
-            <div className="card-header">
-                <h5 className="card-title">List ordered</h5>
-                <h6 className="card-subtitle text-muted">The ordered list items will are marked with numbers.</h6>
-            </div>
-            <div className="card-body">
-                <ol>
-                    <li>
-                        Lorem ipsum dolor sit amet
-                    </li>
-                    <li>
-                        Consectetur adipiscing elit
-                    </li>
-                    <li>
-                        Nulla volutpat aliquam velit
-                    </li>
-                    <li>
-                        Phasellus iaculis neque
-                    </li>
-                    <li>
-                        Eget porttitor lorem
-                    </li>
-                </ol>
+            <div className='card-footer'>
+                More details available. <a href="/" >Documentation</a>
             </div>
         </div>
     </div>
