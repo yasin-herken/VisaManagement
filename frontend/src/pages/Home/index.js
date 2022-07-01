@@ -1,13 +1,8 @@
 import React,{ useEffect, useState } from 'react'
-import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
-import { Badge } from '@mui/material';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import ResrictedPage from './resrictedPage';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './sidebar';
 import Footer from './footer';
-import DropDownMenu from './dropDownMenu.js';
 import Navbar from './navbar';
 import "./css/index.css";
 function Home() {
@@ -37,37 +32,16 @@ function Home() {
               setRole("Restricted")
           }
   }
-  ).catch(err=>console.log(err));
+  ).catch(err=>console.log("Error in index js"));
   }
-    const handleLogout = async(event) =>{
-        event.preventDefault()
-        await axios({
-            method: "POST",
-            withCredentials: true,
-            url: "http://localhost:8000/logout"
-        }).then(res=>{
-            if(res.data.data==="Succesfully Logout")
-                navigate(res.data.direct)
-            else{
-                alert("There is a problem")
-            }
-        })
-        .catch(err => console.log(err))
-    }
-    const handleToggle= (event) =>{
-        if(!collapse)
-            setCollapse(true)
-        else
-            setCollapse(false)
-    }
     useEffect(()=>{
         getUserPage()
-    },[role,username])
+    },[role,username,collapse])
   return ( 
     <div className="wrapper">
         <Sidebar role={role} coll={collapse}/>
         <div className="main">
-            <Navbar usarname={username} role={role}/>
+          <Navbar usarname={username} role={role} setColl={setCollapse}/>
             <main className="content"></main>
         <Footer />
         </div>

@@ -4,34 +4,18 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import DropDownMenu from './dropDownMenu.js';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom'
-function Navbar({username,role}) {
-    const [collapse,setCollapse] = useState(false)
+function Navbar({username,role,setColl}) {
+    const [condition,setCondition] = useState(false)
     const navigate = useNavigate()
-    const handleToggle= (event) =>{
-        if(!collapse)
-            setCollapse(true)
-        else
-            setCollapse(false)
-    }
-    const handleLogout = async(event) =>{
-        event.preventDefault() 
-        event.stopPropagation()
-        await axios({
-            method: "POST",
-            withCredentials: true,
-            url: "http://localhost:8000/logout"
-        }).then(res=>{
-            if(res.data.data==="Succesfully Logout")
-                navigate(res.data.direct)
-        })
-        .catch(err => console.log(err))
-    }
     useEffect(()=>{
         
-    },[username,role])
+    },[username,role,setColl])
   return (
     <nav className="navbar navbar-expand navbar-light navbar-bg">
-    <div onClick={handleToggle}>
+    <div onClick={(event)=>{
+        condition ? setCondition(false):setCondition(true)
+        setColl(condition)
+    }}>
         <a  className="sidebar-toggle js-sidebar-toggle">
         <i className="hamburger align-self-center"></i>
     </a>
@@ -50,7 +34,7 @@ function Navbar({username,role}) {
             </li>
             { role==="Restricted"? 
             <DropDownMenu />:
-            <DropDownMenu username={username} handleLogout={handleLogout}/>
+            <DropDownMenu username={username}/>
             }
         </ul>
     </div>

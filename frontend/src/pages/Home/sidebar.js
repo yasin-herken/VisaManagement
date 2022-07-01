@@ -1,16 +1,15 @@
 import React, { useEffect,useState } from 'react'
 function Sidebar({role,coll}) {
-    const [collapse,setCollapse] = useState("")
+    const [css,setCss] = useState("")
     useEffect(()=>{
-        if(coll)
-            setCollapse("collapse") 
+        if(coll===false)
+            setCss("")
         else{
-            setCollapse("")
+            setCss("collapse")
         }
-        console.log(coll) 
     },[coll])
   return (
-        <nav id="sidebar" className={"sidebar js-sidebar "+ collapse}>
+        <nav id="sidebar" className={"sidebar js-sidebar "+ css}>
             <div className="sidebar-content js-simplebar">
                 <a className="sidebar-brand" href="#">
                     <span className="align-middle">VisaManagement</span>
