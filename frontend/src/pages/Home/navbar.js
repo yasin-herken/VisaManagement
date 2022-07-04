@@ -2,13 +2,10 @@ import React,{useState,useEffect} from 'react'
 import { Badge } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import DropDownMenu from './dropDownMenu.js';
-import axios from 'axios';
-import {useNavigate} from 'react-router-dom'
 function Navbar({username,role,setColl}) {
     const [condition,setCondition] = useState(false)
-    const navigate = useNavigate()
     useEffect(()=>{
-        
+        console.log(username)
     },[username,role,setColl])
   return (
     <nav className="navbar navbar-expand navbar-light navbar-bg">

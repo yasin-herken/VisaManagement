@@ -1,5 +1,5 @@
 import './App.css';
-import React,{useState,useEffect, StrictMode} from "react";
+import React,{useState,useEffect} from "react";
 import {Routes,Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from './pages/Home/login.js';
@@ -10,10 +10,10 @@ import axios from 'axios';
 function App() {
   const [username,setUsername] = useState("")
   const [role,setRole] = useState()
-  const getUserPage =  (event) => {
+  const getUserPage =  async(event) => {
     if(event && event.preventDefault)
         event.preventDefault()
-    axios({
+    await axios({
         method: "GET",
         withCredentials: true,
         url : "http://localhost:8000/getUser"
@@ -39,7 +39,7 @@ useEffect(()=>{
 },[role,username])
   return ( 
         <Routes>
-            <Route path="/admin" element={role==="Admin"?<Home />:<ResrictedPage />} />
+            <Route path="/admin" exact element={role==="Restricted"?<ResrictedPage />:<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route exact path="/"  element={<Home />} />

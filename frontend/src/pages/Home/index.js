@@ -6,42 +6,43 @@ import Footer from './footer';
 import Navbar from './navbar';
 import "./css/index.css";
 function Home() {
-    const navigate = useNavigate()
     const [username,setUsername] = useState("")
     const [role,setRole] = useState()
     const [collapse,setCollapse] = useState(false)
-    const getUserPage =  (event) => {
+    const getUserPage =  async(event) => {
       if(event && event.preventDefault)
           event.preventDefault()
-      axios({
+      await axios({
           method: "GET",
           withCredentials: true,
           url : "http://localhost:8000/getUser"
       }).then(res=>{
-          if(res.data.role==="Admin")
-          {
-              setUsername(res.data.username)
-              setRole(res.data.role)
-          }
-          else if(res.data.role==="Client")
-          {   
-              setUsername(res.data.username)
-              setRole(res.data.role)
-          }
-          else if(res.data.role==="Restricted"){
-              setRole("Restricted")
-          }
+        if(res.data.role==="Admin")
+        {
+            setUsername(res.data.username)
+            setRole(res.data.role)
+            console.log("here")
+        }
+        else if(res.data.role==="Client")
+        {   
+            setUsername(res.data.username)
+            setRole(res.data.role)
+        }
+        else if(res.data.role==="Restricted"){
+            setRole("Restricted")
+        }
   }
   ).catch(err=>console.log("Error in index js"));
   }
-    useEffect(()=>{
-        getUserPage()
-    },[role,username,collapse])
+  useEffect(()=>{
+    getUserPage()
+    console.log(username)
+},[username,role,collapse])
   return ( 
     <div className="wrapper">
-        <Sidebar role={role} coll={collapse}/>
+        <Sidebar username={username} role={role} coll={collapse}/>
         <div className="main">
-          <Navbar usarname={username} role={role} setColl={setCollapse}/>
+          <Navbar username={username} role={role} setColl={setCollapse}/>
             <main className="content"></main>
         <Footer />
         </div>
