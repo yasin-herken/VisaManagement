@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-function Occupation() {
+function Occupation({setJob}) {
     const options = [
         { value: 'Agriculture', label: 'Agriculture' },
         { value: 'Armed/Security_Force', label: 'Armed/Security Force' },
@@ -28,15 +28,16 @@ function Occupation() {
         { value: 'Service_Sector', label: 'Service_Sector'},
         { value: 'Student/Trainee', label: 'Student/Trainee'},
         { value: 'Tourism', label: 'Tourism'},
-        { value: 'Unemployed', label: 'Unemployed'},
-
-        
+        { value: 'Unemployed', label: 'Unemployed'}
       ]
+      const changeHandler = (value) => {
+          setJob(value.value)
+      }
   return (
     <Select
     placeholder="Select Job.." 
     options={options}
-
+    onChange={changeHandler}
     />
   )
 }

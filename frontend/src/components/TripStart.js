@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 function TripStart() {
     const [startDate,setStartDate] = useState(new Date())
-    console.log(startDate)
   return (
         <DatePicker 
             className='form-control'

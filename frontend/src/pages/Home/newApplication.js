@@ -22,9 +22,27 @@ function NewApplication() {
     const [username,setUsername] = useState("")
     const [role,setRole] = useState("")
     const [collapse,setCollapse] = useState(false)
+    const [PNR,setPNR] = useState("")
+    const [status, setStatus] = useState();
+    const [gender,setGender] = useState();
+    const [name,setName] = useState();
+    const [surname,setSurname] = useState();
+    const [married,setMarried] = useState();
+    const [bcountry,setBCountry] = useState();
+    const [bdate,setBDate] = useState();
+    const [bcity,setBCity] = useState();
+    const [nationality,setNationality] = useState();
+    const [job,setJob] = useState();
+    const [fname,setFName] = useState();
+    const [lname,setLName] = useState();
+    const [pnumber,setPNumber] = useState();
+    const [pissue,setPIssue] = useState();
+    const [pexpiry,setPExpiry] = useState();
+    const [pauthority,setPAuthority] = useState();
+    const [pistate,setPIState] = useState();
     const getUserPage =  async(event) => {
         if(event && event.preventDefault)
-            event.preventDefault()
+            event.preventDefault();
         await axios({
             method: "GET",
             withCredentials: true,
@@ -32,20 +50,27 @@ function NewApplication() {
         }).then(res=>{
             if(res.data.role==="Admin")
             {
-                setUsername(res.data.username)
-                setRole(res.data.role)
+                setUsername(res.data.username);
+                setRole(res.data.role);
             }
             else if(res.data.role==="Client")
             {   
-                setUsername(res.data.username)
-                setRole(res.data.role)
+                setUsername(res.data.username);
+                setRole(res.data.role);
             }
             else if(res.data.role==="Restricted"){
-                setRole("Restricted")
+                setRole("Restricted");
             }
     }
     ).catch(err=>console.log(err));
     }
+    //Contact Info Update Render
+    useEffect(()=>{
+    },[status,gender,PNR,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity])
+    // Visa Passport Details
+    useEffect(()=>{
+        console.log(pnumber,pissue,pexpiry,pauthority,pistate)
+    },[pnumber,pissue,pexpiry,pauthority,pistate])
     useEffect(()=>{
         getUserPage()
     },[username,role,collapse])
@@ -63,73 +88,135 @@ function NewApplication() {
                                     <div className="row">
                                         <div className="mb-3 col-md-8">
                                             <label htmlFor="inputEmail4" className="form-label">If there is a linked PNR, please enter:</label>
-                                            <input id="inputAddress" type="text" className="form-control" placeholder=""/>
+                                            <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => {
+                                                setPNR(e.target.value);
+                                            }}/>
                                         </div>
                                         <div className="mb-3 col-md-4">
                                             <label htmlFor="inputEmail4" className="form-label">Status</label>
-                                            <select id="inputAddress" type="text" className="form-select" placeholder="Status" aria-label=".form-select-lg example" >
-                                                <option value="Normal">Normal</option>
-                                                <option value="VIP">VIP</option>
-                                                <option value="Urgent">Urgent</option>
+                                            <select 
+                                            id="inputAddress" 
+                                            type="text" 
+                                            className="form-select" 
+                                            placeholder="Status" 
+                                            aria-label=".form-select-lg example" 
+                                            value={status} 
+                                            defaultValue={"default"}
+                                            onChange={(e) => {setStatus(e.target.value)
+                                            }}
+                                            >
+                                                <option value={"default"} disabled>
+                                                Choose an option
+                                                </option>
+                                                <option value="normal">Normal</option>
+                                                <option value="vip">VIP</option>
+                                                <option value="urgent">Urgent</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="inputEmail4" className="form-label">Title</label>
-                                            <select id="inputAddress" type="text" className="form-select" placeholder="Status" aria-label=".form-select-lg example" >
+                                            <select 
+                                            id="inputAddress" 
+                                            type="text" 
+                                            className="form-select" 
+                                            placeholder="Status" 
+                                            aria-label=".form-select-lg example" 
+                                            value={gender}
+                                            defaultValue={"default"}
+                                            onChange={(e)=>setGender(e.target.value)}
+                                            >
+                                                <option value={"default"} disabled>
+                                                Gender
+                                                </option>
                                                 <option value="Male">Mr(Male)</option>
                                                 <option value="Female">Mrs(Female)</option>
                                             </select>
                                         </div>
                                         <div className="mb-3 col-md-5">
                                             <label htmlFor="inputEmail4" className="form-label">Name</label>
-                                            <input type="text" className="form-control" placeholder="Name"/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Name"
+                                            onChange={(e) => {
+                                                setName(e.target.value);
+                                            }}  
+                                            />
                                         </div>
                                         <div className="mb-3 col-md-4">
                                             <label htmlFor="inputEmail4" className="form-label">Surname</label>
-                                            <input type="text" className="form-control" placeholder="Last name"/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Last name"
+                                            onChange={(e)=>setSurname(e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="inputEmail4" className="form-label">Married</label>
-                                            <select id="inputAddress" type="text" className="form-select" placeholder="Status" aria-label=".form-select-lg example" >
-                                                <option value="Male">Single</option>
-                                                <option value="Female">Married</option>
+                                            <select 
+                                            id="inputAddress" 
+                                            type="text" 
+                                            className="form-select" 
+                                            placeholder="Status" 
+                                            aria-label=".form-select-lg example" 
+                                            onChange={(e)=>setMarried(e.target.value)}
+                                            >
+                                                <option value="single">Single</option>
+                                                <option value="married">Married</option>
                                             </select>
                                         </div>
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="exampleDataList" className="form-label">Birth Country</label>
-                                            <BirthCountry />
+                                            <BirthCountry setBCountry={setBCountry}/>
                                         </div>
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="inputEmail4" className="form-label">Birth Date</label>
-                                            <DatePicker />
+                                            <DatePicker setBDate={setBDate}/>
                                         </div>
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="inputEmail4" className="form-label">Birth City</label>
-                                            <input type="text" className="form-control" placeholder="Birth Place"/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Birth Place"
+                                            onChange={(e) => {setBCity(e.target.value)}}
+                                            />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Nationality</label>
-                                            <Nationality />
+                                            <Nationality setNationality={setNationality}/>
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Occupation *</label>
-                                            <Occupation />
+                                            <Occupation setJob={setJob}/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Father Name</label>
-                                            <input type="text" className="form-control" placeholder="Father Name"/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Father Name"
+                                            onChange={(e) => {setFName(e.target.value)}}
+                                            />
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Mother Name</label>
-                                            <input type="text" className="form-control" placeholder="Last Name"/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Last Name"
+                                            onChange={(e) => {setLName(e.target.value)}}
+                                            />
+
                                         </div>
                                     </div>
                                 </div>
@@ -145,50 +232,59 @@ function NewApplication() {
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Passport Number</label>
-                                                        <input type="text" className="form-control" placeholder=""/>
+                                                        <input 
+                                                        type="number" 
+                                                        className="form-control" 
+                                                        placeholder=""
+                                                        onChange={(e) => {setPNumber(e.target.value)}}
+                                                        />
                                                     </div>
                                                     <div className="mb-3 col-md-3">
                                                         <label htmlFor="inputEmail4" className="form-label">Passport Issue Date</label>
-                                                        {/* <input type="text" className="form-control" placeholder="Last name"/> */}
-                                                        <Issue />
+                                                        <Issue setPIssue={setPIssue} />
                                                     </div>
                                                     <div className="mb-3 col-md-3">
                                                         <label htmlFor="inputEmail4" className="form-label">Passport Expiry Date</label>
-                                                        {/* <input type="text" className="form-control" placeholder="Last name"/> */}
-                                                        <Expiry />
+                                                        <Expiry setPExpiry={setPExpiry} />
                                                     </div>
                                                 </div>
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Passport Authority</label>
-                                                        <input type="text" className="form-control" placeholder=""/>
+                                                        <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        placeholder=""
+                                                        onChange={(e) => {setPAuthority(e.target.value)}}
+                                                        />
                                                     </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Passport Issue State</label>
-                                                        <input type="text" className="form-control" placeholder=""/>
+                                                        <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        placeholder=""
+                                                        onChange={(e) => {setPIState(e.target.value)}}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Type of Travel Doc</label>
-                                                        {/* <input type="text" className="form-control" placeholder=""/> */}
                                                         <TravelType />
                                                     </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Visa Type</label>
-                                                        {/* <input type="text" className="form-control" placeholder=""/> */}
                                                         <VisaType />
                                                     </div>
                                                 </div>
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Document Type</label>
-                                                        {/* <input type="text" className="form-control" placeholder=""/> */}
                                                         <DocumentType />
                                                     </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Entry Type</label>
-                                                        {/* <input type="text" className="form-control" placeholder=""/> */}
                                                         <EntryType />
                                                     </div>
                                                 </div>
@@ -214,7 +310,6 @@ function NewApplication() {
                                     <div className='row'>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Country</label>
-                                            {/* <input type="text" className="form-control" placeholder=""/> */}
                                             <Country />
                                         </div>
                                         <div className="mb-3 col-md-6">
