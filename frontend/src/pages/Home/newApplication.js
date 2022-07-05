@@ -40,6 +40,15 @@ function NewApplication() {
     const [pexpiry,setPExpiry] = useState();
     const [pauthority,setPAuthority] = useState();
     const [pistate,setPIState] = useState();
+    const [phone,setPhone] = useState();
+    const [email,setEmail] = useState();
+    const [country,setCountry] = useState();
+    const [city,setCity] = useState();
+    const [address,setAddress] = useState();
+    const [postal,setPostal] = useState();
+    const [tripstart,setTripStart] = useState();
+    const [insuranceExp,setInsuranceExp] = useState();
+
     const getUserPage =  async(event) => {
         if(event && event.preventDefault)
             event.preventDefault();
@@ -71,6 +80,14 @@ function NewApplication() {
     useEffect(()=>{
         console.log(pnumber,pissue,pexpiry,pauthority,pistate)
     },[pnumber,pissue,pexpiry,pauthority,pistate])
+    // Contact Details
+    useEffect(()=>{
+        console.log(phone,email,country,city,address,postal)
+    },[phone,email,country,city,address,postal])
+    // Travel Details
+    useEffect(()=>{
+        console.log(tripstart,insuranceExp)
+    },[tripstart,insuranceExp])
     useEffect(()=>{
         getUserPage()
     },[username,role,collapse])
@@ -300,31 +317,56 @@ function NewApplication() {
                                     <div className='row'>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Phone</label>
-                                            <input type="number" className="form-control" placeholder="Phone"/>
+                                            <input 
+                                            type="number" 
+                                            className="form-control" 
+                                            placeholder="Phone"
+                                            onChange={(e) => {setPhone(e.target.value)}}
+                                            />
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Email</label>
-                                            <input type="email" className="form-control" placeholder="Email"/>
+                                            <input 
+                                            type="email" 
+                                            className="form-control" 
+                                            placeholder="Email"
+                                            onChange={(e) => {setEmail(e.target.value)}}
+                                            />
                                         </div>
                                     </div>
                                     <div className='row'>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Country</label>
-                                            <Country />
+                                            <Country setCountry={setCountry}/>
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Cities</label>
-                                            <input type="text" className="form-control" placeholder=""/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder=""
+                                            onChange={(e) => {setCity(e.target.value)}}
+                                            />
                                         </div>
                                     </div>
                                     <div className='row'>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Address</label>
-                                            <input type="text" className="form-control" placeholder=""/>
+                                            <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder=""
+                                            onChange={(e) => {setAddress(e.target.value)}}
+                                            />
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Postal Code</label>
-                                            <input type="text" className="form-control" placeholder=""/>
+                                            <input 
+                                            type="number" 
+                                            className="form-control" 
+                                            placeholder=""
+                                            onChange={(e) => {setPostal(e.target.value)}}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -337,24 +379,20 @@ function NewApplication() {
                                     <div className='row'>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Trip Start Date</label>
-                                            {/* <input type="text" className="form-control" placeholder=""/> */}
-                                            <TripStart />
+                                            <TripStart setTripStart={setTripStart} />
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Insurance Exp.Date</label>
-                                            {/* <input type="text" className="form-control" placeholder=""/> */}
-                                            <InsuranceExp />
+                                            <InsuranceExp setInsuranceExp={setInsuranceExp} />
                                         </div>
                                     </div>
                                     <div className='row'>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Airport Name*</label>
-                                            {/* <input type="text" className="form-control" placeholder=""/> */}
                                             <AirportName />
                                         </div>
                                         <div className="mb-3 col-md-6">
                                             <label htmlFor="inputEmail4" className="form-label">Duration of Stay</label>
-                                            {/* <input type="text" className="form-control" placeholder=""/> */}
                                             <DurationStay />
                                         </div>
                                     </div>

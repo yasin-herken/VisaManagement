@@ -9,6 +9,9 @@ import session from "express-session";
 import bodyParser from 'body-parser';
 import key from './config.js';
 import User from './dbUser.js';
+import TravelDoc from './dbTravelDoc.js';
+import VisaType from './dbVisaType.js';
+import DocumentType from './dbDocumentType.js';
 import passportConfig from './passportConfig.js';
 //app config
 const app = express();
@@ -38,7 +41,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 passportConfig(passport);
 app.use(function(err, req, res, next) {
-    console.log(err);
 });
 
 //DB config
@@ -158,6 +160,40 @@ app.post("/visa",(req,res) =>{
 })
 app.get("/visa",(req,res)=>{
     console.log("Here")
+})
+
+app.get("/getData",(req,res)=>{
+    const data = 
+        [
+            {
+                travel:{
+                    name:"Alien's Passport",
+                    visaTypes:[
+                        {
+                            name:"IHB Saglik",
+                            documentsTypes:[
+                                {
+                                    name:"IHB Saglik"
+                                }
+                            ]
+                        },
+                        {
+                            name:"Touristic/Business Person",
+                            documentsTypes:[
+                                {
+                                    name:""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+        res.send(data[0].travel.visaTypes[1].documentsTypes)
+    
+});
+app.post("/postData",(req,res)=>{
+
 })
 //listener
 app.listen(port,()=>console.log("Listening on "+port));
