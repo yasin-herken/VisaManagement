@@ -48,7 +48,22 @@ function NewApplication() {
     const [postal,setPostal] = useState();
     const [tripstart,setTripStart] = useState();
     const [insuranceExp,setInsuranceExp] = useState();
-
+    const [visaValue,setVisaValue] = useState();
+    const [data,setData] = useState([]);
+    const [documentValue,setDocumentValue] = useState();
+    const [entrytype,setEntryType] = useState();
+    const [treeDoc,setTreeDoc] = useState();
+    const getData = async(event) =>{
+        if(event && event.preventDefault)
+          event.preventDefault()
+          await axios({
+            method: "GET",
+            withCredentials: true,
+            url : "http://localhost:8000/getData"
+        }).then((res)=>{
+          setData(res.data)
+        }).catch((err)=>console.log("error in new application"))
+      }
     const getUserPage =  async(event) => {
         if(event && event.preventDefault)
             event.preventDefault();
@@ -75,20 +90,20 @@ function NewApplication() {
     }
     //Contact Info Update Render
     useEffect(()=>{
-        console.log(status,gender,PNR,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity)
     },[status,gender,PNR,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity])
     // Visa Passport Details
     useEffect(()=>{
-        console.log(pnumber,pissue,pexpiry,pauthority,pistate)
     },[pnumber,pissue,pexpiry,pauthority,pistate])
+    useEffect(()=>{
+       
+    },[entrytype])
     // Contact Details
     useEffect(()=>{
-        console.log(phone,email,country,city,address,postal)
     },[phone,email,country,city,address,postal])
     // Travel Details
     useEffect(()=>{
-        console.log(tripstart,insuranceExp)
-    },[tripstart,insuranceExp])
+        getData()
+    },[tripstart,insuranceExp,visaValue])
     useEffect(()=>{
         getUserPage()
     },[username,role,collapse])
@@ -289,21 +304,21 @@ function NewApplication() {
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Type of Travel Doc</label>
-                                                        <TravelType />
+                                                        <TravelType data={data} setVisaValue={setVisaValue} />
                                                     </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Visa Type</label>
-                                                        <VisaType />
+                                                        <VisaType data={data} visaValue={visaValue} setDocumentValue={setDocumentValue}/>
                                                     </div>
                                                 </div>
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Document Type</label>
-                                                        <DocumentType />
+                                                        <DocumentType data={data} documentValue={documentValue} setTreeDoc={setTreeDoc} />
                                                     </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Entry Type</label>
-                                                        <EntryType />
+                                                        <EntryType setEntryType={setEntryType} treeDoc={treeDoc} />
                                                     </div>
                                                 </div>
                                             </div>

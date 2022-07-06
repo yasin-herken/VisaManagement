@@ -1,20 +1,25 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import Select from 'react-select'
-function TravelType() {
-    const options = [
-        { value: "Alien", label:"Alien's Passport"},
-        { value: "Diplomatic", label:"Diplomatic Passport"},
-        { value: "Nansen", label:"Nansen Passport"},
-        { value: "Ordinary", label:"Ordinary Passport"},
-        { value: "Other", label:"Other Passport"},
-        { value: "Refugee", label:"Refugee Travel Document"},
-        { value: "Service", label:"Service Passport"},
-        { value: "Special", label:"Special Passport"}
-    ]
+function TravelType({data,setVisaValue}) {
+    const[options,setOptions] = useState([])
+    
+    useEffect(()=>{
+      const newData = []
+      data.map((element,index)=>{
+        newData.push({
+          value:index,
+          label:element.name
+        })
+      })
+      setOptions(newData)
+    },[data])
   return (
     <Select 
-    options={options}
-        placeholder="Select Travel Type"
+      onChange={(value)=>{
+        setVisaValue(value)
+        }}
+      options={options}
+      placeholder="Select Travel Type"
     />
   )
 }

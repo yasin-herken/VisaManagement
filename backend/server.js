@@ -166,7 +166,7 @@ app.post("/postData",(req,res)=>{
                 name:"Alien's Passport",
                 visaTypes: [
                     {
-                        name:"IHB Saglik",
+                        name:"Other Visas",
                         documentTypes:[
                             {
                                 name:"Touristic Visit"
@@ -215,20 +215,196 @@ app.post("/postData",(req,res)=>{
                         ]
                     }
                 ]
+            },
+            {
+                name:"Nansen Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:"Ordinary Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:"Other Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:"Refugee Travel Document",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:"Service Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:"Special Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
-        dbCollection.insertMany(data,(err,data)=>console.log(data))
+        data.forEach((singleData)=>{
+            dbCollection.findOne({
+                name:singleData.name
+            },(err,data)=>{
+                console.log(err)
+                if(!data){
+                    console.log(singleData)
+                    const newData = new dbCollection(singleData);
+                    newData.save()
+                }
+            })
+        })
 })
 app.get("/updateData",(req,res)=>{
     dbCollection.updateMany({
-        "visaTypes.name":'IHB Saglik'
-     },{$set:{"visaTypes.$":{name:"IHB"}}},(err,data)=>{res.send(data)
+        "visaTypes.name":'IHB'
+     },{$set:{"visaTypes.$":{name:"IHB Saglik"}}},(err,data)=>{res.send(data)
     console.log(err)})
 })
 app.get("/findbyName",(req,res)=>{
     dbCollection.find({
        'visaTypes.name':'IHB Saglik'
     },(err,data)=>res.send(data))
+})
+app.get("/getData",(req,res)=>{
+    dbCollection.find({},(err,data)=>res.json(data))
 })
 //listener
 app.listen(port,()=>console.log("Listening on "+port));
