@@ -9,9 +9,7 @@ import session from "express-session";
 import bodyParser from 'body-parser';
 import key from './config.js';
 import User from './dbUser.js';
-import TravelDoc from './dbTravelDoc.js';
-import VisaType from './dbVisaType.js';
-import DocumentType from './dbDocumentType.js';
+import dbCollection from './dbCollection.js';
 import passportConfig from './passportConfig.js';
 //app config
 const app = express();
@@ -161,39 +159,76 @@ app.post("/visa",(req,res) =>{
 app.get("/visa",(req,res)=>{
     console.log("Here")
 })
-
-app.get("/getData",(req,res)=>{
+app.post("/postData",(req,res)=>{
     const data = 
         [
             {
-                travel:{
-                    name:"Alien's Passport",
-                    visaTypes:[
-                        {
-                            name:"IHB Saglik",
-                            documentsTypes:[
-                                {
-                                    name:"IHB Saglik"
-                                }
-                            ]
-                        },
-                        {
-                            name:"Touristic/Business Person",
-                            documentsTypes:[
-                                {
-                                    name:""
-                                }
-                            ]
-                        }
-                    ]
-                }
+                name:"Alien's Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:"Diplomatic Passport",
+                visaTypes: [
+                    {
+                        name:"IHB Saglik",
+                        documentTypes:[
+                            {
+                                name:"Touristic Visit"
+                            },
+                            {
+                                name:"Official Visit"
+                            }
+                        ]
+                    },
+                    {
+                        name:"Official Visa",
+                        documentTypes:[
+                            {
+                                name:"Single Transit"
+                            },
+                            {
+                                name:"Sportive Transit"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
-        res.send(data[0].travel.visaTypes[1].documentsTypes)
-    
-});
-app.post("/postData",(req,res)=>{
-
+        dbCollection.insertMany(data,(err,data)=>console.log(data))
+})
+app.get("/updateData",(req,res)=>{
+    dbCollection.updateMany({
+        "visaTypes.name":'IHB Saglik'
+     },{$set:{"visaTypes.$":{name:"IHB"}}},(err,data)=>{res.send(data)
+    console.log(err)})
+})
+app.get("/findbyName",(req,res)=>{
+    dbCollection.find({
+       'visaTypes.name':'IHB Saglik'
+    },(err,data)=>res.send(data))
 })
 //listener
 app.listen(port,()=>console.log("Listening on "+port));

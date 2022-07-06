@@ -75,6 +75,7 @@ function NewApplication() {
     }
     //Contact Info Update Render
     useEffect(()=>{
+        console.log(status,gender,PNR,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity)
     },[status,gender,PNR,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity])
     // Visa Passport Details
     useEffect(()=>{
