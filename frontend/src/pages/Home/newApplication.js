@@ -94,7 +94,12 @@ function NewApplication() {
                 setRole("Restricted");
             }
     }
+    
     ).catch(err=>console.log(err));
+    }
+    const handleSubmit = ()=>{
+        console.log("-------------------------")
+        console.log(PNR,status,gender,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity)
     }
     //Contact Info Update Render
     useEffect(()=>{
@@ -420,7 +425,7 @@ function NewApplication() {
                             </div>
                             <div className='row'>
                                 <div className="mb-3 mw-100 col-md-12">
-                                    <button type="submit" className="btn btn-primary w-100">Save Application</button>
+                                    <button type="submit" className="btn btn-primary w-100" onClick={handleSubmit}>Save Application</button>
                                 </div>
                             </div>
                         </div>

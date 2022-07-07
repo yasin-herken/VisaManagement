@@ -1,16 +1,19 @@
 import React,{useState} from 'react'
 import Datepicker from "react-datepicker";
 
-import "react-datepicker/dist/react-datepicker.css";
 function DatePicker({setBDate}) {
-    const [startDate,setStartDate] = useState(new Date())
+    const [startDate,setStartDate] = useState(new Date("1980/02/08"))
   return (
-        <Datepicker 
-            className='form-control'
-            selected={startDate} onChange={(date)=>{setStartDate(date)
-            setBDate(date)
-            }}
-        />
+        <Datepicker
+        selected={startDate}
+        className="form-control"
+        onChange={(date) => {setStartDate(date)
+        setBDate(date)}}
+        showYearDropdown
+        dateFormatCalendar="MMMM"
+        yearDropdownItemNumber={50}
+        scrollableYearDropdown
+      />
   )
 }
 
