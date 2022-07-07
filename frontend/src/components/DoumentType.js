@@ -38,9 +38,9 @@ function DocumentType({documentValue,data,setTreeDoc}) {
     },[documentValue,data])
   return (
     <Select 
-    onChange={(value)=>{
+      onChange={(value)=>{
       setSelected(value)
-      setTreeDoc({value,senddata})
+      setTreeDoc([...senddata,value.label])
     }}
     value={selected}
         options={options}

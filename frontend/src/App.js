@@ -39,11 +39,15 @@ useEffect(()=>{
 },[role,username])
   return ( 
         <Routes>
-            <Route path="/admin" exact element={role==="Restricted"?<ResrictedPage />:<Home />} />
+            <Route path="/admin" exact element={role==="Restricted"?<ResrictedPage />:<Home />} >
+
+
+                
+            </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route exact path="/"  element={<Home />} />
-            <Route path="/visa" element={<NewApplication />} />
+            <Route path="/visa" element={role==="Admin"?<NewApplication />:null } />
             <Route path="/restrictedPage" element={<ResrictedPage />} />
             <Route path="*" element={<ResrictedPage />} />   
         </Routes>

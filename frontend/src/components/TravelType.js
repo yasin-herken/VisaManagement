@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import Select from 'react-select'
-function TravelType({data,setVisaValue}) {
+function TravelType({data,setVisaValue,setTreeDoc}) {
     const[options,setOptions] = useState([])
     
     useEffect(()=>{
@@ -17,6 +17,7 @@ function TravelType({data,setVisaValue}) {
     <Select 
       onChange={(value)=>{
         setVisaValue(value)
+        setTreeDoc([])
         }}
       options={options}
       placeholder="Select Travel Type"

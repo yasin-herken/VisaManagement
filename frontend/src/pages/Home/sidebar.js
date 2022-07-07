@@ -2,19 +2,28 @@ import React, { useEffect,useState } from 'react';
 import './css/sidebar.css';
 function Sidebar({role,coll,username}) {
     const [css,setCss] = useState("")
-    const [active,setActive] = useState("");
     const pathName= window.location.pathname
-   
+    const [active,setActive] = useState(pathName);
+    const [styles,setStyles] = useState({
+
+    })
     useEffect(()=>{
         if(coll===false)
+        {
             setCss("")
+            setStyles({
+                marginLeft:"0px"
+            })
+        }
         else{
             setCss("collapse")
+            setStyles({
+                marginLeft:"-256px"
+            })
         }
-        setActive(pathName)
     },[coll,username])
   return (
-        <nav id="sidebar" className={"sidebar js-sidebar "+ css}>
+        <nav id="sidebar" className={"sidebar js-sidebar "+ css} style={styles}>
             <div className="sidebar-content js-simplebar" data-simplebar="init">
                 <div className="simplebar-wrapper" style={{margin:"0px"}}>
                     <div className="simplebar-height-auto-observer-wrapper">
@@ -61,14 +70,14 @@ function Sidebar({role,coll,username}) {
                                         </li>
 
                                         <li className={active==='/'?"sidebar-item active":"sidebar-item"} >
-                                            <a data-bs-target="#dashboards"  className="sidebar-link" href="/">
+                                            <a data-bs-target="#dashboards"  className="sidebar-link" href="/" >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span className="align-middle">Dashboards</span>
                                             </a>
                                         </li>
                                         {
                                             (role==="Admin" ?
                                         <li className={active==='/visa'?"sidebar-item active":"sidebar-item"}>
-                                            <a className="sidebar-link" href="/visa">
+                                            <a className="sidebar-link" href="/visa" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span> 
                                             </a>
                                         </li>: null)

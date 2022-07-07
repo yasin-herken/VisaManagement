@@ -5,10 +5,6 @@ function VisaType({visaValue,data,setDocumentValue}) {
     const [selected,setSelected] =useState();
     useEffect(()=>{
       const newData = [
-        {
-          value:"",
-          isDisabled:true
-        }
       ]
       data.map(async(element,index)=>{
         let i = 0;

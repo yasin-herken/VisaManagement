@@ -18,6 +18,13 @@ import TripStart from '../../components/TripStart';
 import InsuranceExp from '../../components/InsuranceExp';
 import AirportName from '../../components/AirportName';
 import DurationStay from '../../components/DurationStay';
+import VisaTable from '../../components/VisaTable';
+import AdditionalPrices from '../../components/AdditionalPrices';
+import TotalTable from '../../components/TotalTable';
+import Status from '../../Variables/status';
+import Select from 'react-select';
+import Gender from '../../Variables/gender';
+import Married from '../../Variables/married';
 function NewApplication() {
     const [username,setUsername] = useState("")
     const [role,setRole] = useState("")
@@ -52,7 +59,8 @@ function NewApplication() {
     const [data,setData] = useState([]);
     const [documentValue,setDocumentValue] = useState();
     const [entrytype,setEntryType] = useState();
-    const [treeDoc,setTreeDoc] = useState();
+    const [treeDoc,setTreeDoc] = useState([]);
+    const [sum,setSum] = useState(0)
     const getData = async(event) =>{
         if(event && event.preventDefault)
           event.preventDefault()
@@ -127,45 +135,28 @@ function NewApplication() {
                                         </div>
                                         <div className="mb-3 col-md-4">
                                             <label htmlFor="inputEmail4" className="form-label">Status</label>
-                                            <select 
+                                            <Select 
+                                            options={Status}
                                             id="inputAddress" 
-                                            type="text" 
-                                            className="form-select" 
-                                            placeholder="Status" 
-                                            aria-label=".form-select-lg example" 
+                                            placeholder="Select Status" 
                                             value={status} 
-                                            defaultValue={"default"}
-                                            onChange={(e) => {setStatus(e.target.value)
+                                            onChange={(value) => {
+                                                setStatus(value)
                                             }}
-                                            >
-                                                <option value={"default"} disabled>
-                                                Choose an option
-                                                </option>
-                                                <option value="normal">Normal</option>
-                                                <option value="vip">VIP</option>
-                                                <option value="urgent">Urgent</option>
-                                            </select>
+                                            />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="inputEmail4" className="form-label">Title</label>
-                                            <select 
+                                            <Select 
+                                            options={Gender}
                                             id="inputAddress" 
                                             type="text" 
-                                            className="form-select" 
-                                            placeholder="Status" 
-                                            aria-label=".form-select-lg example" 
+                                            placeholder="Select Gender" 
                                             value={gender}
-                                            defaultValue={"default"}
-                                            onChange={(e)=>setGender(e.target.value)}
-                                            >
-                                                <option value={"default"} disabled>
-                                                Gender
-                                                </option>
-                                                <option value="Male">Mr(Male)</option>
-                                                <option value="Female">Mrs(Female)</option>
-                                            </select>
+                                            onChange={(value)=>setGender(value)}
+                                            />
                                         </div>
                                         <div className="mb-3 col-md-5">
                                             <label htmlFor="inputEmail4" className="form-label">Name</label>
@@ -191,17 +182,13 @@ function NewApplication() {
                                     <div className="row">
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="inputEmail4" className="form-label">Married</label>
-                                            <select 
+                                            <Select 
+                                            options={Married}
                                             id="inputAddress" 
                                             type="text" 
-                                            className="form-select" 
-                                            placeholder="Status" 
-                                            aria-label=".form-select-lg example" 
-                                            onChange={(e)=>setMarried(e.target.value)}
-                                            >
-                                                <option value="single">Single</option>
-                                                <option value="married">Married</option>
-                                            </select>
+                                            placeholder="Select Married" 
+                                            onChange={(value)=>setMarried(value)}
+                                            />                                          
                                         </div>
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="exampleDataList" className="form-label">Birth Country</label>
@@ -304,7 +291,7 @@ function NewApplication() {
                                                 <div className='row'>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Type of Travel Doc</label>
-                                                        <TravelType data={data} setVisaValue={setVisaValue} />
+                                                        <TravelType data={data} setVisaValue={setVisaValue} setTreeDoc={setTreeDoc}/>
                                                     </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="inputEmail4" className="form-label">Visa Type</label>
@@ -445,26 +432,7 @@ function NewApplication() {
                                 </div>
                                 </div>
                                 <div className='card-body'>
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th style={{width:"18%"}}>Visa Name</th>
-                                                <th style={{width:"18%"}}>Trip Name</th>
-                                                <th style={{width:"18%"}}>Single Price</th>
-                                                <th style={{width:"20%"}}>Multi Price</th>
-                                                <th className="d-none d-md-table-cell" style={{width:"26%"}}>Service Fee Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>..</td>
-                                                <td>..</td>
-                                                <td>..</td>
-                                                <td>..</td>
-                                                <td>..</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <VisaTable entryType={entrytype} treeDoc={treeDoc} />
                                 </div>
 
                             </div>
@@ -475,40 +443,7 @@ function NewApplication() {
                                 </div>
                                 </div>
                             <div className='card-body'>
-                                    <table className="table table-striped table-sm table-bordered table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <th style={{width:"10%"}}></th>
-                                                <th style={{width:"50%"}}>Service Name</th>
-                                                <th style={{width:"40%",textAlign:"right"}}>Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr >
-                                                <td>
-                                                    <label className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="checkbox" value="option1" />
-                                                    <span className="form-check-label">
-                                                    </span>
-                                                    </label>
-                                                </td>
-                                                <td>1 MONTH INSURANCE</td>
-                                                <td style={{textAlign:"right"}}>25000 CFA</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="checkbox" value="option1" />
-                                                    <span className="form-check-label">
-                                                    </span>
-                                                    </label>
-                                                </td>
-                                                <td>12 MONTH INSURANCE</td>
-                                                <td style={{textAlign:"right"}}>90000 CFA</td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
+                                    <AdditionalPrices setSum={setSum} />
                             </div>
                             </div>
                             <div className="card">
@@ -518,32 +453,8 @@ function NewApplication() {
                                 </div>
                                 </div>
                                 <div className='card-body'>
-                                    <table className="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th sytle={{width:"40%"}}></th>
-                                                <th style={{width:"40%"}}></th>
-                                                <th style={{width:"20%",textAlign:"right"}}></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Ministry Fee</td>
-                                                <td>:</td>
-                                                <td style={{textAlign:"right"}} >0</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Additinal & Service Fee</td>
-                                                <td>:</td>
-                                                <td style={{textAlign:"right"}}>50000.00 CFA</td>
-                                            </tr>
-                                            <tr>
-                                                <td style={{fontWeight:"bold"}} >Total</td>
-                                                <td>:</td>
-                                                <td style={{textAlign:"right",fontWeight:"bold"}}>50000.00 CFA</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <TotalTable sum={sum} entrytype={entrytype}/>
+                                    
                                 </div>
                             </div>
 
