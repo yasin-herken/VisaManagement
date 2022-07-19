@@ -61,6 +61,7 @@ function NewApplication() {
     const [entrytype,setEntryType] = useState();
     const [treeDoc,setTreeDoc] = useState([]);
     const [sum,setSum] = useState(0)
+    const [prices,setPrices] = useState()
     const getData = async(event) =>{
         if(event && event.preventDefault)
           event.preventDefault()
@@ -97,6 +98,17 @@ function NewApplication() {
     
     ).catch(err=>console.log(err));
     }
+    const getAdditionalPrices = async(event) => {
+        if(event && event.preventDefault)
+            event.preventDefault();
+        await axios({
+            method: "GET",
+            withCredentials: true,
+            url : "http://localhost:8000/getPrices"
+        }).then(res=>{
+            setPrices(res.data)
+        }).catch(err=>console.log(err))
+    }
     const handleSubmit = ()=>{
         console.log("-------------------------")
         console.log(PNR,status,gender,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity)
@@ -119,6 +131,7 @@ function NewApplication() {
     },[tripstart,insuranceExp,visaValue])
     useEffect(()=>{
         getUserPage()
+        getAdditionalPrices()
     },[username,role,collapse])
   return (
     <div className="wrapper" >
@@ -448,7 +461,7 @@ function NewApplication() {
                                 </div>
                                 </div>
                             <div className='card-body'>
-                                    <AdditionalPrices setSum={setSum} />
+                                    <AdditionalPrices setSum={setSum} prices={prices} />
                             </div>
                             </div>
                             <div className="card">

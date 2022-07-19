@@ -6,7 +6,7 @@ function TravelType({data,setVisaValue,setTreeDoc}) {
     useEffect(()=>{
       const newData = []
       data.map((element,index)=>{
-        newData.push({
+        return newData.push({
           value:index,
           label:element.name
         })

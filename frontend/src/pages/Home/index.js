@@ -31,6 +31,9 @@ function Home() {
         else if(res.data.role==="Restricted"){
             setRole("Restricted")
         }
+        else{
+          setRole("")
+        }
   }
   ).catch(err=>console.log("Error in index js"));
   }

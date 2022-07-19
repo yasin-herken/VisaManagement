@@ -2,7 +2,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport';
-import passportLocal from 'passport-local';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import session from "express-session";
@@ -11,6 +10,7 @@ import key from './config.js';
 import User from './dbUser.js';
 import dbCollection from './dbCollection.js';
 import passportConfig from './passportConfig.js';
+import Price from './dbPrices.js';
 //app config
 const app = express();
 const port = process.env.PORT || 8000;
@@ -118,7 +118,6 @@ app.get("/getUser",(req,res)=>{
 app.get("/admin",(req,res) => {
     if (req.user.role!=="Admin" || req.user==="")
         {
-            console.log("ASD")
             res.status(403).send("Restricted area");
         }
     else{
@@ -133,10 +132,8 @@ app.get("/admin",(req,res) => {
 })
 app.post("/admin",(req,res)=>{
     console.log(req)
-    console.log("Here")
 })
 app.post("/newApplication",(req,res)=>{
-    console.log("HEERE")
     const msg ={
         data: req.user,
         direct: "/admin"
@@ -153,250 +150,36 @@ app.post("/logout",(req,res)=>{
     }
     res.json(msg)
 })
-app.post("/visa",(req,res) =>{
-    console.log("here")
-})
 app.get("/visa",(req,res)=>{
     console.log("Here")
 })
 app.post("/postData",(req,res)=>{
-    const data = 
-        [
-            {
-                name:"Alien's Passport",
-                visaTypes: [
-                    {
-                        name:"Other Visas",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Diplomatic Passport",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Nansen Passport",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Ordinary Passport",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Other Passport",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Refugee Travel Document",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Service Passport",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                name:"Special Passport",
-                visaTypes: [
-                    {
-                        name:"IHB Saglik",
-                        documentTypes:[
-                            {
-                                name:"Touristic Visit"
-                            },
-                            {
-                                name:"Official Visit"
-                            }
-                        ]
-                    },
-                    {
-                        name:"Official Visa",
-                        documentTypes:[
-                            {
-                                name:"Single Transit"
-                            },
-                            {
-                                name:"Sportive Transit"
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+    if(req.isAuthenticated() && req.user.role==="Admin")
+    {
         data.forEach((singleData)=>{
             dbCollection.findOne({
                 name:singleData.name
-            },(err,data)=>{
+            },async (err,data)=>{
                 console.log(err)
                 if(!data){
                     console.log(singleData)
                     const newData = new dbCollection(singleData);
-                    newData.save()
+                    await newData.save()
                 }
             })
         })
+    }
 })
-app.get("/updateData",(req,res)=>{
-    dbCollection.updateMany({
-        "visaTypes.name":'IHB'
-     },{$set:{"visaTypes.$":{name:"IHB Saglik"}}},(err,data)=>{res.send(data)
-    console.log(err)})
+app.put("/updateData",(req,res)=>{
+    if(req.isAuthenticated() && req.user.role==="admin")
+    {
+        dbCollection.updateMany({
+            "visaTypes.name":'IHB'
+        },{$set:{"visaTypes.$":{name:"IHB Saglik"}}},(err,data)=>{res.send(data)
+        console.log(err)})
+        }else{
+            res.send("Acess Denied");
+        }
 })
 app.get("/findbyName",(req,res)=>{
     dbCollection.find({
@@ -406,5 +189,35 @@ app.get("/findbyName",(req,res)=>{
 app.get("/getData",(req,res)=>{
     dbCollection.find({},(err,data)=>res.json(data))
 })
+app.get("/getPrices",(req,res)=>{
+    
+        Price.find({},async (err,data)=>res.json(data))
+})
+app.post("/postPrices",(req,res)=>{
+    if(req.isAuthenticated() && req.user.role==="admin")
+    {
+        Price.findOne({
+            "service.name":req.body.service.name
+        },async(err,data)=>{
+            if(err) throw err;
+            if(data){
+                res.send("Data is exist");
+            }else{
+                
+                const data = new Price({
+                    service:{
+                        name:req.body.service.name,
+                        price:req.body.service.price
+                    }
+                })
+                await data.save()
+                res.send("Data added database successfully")
+            }
+        })
+    }else{
+        res.send("Acess Denied")
+    }
+    
+})
 //listener
-app.listen(port,()=>console.log("Listening on "+port));
+app.listen(port,()=>console.log("Listening on "+ port));

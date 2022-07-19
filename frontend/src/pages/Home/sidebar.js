@@ -1,12 +1,13 @@
 import React, { useEffect,useState } from 'react';
 import './css/sidebar.css';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 function Sidebar({role,coll,username}) {
     const [css,setCss] = useState("")
     const pathName= window.location.pathname
     const [active,setActive] = useState(pathName);
     const [styles,setStyles] = useState({
-
     })
+    const [clicked,setClicked] = useState(false);
     useEffect(()=>{
         if(coll===false)
         {
@@ -44,21 +45,28 @@ function Sidebar({role,coll,username}) {
                                     <div className="sidebar-user" >
                                         <div className='m-4 d-flex justify-content-center' >
                                             <div className='flex-shrink-0'>
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxCnbayQIq0SLjq7bdjeYI4R14mT7RiGbuhw&usqp=CAU" className="avatar img-fluid rounded me-1 " alt="Image" />
+                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxCnbayQIq0SLjq7bdjeYI4R14mT7RiGbuhw&usqp=CAU" class="avatar img-fluid rounded me-1" alt="Charles Hall" />
                                             </div>
                                             <div className="flex-grow-1 ps-2" >
-                                                <a className="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                                <a class="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false" role="button" id="dropdownMenuLink" onClick={()=>{
+                                                    if(clicked){
+                                                        setClicked(false)
+                                                    }else{
+                                                        setClicked(true)
+                                                    }
+                                                }} >
                                                     {username.toUpperCase()}
+                                                    <ChevronLeftIcon className="dropdown-after"  style={{transform: clicked?"rotate(90deg)":"rotate(-90deg)"}} />
                                                 </a>
-                                                <div className="dropdown-menu dropdown-menu-start" >
-                                                    <a className="dropdown-item" href="pages-profile.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin={"round"} className="feather feather-user align-middle me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Profile</a>
-                                                    <a className="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"} className="feather feather-pie-chart align-middle me-1"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Analytics</a>
-                                                        <div className="dropdown-divider"></div>
-                                                    <a className="dropdown-item" href="pages-settings.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"} className="feather feather-settings align-middle me-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings &amp;
+                                                <div class="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="pages-profile.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user align-middle me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Profile</a>
+                                                    <a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart align-middle me-1"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Analytics</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="pages-settings.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings align-middle me-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings &amp;
                                                         Privacy</a>
-                                                    <a className="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"} className="feather feather-help-circle align-middle me-1"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Help Center</a>
-                                                        <div className="dropdown-divider"></div>
-                                                    <a className="dropdown-item" href="#">Log out</a>
+                                                    <a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-help-circle align-middle me-1"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Help Center</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Log out</a>
                                                 </div>
                                                 <div className="sidebar-user-subtitle" style={{color:"white"}}>{role}</div>
                                             </div>
@@ -90,11 +98,18 @@ function Sidebar({role,coll,username}) {
                                             </a>
                                         </li>: null
                                         }
-                                        <li className="sidebar-item">
-                                            <a className="sidebar-link" href="pages-blank.html">
-                                                <i className="align-middle" data-feather="book"></i> <span className="align-middle">Blank</span>
+                                        {
+                                            (role==="")?<li className="sidebar-item">
+                                            <a href="#auth" data-bs-toggle="collapse" className="sidebar-link" aria-expanded="true">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-users align-middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> <span className="align-middle">Auth</span>
                                             </a>
-                                        </li>
+                                            <ul id="auth" className="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar" >
+                                                <li className="sidebar-item"><a className="sidebar-link" href="/login">Sign In</a></li>
+                                                <li className="sidebar-item"><a className="sidebar-link" href="/register">Sign Up</a></li>
+                                            </ul>
+                                        </li>:null
+                                        }
+                                        
                                     </ul>
                                     <div className='sidebar-cta'></div>
                                 </div>
