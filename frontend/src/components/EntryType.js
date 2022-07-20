@@ -5,8 +5,7 @@ function EntryType({setEntryType,treeDoc}) {
         { value: "single", label:"Single"},
         { value: "multiple", label: "Multiple"}
     ]
-    useEffect(()=>{
-      console.log(treeDoc)
+    useEffect(()=>{      
     },[treeDoc])
   return (
     <Select 

@@ -40,7 +40,6 @@ app.use(passport.session());
 passportConfig(passport);
 app.use(function(err, req, res, next) {
 });
-
 //DB config
 const connection_url = "mongodb+srv://admin:" + key +"@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
 mongoose.connect(connection_url,{
@@ -115,43 +114,20 @@ app.get("/getUser",(req,res)=>{
     if(req.user!=="" || req.user!==null)
         res.json(req.user)
 });
-app.get("/admin",(req,res) => {
-    if (req.user.role!=="Admin" || req.user==="")
-        {
-            res.status(403).send("Restricted area");
-        }
-    else{
-        const msg ={
-            role: req.user.role,
-            direct: "/admin"
-        }
-        console.log("admin")
-        res.json(msg);
+app.get("/admin",(req,res)=>{
+    if(req.isAuthenticated() && req.user.role==="Admin")
+    {
+        res.json(req.user)
     }
-    
-})
-app.post("/admin",(req,res)=>{
-    console.log(req)
-})
-app.post("/newApplication",(req,res)=>{
-    const msg ={
-        data: req.user,
-        direct: "/admin"
-    }
-    res.json(msg);
 })
 app.post("/logout",(req,res)=>{
     req.logout((res)=>{
-        console.log(res)
     })
     const msg ={
         data: "Succesfully Logout",
         direct: "/login"
     }
     res.json(msg)
-})
-app.get("/visa",(req,res)=>{
-    console.log("Here")
 })
 app.post("/postData",(req,res)=>{
     if(req.isAuthenticated() && req.user.role==="Admin")
@@ -160,13 +136,12 @@ app.post("/postData",(req,res)=>{
             dbCollection.findOne({
                 name:singleData.name
             },async (err,data)=>{
-                console.log(err)
                 if(!data){
                     console.log(singleData)
                     const newData = new dbCollection(singleData);
                     await newData.save()
                 }
-            })
+            }).then(res=>console.log(res)).catch(err=>console.log(err))
         })
     }
 })

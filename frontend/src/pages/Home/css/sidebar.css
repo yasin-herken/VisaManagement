@@ -46,10 +46,7 @@ nav {
   margin-bottom: 0;
   padding-left: 0;
 }
-ul {
-  list-style-type: disc;
-  padding: 0;
-}
+
 .sidebar [data-bs-toggle=collapse] {
   position: relative;
 }
@@ -105,16 +102,10 @@ ul {
   display: none;
 }
 .dropdown-after{
-  transform: rotate(-90deg);
-}
-.dropdown-after:after {
   border-bottom: 0;
-  border-left: .3em solid transparent;
-  border-right: .3em solid transparent;
-  border-top: .3em solid;
-  content: "";
-  margin-left: .255em;
-  vertical-align: .255em;
+  content: " ";
+  transition: all 0.5s ease;
+  transform: rotate(90deg)!important;
 }
 .dropdown-toggle:after {
   border-bottom: 0;

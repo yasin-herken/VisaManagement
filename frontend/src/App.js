@@ -1,11 +1,11 @@
 import './App.css';
 import React,{useState,useEffect} from "react";
-import {Routes,Route,Navigate} from "react-router-dom";
+import {Routes,Route,Link} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from './pages/Home/login.js';
 import Register from './pages/Home/register.js';
 import ResrictedPage from './pages/Home/resrictedPage.js';
-import NewApplication from './pages/Home/newApplication.js';
+import Admin from './pages/Home/admin.js';
 import axios from 'axios';
 function App() {
   const [username,setUsername] = useState("")
@@ -30,8 +30,10 @@ function App() {
         }
         else if(res.data.role==="Restricted"){
             setRole("Restricted")
+        }else{
+            setRole("")
         }
-        console.log(role)
+
 }
 ).catch(err=>console.log(err));
 }
@@ -40,13 +42,13 @@ useEffect(()=>{
 },[role,username])
   return ( 
         <Routes>
-            <Route path="/admin" exact element={role==="Restricted"?<ResrictedPage />:<Home />} />
-            <Route path="/login" element={(role==="Admin" || role==="Client")?<Navigate to="/" />:<Login /> } />
+            <Route exact path="/admin" element={role==="Restricted"?<ResrictedPage />:<Admin path="/admin" />} />
+            <Route path="/login" element={role==="Admin" && role==="Client"?<Home />:<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route exact path="/"  element={<Home />} />
-            <Route path="/visa" element={role==="Admin"?<NewApplication />:<Home /> } />
+            <Route exact path="/"  element={role==="Admin"?<Admin path="/"/>:<Home />} />
             <Route path="/restrictedPage" element={<ResrictedPage />} />
-            <Route path="*" element={<ResrictedPage />} />   
+            <Route path="/newApplication" element={role==="Admin"?<Admin path="/new Application"/>:null} />
+            <Route path="*" element={<ResrictedPage />} />  
         </Routes>
   );
 }

@@ -1,6 +1,5 @@
 import React,{ useEffect, useState } from 'react'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Sidebar from './sidebar';
 import Footer from './footer';
 import Navbar from './navbar';
@@ -21,7 +20,6 @@ function Home() {
         {
             setUsername(res.data.username)
             setRole(res.data.role)
-            console.log("here")
         }
         else if(res.data.role==="Client")
         {   
@@ -32,14 +30,13 @@ function Home() {
             setRole("Restricted")
         }
         else{
-          setRole("")
+          
         }
   }
   ).catch(err=>console.log("Error in index js"));
   }
   useEffect(()=>{
     getUserPage()
-    console.log(username)
 },[username,role,collapse])
   return ( 
     <div className="wrapper">

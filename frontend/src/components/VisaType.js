@@ -16,6 +16,7 @@ function VisaType({visaValue,data,setDocumentValue}) {
               label:element2.name
             })
             i++;
+            return "";
           })
         }
         setOptions(newData)

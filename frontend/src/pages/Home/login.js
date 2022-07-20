@@ -1,4 +1,4 @@
-import React ,{useState} from 'react'
+import React ,{useEffect, useState} from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 function Login() {
@@ -22,6 +22,24 @@ function Login() {
         })
         .catch((err)=>{console.log("login Page")})
     }
+    const getUserPage =  async(event) => {
+        if(event && event.preventDefault)
+            event.preventDefault()
+        await axios({
+            method: "GET",
+            withCredentials: true,
+            url : "http://localhost:8000/getUser"
+        }).then(res=>{
+            if(res.data.role==="Admin")
+                navigate("/admin")
+            else if(res.data.role==="Client")
+                navigate("/")
+    }
+    ).catch(err=>console.log("Error in index js"));
+    }
+    useEffect(()=>{
+        getUserPage()
+    })
   return (
     <main className="d-flex w-100">
 		<div className="container d-flex flex-column">
@@ -69,7 +87,6 @@ function Login() {
                                             </label>
 										</div>
 										<div className="text-center mt-3">
-											{/* <button type="submit" className="btn btn-lg btn-primary" onClick={loginPage}>Sign in</button>  */}
                                             <button type="submit" className="btn btn-lg btn-primary" onClick={loginPage}>Sign in</button>
 										</div>
                                         <div className="text-center">
