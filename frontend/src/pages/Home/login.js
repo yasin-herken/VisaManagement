@@ -1,13 +1,23 @@
-import React ,{useEffect, useState} from 'react'
+import React ,{useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { useDispatch} from 'react-redux';
+
 function Login() {
     const [loginUsername,setLoginUsername] = useState("")
     const [loginPassword,setLoginPassword] = useState("")
-    const [role,setRole] = useState("")
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [show,setShow] = useState(true);
+    console.log(new Date())
+    // const user = useSelector(selectUser);
+
     const loginPage = async (event) => {
-        event.preventDefault()
+        if(event && event.preventDefault)
+        {
+            event.preventDefault()
+            event.stopPropagation()
+        }
         await axios({
             method: "POST",
             data: {
@@ -17,32 +27,42 @@ function Login() {
             withCredentials: true,
             url: "http://localhost:8000/login"
         }).then((res)=>{
+            if(res.data.role==="Admin" || res.data.role==="Client")
+            {
+                console.log("asdasdasdsa")
+                // dispatch(login({
+                //     name:  res.data.username,
+                //     password: res.data.password,
+                //     role: res.data.role,
+                //     loggedIn: true
+                // }))
+            }
             navigate(res.data.direct)
-            setRole(res.data.role)
         })
         .catch((err)=>{console.log("login Page")})
     }
-    const getUserPage =  async(event) => {
-        if(event && event.preventDefault)
-            event.preventDefault()
-        await axios({
-            method: "GET",
-            withCredentials: true,
-            url : "http://localhost:8000/getUser"
-        }).then(res=>{
-            if(res.data.role==="Admin")
-                navigate("/admin")
-            else if(res.data.role==="Client")
-                navigate("/")
-    }
-    ).catch(err=>console.log("Error in index js"));
-    }
     useEffect(()=>{
+        console.log(new Date())
+        const getUserPage = async (event) => {
+            if(event && event.preventDefault){
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            await axios({
+                method: "GET",
+                withCredentials: true,
+                url: "http://localhost:8000/getUser"
+            }).then(res=>{
+                if(res.data.role==="Admin"){
+                    return navigate("/admin")
+                }
+            })
+        }
         getUserPage()
-    })
+    },[])
   return (
     <main className="d-flex w-100">
-		<div className="container d-flex flex-column">
+    {show?<div className="container d-flex flex-column">
 			<div className="row vh-100">
 				<div className="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
 					<div className="d-table-cell align-middle">
@@ -105,7 +125,8 @@ function Login() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>:null}
+        
 	</main>
   )
 }

@@ -58,7 +58,7 @@ function NewApplication() {
     const [entrytype,setEntryType] = useState();
     const [treeDoc,setTreeDoc] = useState([]);
     const [sum,setSum] = useState(0)
-    const [prices,setPrices] = useState()
+    const [prices,setPrices] = useState();
     const getData = async(event) =>{
         if(event && event.preventDefault)
           event.preventDefault()

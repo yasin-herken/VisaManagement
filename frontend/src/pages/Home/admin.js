@@ -4,10 +4,14 @@ import Sidebar from './sidebar';
 import Footer from './footer';
 import Navbar from './navbar';
 import NewApplication from './newApplication';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../Features/userSlice';
 function Admin({path}) {
     const [username,setUsername] = useState("")
     const [role,setRole] = useState("")
     const [collapse,setCollapse] = useState(false)
+    const user = useSelector(selectUser)
+    console.log("In Admin : ",user)
     const getUserPage =  async(event) => {
         if(event && event.preventDefault)
             event.preventDefault();
