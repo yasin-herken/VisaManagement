@@ -42,7 +42,8 @@ passportConfig(passport);
 app.use(function(err, req, res, next) {
 });
 //DB config
-const connection_url = "mongodb+srv://admin:" + key +"@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
+//const connection_url = "mongodb+srv://admin:" + key +"@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
+const connection_url = "mongodb://localhost:27017/"
 mongoose.connect(connection_url,{
     useNewUrlParser: true,
     useUnifiedTopology: true
