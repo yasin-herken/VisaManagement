@@ -48,7 +48,7 @@ mongoose.connect(connection_url,{
     useUnifiedTopology: true
 },()=>{
     console.log("Mongoose is connected");
-});
+}).catch(err=>console.log(err));
 //app routers
 app.get("/",(req,res)=>{
     res.status(200).send("Hello World");
