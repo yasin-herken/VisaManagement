@@ -7,13 +7,10 @@ import Register from './pages/Home/register.js';
 import ResrictedPage from './pages/Home/resrictedPage.js';
 import Admin from './pages/Home/admin.js';
 import { useSelector} from 'react-redux';
-import { logout,selectUser} from './pages/Features/userSlice.js';
-import {useDispatch} from 'react-redux';
+import { selectUser} from './pages/Features/userSlice.js';
 function App() {
   const [role,setRole] = useState("");
   const user = useSelector(selectUser);
-  const dispact = useDispatch();
-  console.log(dispact(logout()))
   useEffect(()=>{
     if(user && user.role==="Admin"){
         setRole("Admin")

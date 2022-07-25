@@ -1,17 +1,15 @@
-import React ,{useEffect, useState } from 'react'
+import React ,{useEffect, useState ,useCallback} from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
-import { useDispatch} from 'react-redux';
-
+import { useDispatch,useSelector } from 'react-redux';
+import {selectUser,login} from '../Features/userSlice.js';
 function Login() {
     const [loginUsername,setLoginUsername] = useState("")
     const [loginPassword,setLoginPassword] = useState("")
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [show,setShow] = useState(true);
-    console.log(new Date())
-    // const user = useSelector(selectUser);
-
+    const user = useSelector(selectUser);
+    
     const loginPage = async (event) => {
         if(event && event.preventDefault)
         {
@@ -29,40 +27,32 @@ function Login() {
         }).then((res)=>{
             if(res.data.role==="Admin" || res.data.role==="Client")
             {
-                console.log("asdasdasdsa")
-                // dispatch(login({
-                //     name:  res.data.username,
-                //     password: res.data.password,
-                //     role: res.data.role,
-                //     loggedIn: true
-                // }))
+                dispatch(login({
+                    username:  res.data.username,
+                    password: res.data.password,
+                    role: res.data.role,
+                    loggedIn: true
+                }))
             }
             navigate(res.data.direct)
         })
-        .catch((err)=>{console.log("login Page")})
+        .catch((err)=>{console.log(err)})
+        
     }
+    const redirect = useCallback(
+        () => navigate("/admin", { replace: true }),
+        [navigate]
+      );
     useEffect(()=>{
-        console.log(new Date())
-        const getUserPage = async (event) => {
-            if(event && event.preventDefault){
-                event.preventDefault()
-                event.stopPropagation()
+        if(user&& user.role){
+            if(user.role==="Admin" || user.role==="Client"){
+                redirect()
             }
-            await axios({
-                method: "GET",
-                withCredentials: true,
-                url: "http://localhost:8000/getUser"
-            }).then(res=>{
-                if(res.data.role==="Admin"){
-                    return navigate("/admin")
-                }
-            })
         }
-        getUserPage()
-    },[])
+    },[user,redirect])
   return (
     <main className="d-flex w-100">
-    {show?<div className="container d-flex flex-column">
+        <div className="container d-flex flex-column">
 			<div className="row vh-100">
 				<div className="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
 					<div className="d-table-cell align-middle">
@@ -125,8 +115,7 @@ function Login() {
 					</div>
 				</div>
 			</div>
-		</div>:null}
-        
+		</div>
 	</main>
   )
 }

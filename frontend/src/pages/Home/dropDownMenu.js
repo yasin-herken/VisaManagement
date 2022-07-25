@@ -4,7 +4,6 @@ import {useDispatch} from 'react-redux';
 import { logout } from '../Features/userSlice';
 import axios from 'axios';
 function DropDownMenu({username}) {
-  const [bool,setBool] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const handleLogout = async(event) =>{
@@ -17,20 +16,17 @@ function DropDownMenu({username}) {
         url: "http://localhost:8000/logout"
     }).then(res=>{
         if(res.data.data==="Succesfully Logout")
-           { navigate(res.data.direct)
+           { 
           dispatch(logout({
             loggedIn:false
-          }))}
+          }))
+          navigate(res.data.direct)
+        }
     })
     .catch(err => console.log(err))
 }
   useEffect(()=>{
-    if(username)
-      setBool(true)
-    else{
-      setBool(false)
-    }
-  },[username])
+  },[])
   return (
 		<li className="nav-item dropdown">
 			<a className="nav-icon pe-md-0 dropdown-toggle" href="#" data-bs-toggle="dropdown">

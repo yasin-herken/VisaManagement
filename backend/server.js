@@ -26,7 +26,8 @@ app.use((req,res,next)=>{
     next();
 });
 app.use(cors({
-    origin: "http://localhost:3000", // <--- location of the react app were connecting to
+    origin: ["http://localhost:3001","http://194.195.241.214:3001",], // <--- location of the react app were connecting to
+    
     credential: true
 }));
 app.use(session({
@@ -54,6 +55,8 @@ app.get("/",(req,res)=>{
 });
 app.post("/login",(req,res,next)=>{
     const msg ={
+        username:"",
+        password:"",
         role: "Client",
         direct: "/"
     };
@@ -68,7 +71,12 @@ app.post("/login",(req,res,next)=>{
             req.logIn(user,err=>{
                 if(err) throw err;
                 msg.role= user.role;
-                user.role ==="Admin" ? msg.direct="/admin": msg.direct="/";
+                if(user.role==="Admin"){
+                    msg.username = user.username,
+                    msg.password = user.password,
+                    msg.role = user.role,
+                    msg.direct = "/admin"
+                }
                 res.json(msg);
             })
         }
