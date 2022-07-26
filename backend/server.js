@@ -20,14 +20,14 @@ app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
+    res.setHeader("Access-Control-Allow-Origin","http://194.195.241.214:3000");
     res.setHeader("Access-Control-Allow-Headers","*");
     res.setHeader("Access-Control-Allow-Credentials","true");
     next();
 });
+
 app.use(cors({
     origin: ["http://localhost:3000","http://194.195.241.214:3000"], // <--- location of the react app were connecting to
-    
     credential: true
 }));
 app.use(session({
@@ -56,7 +56,9 @@ mongoose.connect(connection_url,{
 })
 //app routers
 app.get("/",(req,res)=>{
+    console.log("here")
     res.status(200).send("Hello World");
+    
 });
 app.post("/login",(req,res,next)=>{
     const msg ={
@@ -132,6 +134,9 @@ app.get("/admin",(req,res)=>{
     {
         res.json(req.user)
     }
+    else{
+        res.json("")
+    }
 })
 app.post("/logout",(req,res)=>{
     req.logout((res)=>{
@@ -175,17 +180,20 @@ app.get("/findbyName",(req,res)=>{
     },(err,data)=>res.send(data))
 })
 app.get("/getData",(req,res)=>{
-    dbCollection.find({},(err,data)=>res.json(data))
+    dbCollection.find({},(err,data)=>{
+        if(err) throw err;
+        res.json(data)})
 })
 app.get("/getPrices",(req,res)=>{
     
         Price.find({},async (err,data)=>res.json(data))
 })
 app.post("/postPrices",(req,res)=>{
+
     if(req.isAuthenticated() && req.user.role==="admin")
     {
         Price.findOne({
-            "service.name":req.body.service.name
+            "service.name":data
         },async(err,data)=>{
             if(err) throw err;
             if(data){

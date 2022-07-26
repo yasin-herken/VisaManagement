@@ -65,9 +65,10 @@ function NewApplication() {
           await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://localhost:8000/getData"
+            url : "http://194.195.241.214:8000/getData"
         }).then((res)=>{
           setData(res.data)
+          console.log(res.data)
         }).catch((err)=>console.log("error in new application"))
       }
     const getUserPage =  async(event) => {
@@ -76,7 +77,7 @@ function NewApplication() {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://localhost:8000/getUser"
+            url : "http://194.195.241.214:8000/getUser"
         }).then(res=>{
             if(res.data.role==="Admin")
             {
@@ -101,9 +102,10 @@ function NewApplication() {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://localhost:8000/getPrices"
+            url : "http://194.195.241.214:8000/getPrices"
         }).then(res=>{
             setPrices(res.data)
+            console.log("here")
         }).catch(err=>console.log(err))
     }
     const handleSubmit = ()=>{

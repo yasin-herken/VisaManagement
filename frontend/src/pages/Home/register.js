@@ -18,7 +18,7 @@ function Register() {
                 role: "Admin"
             },
             withCredentials: true,
-            url: "http://localhost:8000/register"
+            url: "http://194.195.241.214:8000/register"
         }).then((res)=>{navigate(res.data.direct)
             setMsg(res.data.message)
         })

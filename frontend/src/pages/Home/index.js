@@ -14,7 +14,7 @@ function Home() {
       await axios({
           method: "GET",
           withCredentials: true,
-          url : "http://localhost:8000/getUser"
+          url : "http://194.195.241.214:8000/getUser"
       }).then(res=>{
         if(res.data.role==="Admin")
         {
@@ -33,7 +33,7 @@ function Home() {
           
         }
   }
-  ).catch(err=>console.log("Error in index js"));
+  ).catch(err=>console.log("Error in index1 js"));
   }
   useEffect(()=>{
     getUserPage()
