@@ -6,11 +6,11 @@ import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import session from "express-session";
 import bodyParser from 'body-parser';
-import key from './config.js';
 import User from './dbUser.js';
 import dbCollection from './dbCollection.js';
 import passportConfig from './passportConfig.js';
 import Price from './dbPrices.js';
+import dotenv from 'dotenv/config';
 //app config
 const app = express();
 const port = process.env.PORT || 8000;
@@ -26,7 +26,7 @@ app.use((req,res,next)=>{
     next();
 });
 app.use(cors({
-    origin: ["http://localhost:3001","http://194.195.241.214:3001",], // <--- location of the react app were connecting to
+    origin: ["http://localhost:3000","http://194.195.241.214:3000"], // <--- location of the react app were connecting to
     
     credential: true
 }));
@@ -43,13 +43,17 @@ app.use(function(err, req, res, next) {
 });
 //DB config
 //const connection_url = "mongodb+srv://admin:" + key +"@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
-const connection_url = "mongodb://localhost:27017/"
+const connection_url = "mongodb://user:"+process.env.MONGO_PASSWORD+"@194.195.241.214:27017/users"
 mongoose.connect(connection_url,{
     useNewUrlParser: true,
     useUnifiedTopology: true
-},()=>{
+},(err)=>{
+    if(err) {
+        console.log("Error on mongodb connect")
+        throw err;}
     console.log("Mongoose is connected");
-}).catch(err=>console.log(err));
+    
+})
 //app routers
 app.get("/",(req,res)=>{
     res.status(200).send("Hello World");
@@ -107,7 +111,7 @@ app.post("/register",(req,res)=>{
                 username: req.body.username,
                 password: hashedPassword,
                 email: req.body.email,
-                role: "Client",
+                role: "Admin",
             });
             await newUser.save();
             const msg ={

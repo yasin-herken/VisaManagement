@@ -11,7 +11,6 @@ function Admin({path}) {
     const [role,setRole] = useState("")
     const [collapse,setCollapse] = useState(false)
     const user = useSelector(selectUser)
-    console.log("In Admin : ",user)
     const getUserPage =  async(event) => {
         if(event && event.preventDefault)
             event.preventDefault();

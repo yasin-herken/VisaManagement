@@ -17,7 +17,7 @@ const store = configureStore({
   reducer:persistedReducer,
   middleware:(getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck:false
-  }).concat(logger)
+  })
 })
 const Persistor = persistStore(store);
 export {Persistor}
