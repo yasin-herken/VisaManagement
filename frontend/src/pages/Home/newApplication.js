@@ -65,7 +65,7 @@ function NewApplication() {
           await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8000/getData"
+            url : "http://194.195.241.214:8001/getData"
         }).then((res)=>{
           setData(res.data)
           console.log(res.data)
@@ -77,7 +77,7 @@ function NewApplication() {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8000/getUser"
+            url : "http://194.195.241.214:8001/getUser"
         }).then(res=>{
             if(res.data.role==="Admin")
             {
@@ -102,7 +102,7 @@ function NewApplication() {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8000/getPrices"
+            url : "http://194.195.241.214:8001/getPrices"
         }).then(res=>{
             setPrices(res.data)
             console.log("here")

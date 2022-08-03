@@ -23,8 +23,9 @@ function Login() {
                 password: loginPassword
             },
             withCredentials: true,
-            url: "http://194.195.241.214:8000/login"
+            url: "http://194.195.241.214:8001/login"
         }).then((res)=>{
+            console.log(res.data)
             if(res.data.role==="Admin" || res.data.role==="Client")
             {
                 dispatch(login({

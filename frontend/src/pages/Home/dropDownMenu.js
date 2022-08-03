@@ -13,7 +13,7 @@ function DropDownMenu({username}) {
     await axios({
         method: "POST",
         withCredentials: true,
-        url: "http://194.195.241.214:8000/logout"
+        url: "http://194.195.241.214:8001/logout"
     }).then(res=>{
         if(res.data.data==="Succesfully Logout")
            { 

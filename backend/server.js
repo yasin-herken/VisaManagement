@@ -13,14 +13,14 @@ import Price from './dbPrices.js';
 import dotenv from 'dotenv/config';
 //app config
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8001;
 
 //middleware
 app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin","http://194.195.241.214:3000");
+    res.setHeader("Access-Control-Allow-Origin","*");
     res.setHeader("Access-Control-Allow-Headers","*");
     res.setHeader("Access-Control-Allow-Credentials","true");
     next();

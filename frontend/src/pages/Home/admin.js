@@ -17,7 +17,7 @@ function Admin({path}) {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8000/admin"
+            url : "http://194.195.241.214:8001/admin"
         }).then(res=>{
             if(res.data.role==="Admin")
             {

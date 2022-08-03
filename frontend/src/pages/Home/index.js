@@ -11,11 +11,13 @@ function Home() {
     const getUserPage =  async(event) => {
       if(event && event.preventDefault)
           event.preventDefault()
+      console.log("!")
       await axios({
           method: "GET",
           withCredentials: true,
-          url : "http://194.195.241.214:8000/getUser"
+          url : "http://194.195.241.214:8001/getUser"
       }).then(res=>{
+        console.log("here")
         if(res.data.role==="Admin")
         {
             setUsername(res.data.username)
