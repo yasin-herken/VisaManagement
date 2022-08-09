@@ -20,16 +20,18 @@ app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
-    res.setHeader("Access-Control-Allow-Headers","*");
-    res.setHeader("Access-Control-Allow-Credentials","true");
+    res.setHeader("Access-Control-Allow-Origin",'http://194.195.241.214:3000');
+    res.setHeader("Access-Control-Allow-Credentials",true);
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     next();
 });
 
-app.use(cors({
-    origin: ["http://localhost:3000","http://194.195.241.214:3000"], // <--- location of the react app were connecting to
-    credential: true
+app.use(cors({   
+    credentials:true,
+    origin: "http://194.195.241.214:3000"
 }));
+
 app.use(session({
     secret: "secretcode",
     resave: true,
@@ -56,7 +58,6 @@ mongoose.connect(connection_url,{
 })
 //app routers
 app.get("/",(req,res)=>{
-    console.log("here")
     res.status(200).send("Hello World");
     
 });
@@ -113,7 +114,7 @@ app.post("/register",(req,res)=>{
                 username: req.body.username,
                 password: hashedPassword,
                 email: req.body.email,
-                role: "Admin",
+                role: "Client",
             });
             await newUser.save();
             const msg ={

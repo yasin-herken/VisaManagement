@@ -6,6 +6,7 @@ import Navbar from './navbar';
 import NewApplication from './newApplication';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice';
+import {HOST,PORT} from '../../Variables/host.js';
 function Admin({path}) {
     const [username,setUsername] = useState("")
     const [role,setRole] = useState("")
@@ -17,7 +18,7 @@ function Admin({path}) {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8001/admin"
+            url : HOST.url + "/" + PORT.port+"/admin",
         }).then(res=>{
             if(res.data.role==="Admin")
             {

@@ -17,7 +17,6 @@ function Home() {
           withCredentials: true,
           url : "http://194.195.241.214:8001/getUser"
       }).then(res=>{
-        console.log("here")
         if(res.data.role==="Admin")
         {
             setUsername(res.data.username)
