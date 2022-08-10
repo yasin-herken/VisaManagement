@@ -1,5 +1,5 @@
 const HOST = {
-    url:"http://194.195.241.214"
+    url:"http://localhost"
 }
 
 const PORT = {

@@ -20,7 +20,7 @@ app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin",'http://194.195.241.214:3000');
+    res.setHeader("Access-Control-Allow-Origin",'http://localhost:3000');
     res.setHeader("Access-Control-Allow-Credentials",true);
     res.setHeader("Access-Control-Allow-Headers", "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -29,7 +29,7 @@ app.use((req,res,next)=>{
 
 app.use(cors({   
     credentials:true,
-    origin: "http://194.195.241.214:3000"
+    origin: "http://localhost:3000"
 }));
 
 app.use(session({
@@ -62,6 +62,7 @@ app.get("/",(req,res)=>{
     
 });
 app.post("/login",(req,res,next)=>{
+    console.log("here")
     const msg ={
         username:"",
         password:"",
@@ -78,12 +79,16 @@ app.post("/login",(req,res,next)=>{
         else{
             req.logIn(user,err=>{
                 if(err) throw err;
-                msg.role= user.role;
                 if(user.role==="Admin"){
                     msg.username = user.username,
                     msg.password = user.password,
                     msg.role = user.role,
                     msg.direct = "/admin"
+                }else if(user.role==="Client"){
+                    msg.username = user.username,
+                    msg.password = user.password,
+                    msg.role = "Client",
+                    msg.direct ="/"
                 }
                 res.json(msg);
             })
@@ -114,7 +119,7 @@ app.post("/register",(req,res)=>{
                 username: req.body.username,
                 password: hashedPassword,
                 email: req.body.email,
-                role: "Client",
+                role: "Admin",
             });
             await newUser.save();
             const msg ={

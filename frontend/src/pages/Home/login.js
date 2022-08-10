@@ -1,5 +1,6 @@
 import React ,{useEffect, useState ,useCallback} from 'react'
 import axios from 'axios'
+import {PORT,HOST} from '../../Variables/host.js';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import {selectUser,login} from '../Features/userSlice.js';
@@ -23,9 +24,9 @@ function Login() {
                 password: loginPassword
             },
             withCredentials: true,
-            url: "http://194.195.241.214:8001/login"
+            url: HOST.url + ":" + PORT.port +"/login"
         }).then((res)=>{
-            console.log(res.data)
+            
             if(res.data.role==="Admin" || res.data.role==="Client")
             {
                 dispatch(login({
@@ -33,7 +34,7 @@ function Login() {
                     password: res.data.password,
                     role: res.data.role,
                     loggedIn: true
-                }))
+                }));
             }
             navigate(res.data.direct)
         })
@@ -41,13 +42,16 @@ function Login() {
         
     }
     const redirect = useCallback(
-        () => navigate("/admin", { replace: true }),
+        (props) => {
+            navigate(props, { replace: true })},
         [navigate]
       );
     useEffect(()=>{
         if(user&& user.role){
-            if(user.role==="Admin" || user.role==="Client"){
-                redirect()
+            if(user.role==="Admin"){
+                redirect("/admin")
+            }else if(user.role==="Client"){
+                redirect("/")
             }
         }
     },[user,redirect])

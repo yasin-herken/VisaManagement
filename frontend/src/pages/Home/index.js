@@ -1,55 +1,30 @@
-import React,{ useEffect, useState } from 'react'
-import axios from 'axios';
+import React, { useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './sidebar';
 import Footer from './footer';
 import Navbar from './navbar';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../Features/userSlice.js';
 import "./css/index.css";
 function Home() {
-    const [username,setUsername] = useState("")
-    const [role,setRole] = useState()
-    const [collapse,setCollapse] = useState(false)
-    const getUserPage =  async(event) => {
-      if(event && event.preventDefault)
-          event.preventDefault()
-      console.log("!")
-      await axios({
-          method: "GET",
-          withCredentials: true,
-          url : "http://194.195.241.214:8001/getUser"
-      }).then(res=>{
-        if(res.data.role==="Admin")
-        {
-            setUsername(res.data.username)
-            setRole(res.data.role)
-        }
-        else if(res.data.role==="Client")
-        {   
-            setUsername(res.data.username)
-            setRole(res.data.role)
-        }
-        else if(res.data.role==="Restricted"){
-            setRole("Restricted")
-        }
-        else{
-          
-        }
-  }
-  ).catch(err=>console.log("Error in index1 js"));
-  }
+  const [collapse, setCollapse] = useState(false)
+  const user = useSelector(selectUser);
   useEffect(()=>{
-    getUserPage()
-},[username,role,collapse])
-  return ( 
+
+  },[user])
+   
+ 
+  return (
     <div className="wrapper">
-        <Sidebar username={username} role={role} coll={collapse}/>
-        <div className="main">
-          <Navbar username={username} role={role} setColl={setCollapse}/>
-            <main className="content"></main>
+      <Sidebar coll={collapse} />
+      <div className="main">
+        <Navbar setColl={setCollapse} />
+        <main className="content"></main>
         <Footer />
-        </div>
+      </div>
     </div>
   )
-    
+
 }
 
 export default Home;

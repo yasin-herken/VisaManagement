@@ -2,6 +2,7 @@ import React,{useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import { logout } from '../Features/userSlice';
+import {HOST,PORT} from '../../Variables/host.js';
 import axios from 'axios';
 function DropDownMenu({username}) {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ function DropDownMenu({username}) {
     await axios({
         method: "POST",
         withCredentials: true,
-        url: "http://194.195.241.214:8001/logout"
+        url: HOST.url + ":" + PORT.port + "/logout"
     }).then(res=>{
         if(res.data.data==="Succesfully Logout")
            { 

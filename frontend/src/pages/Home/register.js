@@ -1,6 +1,7 @@
-import React,{ useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import React,{ useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import {HOST,PORT} from '../../Variables/host.js';
 function Register() {
     const [registerUsername,setRegisterUsername] = useState("")
     const [registerPassword,setRegisterPassword] = useState("")
@@ -18,7 +19,7 @@ function Register() {
                 role: "Admin"
             },
             withCredentials: true,
-            url: "http://194.195.241.214:8001/register"
+            url: HOST.url + ":" + PORT.port + "/register"
         }).then((res)=>{navigate(res.data.direct)
             setMsg(res.data.message)
         })

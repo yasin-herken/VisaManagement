@@ -22,6 +22,7 @@ import Status from '../../Variables/status';
 import Select from 'react-select';
 import Gender from '../../Variables/gender';
 import Married from '../../Variables/married';
+import {PORT,HOST} from '../../Variables/host.js';
 function NewApplication() {
     const [username,setUsername] = useState("")
     const [role,setRole] = useState("")
@@ -65,10 +66,9 @@ function NewApplication() {
           await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8001/getData"
+            url : HOST.url + ":" + PORT.port + "/getData"
         }).then((res)=>{
           setData(res.data)
-          console.log(res.data)
         }).catch((err)=>console.log("error in new application"))
       }
     const getUserPage =  async(event) => {
@@ -77,7 +77,7 @@ function NewApplication() {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8001/getUser"
+            url : HOST.url + ":" + PORT.port + "/getUser"
         }).then(res=>{
             if(res.data.role==="Admin")
             {
@@ -102,14 +102,12 @@ function NewApplication() {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : "http://194.195.241.214:8001/getPrices"
+            url : HOST.url + ":" + PORT.port + "/getPrices"
         }).then(res=>{
             setPrices(res.data)
-            console.log("here")
         }).catch(err=>console.log(err))
     }
     const handleSubmit = ()=>{
-        console.log("-------------------------")
         console.log(PNR,status,gender,name,surname,married,bcountry,bdate,nationality,job,fname,lname,bcity)
     }
     //Contact Info Update Render

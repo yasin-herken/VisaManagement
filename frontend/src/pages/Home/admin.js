@@ -18,7 +18,7 @@ function Admin({path}) {
         await axios({
             method: "GET",
             withCredentials: true,
-            url : HOST.url + "/" + PORT.port+"/admin",
+            url : HOST.url + ":" + PORT.port+"/admin",
         }).then(res=>{
             if(res.data.role==="Admin")
             {
