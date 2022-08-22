@@ -19,7 +19,7 @@ function AdditionalPrices({ setSum, prices }) {
     }, [sum, setSum])
 
     return (
-        <table className="table table-sm table-bordered table-responsive">
+        <table className="table table-sm table-bordered table-responsive striped">
             <thead>
                 <tr>
                     <th style={{ width: "10%" }}></th>
@@ -31,7 +31,7 @@ function AdditionalPrices({ setSum, prices }) {
                 {prices ? prices.map((price, index) => {
                     if (!price) return null
                     return (
-                        <tr key={price.service.name} style={{backgroundColor:(checked[index]?"#73C2FB":"white")}}>
+                        <tr key={price.service.name} style={{backgroundColor:(checked[index]?"#73C2FB":"")}}>
                             <td>
                                 <label className="form-check form-check-inline">
                                     <input className="form-check-input" type="checkbox" value={(index + 1).toString()} onClick={(e) => {
