@@ -62,11 +62,10 @@ app.get("/",(req,res)=>{
     
 });
 app.post("/login",(req,res,next)=>{
-    console.log("here")
     const msg ={
         username:"",
         password:"",
-        role: "Client",
+        role: "Admin",
         direct: "/"
     };
     passport.authenticate("local",{ failureRedirect: '/getUser', failureMessage: true },(err,user,info)=>{
