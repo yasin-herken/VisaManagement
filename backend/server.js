@@ -2,14 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport';
-import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
-import session from "express-session";
-import bodyParser from 'body-parser';
-import User from './dbUser.js';
+import UserModel from './dbUser.js';
 import dbCollection from './dbCollection.js';
-import passportConfig from './passportConfig.js';
 import Price from './dbPrices.js';
+import jwt from 'jsonwebtoken';
+import bodyParser from 'body-parser';
 import dotenv from 'dotenv/config';
 //app config
 const app = express();
@@ -20,32 +18,22 @@ app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin",'http://localhost:3000');
-    res.setHeader("Access-Control-Allow-Credentials",true);
+    res.setHeader("Access-Control-Allow-Origin",'http://localhost:3000/');
     res.setHeader("Access-Control-Allow-Headers", "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     next();
 });
 
-app.use(cors({   
-    credentials:true,
-    origin: "http://localhost:3000"
+app.use(cors({ 
+    credentials:false,  
+    origin: "*"
 }));
-
-app.use(session({
-    secret: "secretcode",
-    resave: true,
-    saveUninitialized: true
-}));
-app.use(cookieParser("secretcode"));
 app.use(passport.initialize());
-app.use(passport.session());
-passportConfig(passport);
-app.use(function(err, req, res, next) {
-});
+import './passportConfig.js';
+
 //DB config
 //const connection_url = "mongodb+srv://admin:" + key +"@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
-const connection_url = "mongodb://user:"+process.env.MONGO_PASSWORD+"@194.195.241.214:27017/users"
+const connection_url = "mongodb://user:"+ process.env.MONGO_PASSWORD +"@194.195.241.214:27017/users"
 mongoose.connect(connection_url,{
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -61,87 +49,89 @@ app.get("/",(req,res)=>{
     res.status(200).send("Hello World");
     
 });
-app.post("/login",(req,res,next)=>{
-    const msg ={
-        username:"",
-        password:"",
-        role: "Admin",
-        direct: "/"
-    };
-    passport.authenticate("local",{ failureRedirect: '/getUser', failureMessage: true },(err,user,info)=>{
-        if(err) throw err;
-        if(!user) {
-            msg.role= "Restricted";
-            msg.direct="/login";
-            res.json(msg)
-        }
-        else{
-            req.logIn(user,err=>{
-                if(err) throw err;
-                if(user.role==="Admin"){
-                    msg.username = user.username,
-                    msg.password = user.password,
-                    msg.role = user.role,
-                    msg.direct = "/admin"
-                }else if(user.role==="Client"){
-                    msg.username = user.username,
-                    msg.password = user.password,
-                    msg.role = "Client",
-                    msg.direct ="/"
-                }
-                res.json(msg);
+app.post("/login",(req,res)=>{
+    UserModel.findOne({ username: req.body.username}).then(user=>{
+        //No user found
+        if(!user){
+            return res.status(401).send({
+                success: false,
+                message: "Could not find the user"
             })
         }
-    })(req,res,next);
+
+        if(!bcrypt.compareSync(req.body.password,user.password)){
+            return res.status(401).send({
+                success: false,
+                message: "Incorrect password"
+            })
+        }
+
+        const payload = {
+            username: user.username,
+            id: user._id
+        }
+        const secretOrKey = 'jwt_secret_key'
+        const token = jwt.sign(payload, secretOrKey, {expiresIn:"1d"})
+
+        return res.status(200).send({
+            success: true,
+            message: "Logged in successfully",
+            token : "Bearer " + token,
+            username: user.username,
+            role: user.role
+        })
+    })
 });
 app.post("/register",(req,res)=>{
-    const msg = {
-        msg: "",
-        direct: ""
-    }
-    User.findOne({
-        username:req.body.username
+    UserModel.findOne({
+        username: req.body.username
     },async (err,data)=>{
         if(err) throw err;
         if(data){
-            
-        msg.msg="User is already exists";
-        msg.direct="/register";
-        
-        res.json(msg)
-    };
+            res.send({
+                success: false,
+                message: "User is already exists"
+            })
+        }
         if(!data){
-            const saltRounds = 10;
-            const salt1 = await bcrypt.genSalt(saltRounds);
-            const hashedPassword = await bcrypt.hash(req.body.password, salt1);
-            const newUser = new User({
+            const user = new UserModel({
                 username: req.body.username,
-                password: hashedPassword,
-                email: req.body.email,
-                role: "Admin",
+                password: bcrypt.hashSync(req.body.password,10),
+                role: "Client"
             });
-            await newUser.save();
-            const msg ={
-                message: "User Created",
-                direct: "/"
-            }
-            newUser.role ==="Admin" ? msg.direct="/admin": msg.direct ="/"
-            res.json(msg);
+            user.save().then(user=>{
+                res.send({
+                    success: true,
+                    message: "User created successfully",
+                    user: {
+                        id: user._id,
+                        username: user.username
+                    }
+                })
+            }).catch(err=>{
+                res.send({
+                    success: false,
+                    message: "Something went wrong",
+                    error: err
+                })
+            })
         }
     })
+    
 });
 app.get("/getUser",(req,res)=>{
     if(req.user!=="" || req.user!==null)
         res.json(req.user)
 });
-app.get("/admin",(req,res)=>{
-    if(req.isAuthenticated() && req.user.role==="Admin")
-    {
-        res.json(req.user)
-    }
-    else{
-        res.json("")
-    }
+app.get("/admin",passport.authenticate('jwt',{session : false}),(req,res)=>{
+    return res.status(200).send({
+        success: true,
+        user: {
+            id: req.user._id,
+            username: req.user.username,
+            role: req.user.role
+        }
+    })
 })
 app.post("/logout",(req,res)=>{
     req.logout((res)=>{

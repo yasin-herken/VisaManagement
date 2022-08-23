@@ -26,7 +26,6 @@ import { PORT, HOST } from '../../Variables/host.js';
 function NewApplication() {
     const [username, setUsername] = useState("")
     const [role, setRole] = useState("")
-    const [collapse, setCollapse] = useState(false)
     const [PNR, setPNR] = useState("")
     const [status, setStatus] = useState();
     const [gender, setGender] = useState();
@@ -65,41 +64,18 @@ function NewApplication() {
             event.preventDefault()
         await axios({
             method: "GET",
-            withCredentials: true,
+            withCredentials: false,
             url: HOST.url + ":" + PORT.port + "/getData"
         }).then((res) => {
             setData(res.data)
         }).catch((err) => console.log("error in new application"))
-    }
-    const getUserPage = async (event) => {
-        if (event && event.preventDefault)
-            event.preventDefault();
-        await axios({
-            method: "GET",
-            withCredentials: true,
-            url: HOST.url + ":" + PORT.port + "/getUser"
-        }).then(res => {
-            if (res.data.role === "Admin") {
-                setUsername(res.data.username);
-                setRole(res.data.role);
-            }
-            else if (res.data.role === "Client") {
-                setUsername(res.data.username);
-                setRole(res.data.role);
-            }
-            else if (res.data.role === "Restricted") {
-                setRole("Restricted");
-            }
-        }
-
-        ).catch(err => console.log(err));
     }
     const getAdditionalPrices = async (event) => {
         if (event && event.preventDefault)
             event.preventDefault();
         await axios({
             method: "GET",
-            withCredentials: true,
+            withCredentials: false,
             url: HOST.url + ":" + PORT.port + "/getPrices"
         }).then(res => {
             setPrices(res.data)
@@ -115,7 +91,6 @@ function NewApplication() {
     useEffect(() => {
     }, [pnumber, pissue, pexpiry, pauthority, pistate])
     useEffect(() => {
-
     }, [entrytype])
     // Contact Details
     useEffect(() => {
@@ -125,9 +100,8 @@ function NewApplication() {
         getData()
     }, [tripstart, insuranceExp, visaValue])
     useEffect(() => {
-        getUserPage()
         getAdditionalPrices()
-    }, [username, role, collapse])
+    }, [prices])
     return (
         <div className="container-fluid p-0">
             <div className="row">
@@ -420,7 +394,6 @@ function NewApplication() {
                                     <button type="button" className='form-control' >Add Hotel</button>
                                 </div>
                             </div>
-
                             <div className='row'>
                                 <div className="mb-3 col-md-12">
                                     <label htmlFor="inputEmail4" className="form-label">Description</label>
@@ -445,7 +418,6 @@ function NewApplication() {
                         <div className='card-body'>
                             <VisaTable entryType={entrytype} treeDoc={treeDoc} />
                         </div>
-
                     </div>
                     <div className="card">
                         <div className="card-header">
@@ -467,7 +439,6 @@ function NewApplication() {
                             <TotalTable sum={sum} entrytype={entrytype} />
                         </div>
                     </div>
-
                     <div className="card">
                         <div className="card-header">
                             <h5 className="card-title">Accompaniment Purpose Multiple Visa Requirements</h5>

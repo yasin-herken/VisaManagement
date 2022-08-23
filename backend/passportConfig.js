@@ -1,39 +1,24 @@
-import User from './dbUser.js';
-import bcrypt from 'bcryptjs';
-import localStrategy from 'passport-local';
-localStrategy.Strategy;
 
-export default function(passport){
-    passport.use(
-        new localStrategy((username,password,done)=>{
-            User.findOne({username: username},(err,user)=>{
-                if(err) {return done(err);}
-                if(!user) return done(null,false,{ message: 'Incorrect username or password.' });
-                bcrypt.compare(password,user.password,(err,result)=>{
-                    if(err) throw err;
-                    if(result===true){
-                        return done(null,user);
-                    }else{
-                        return done(null,false);
-                    }
-                });
-
-            });
-
-        })
-    );
-    passport.serializeUser((user,cb)=>{
-        cb(null,user.id);
+import JwtStrategy from 'passport-jwt';
+const JwtStrategy1 = JwtStrategy.Strategy;
+import ExtractJwt from 'passport-jwt';
+const ExtractJwt1 = ExtractJwt.ExtractJwt;
+import UserModel from './dbUser.js';
+import passport from 'passport';
+const secretOrKey = 'jwt_secret_key'
+passport.use(new JwtStrategy1({
+    jwtFromRequest: ExtractJwt1.fromAuthHeaderAsBearerToken(),
+    secretOrKey: secretOrKey
+}, function async (jwt_payload, done) {
+    UserModel.findOne({ id: jwt_payload._id }, function (err, user) {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
+            return done(null, user);
+        } else {
+            return done(null, false);
+            // or you could create a new account
+        }
     });
-    passport.deserializeUser((id,cb)=>{
-        User.findOne({_id:id},(err,user)=>{
-            const userInformation ={
-                username: user.username,
-                email: user.email,
-                role: user.role
-            };
-            cb(err,userInformation);
-        });
-        
-    });
-};
+}));

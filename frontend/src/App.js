@@ -11,19 +11,17 @@ import { selectUser} from './pages/Features/userSlice.js';
 function App() {
   const user = useSelector(selectUser);
   useEffect(()=>{
-    console.log(user)
   },[user])
   useEffect(()=>{
   },[])
   return ( 
         <Routes>
-          {console.log(new Date(),"router begin",user && user.role)}
-            <Route exact path="/admin" element={user && user.role==="Restricted"?<ResrictedPage />:<Admin path="/admin" />} />
-            <Route path="/login" element={user && user.role==="Admin" && user.role==="Client" ?<Home />:<Login />} />
-            <Route path="/register" element={user && user.role?<Navigate replace to="/" />:<Register />} />
-            <Route exact path="/"  element={user &&user.role==="Admin"?<Admin path="/"/>:<Home />} />
+            <Route exact path="/admin" element={<Admin />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route exact path="/"  element={<Home />} />
             <Route path="/restrictedPage" element={<ResrictedPage />} />
-            <Route path="/newApplication" element={user && user.role==="Admin"?<Admin path="/new Application"/>:"null"} />
+            <Route path="/admin/newApplication" element={user?.role==="Admin"?<Admin path={"newApplication"} />:<Navigate to="/restrictedPage"></Navigate>} />
             <Route path="*" element={<ResrictedPage />} />  
         </Routes>
   );

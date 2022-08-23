@@ -10,21 +10,10 @@ function DropDownMenu({username}) {
   const handleLogout = async(event) =>{
     event.preventDefault() 
     event.stopPropagation();
-	
-    await axios({
-        method: "POST",
-        withCredentials: true,
-        url: HOST.url + ":" + PORT.port + "/logout"
-    }).then(res=>{
-        if(res.data.data==="Succesfully Logout")
-           { 
-          dispatch(logout({
-            loggedIn:false
-          }))
-          navigate(res.data.direct)
-        }
-    })
-    .catch(err => console.log(err))
+    dispatch(logout({
+      loggedIn: false
+    }));
+	navigate("/login");
 }
   useEffect(()=>{
   },[])

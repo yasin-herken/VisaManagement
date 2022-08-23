@@ -3,20 +3,19 @@ import "./AdditionalPrices.css";
 function AdditionalPrices({ setSum, prices }) {
     const [sum, setSummation] = useState(0);
     const [checked, setChecked] = useState([]);
-    useEffect(() => {
-        if (prices) {
-            if (checked <= prices.length) {
-                prices.map((price, index) => {
-                    setChecked(prevState => [...prevState, false])
-                })
-            }
+    
+    if (prices) {
+        if (checked <= prices.length) {
+            prices.map((price, index) => {
+                setChecked(prevState => [...prevState, false])
+            })
         }
-    }, [prices])
+    }
     useEffect(() => {
     }, [checked])
     useEffect(() => {
         setSum(sum)
-    }, [sum, setSum])
+    }, [sum,setSum])
 
     return (
         <table className="table table-sm table-bordered table-responsive striped">

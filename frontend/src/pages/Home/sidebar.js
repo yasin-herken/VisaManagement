@@ -22,7 +22,7 @@ function Sidebar({ coll }) {
                     file.children[i].classList.add("active")
                 }
             }
-            else if (file.children[i].firstChild.pathname === "/newApplication" && pathName === "/newApplication") {
+            else if (file.children[i].firstChild.pathname === "/admin/newApplication" && pathName === "/admin/newApplication") {
 
                 if (file.children[i].classList.contains("active")) {
                 } else {
@@ -115,7 +115,7 @@ function Sidebar({ coll }) {
                                         {
                                             ((user ? user.role==="Admin":null) ?
                                         <li className="sidebar-item ">
-                                            <Link  className="sidebar-link" to="/newApplication">
+                                            <Link  className="sidebar-link" to="/admin/newApplication">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span> 
                                             </Link>
                                         </li>: null)
