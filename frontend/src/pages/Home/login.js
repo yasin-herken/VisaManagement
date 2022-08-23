@@ -4,13 +4,19 @@ import { PORT, HOST } from '../../Variables/host.js';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, login } from '../Features/userSlice.js';
+import userSchema from '../../Validations/userValidation.js';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {Form} from 'react-bootstrap';
 function Login() {
-    const [loginUsername, setLoginUsername] = useState("")
-    const [loginPassword, setLoginPassword] = useState("")
+    const [loginUsername, setLoginUsername] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
-
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(userSchema),
+    });
     const loginPage = async (event) => {
         if (event && event.preventDefault) {
             event.preventDefault()
@@ -25,6 +31,7 @@ function Login() {
             withCredentials: false,
             url: HOST.url + ":" + PORT.port + "/login"
         }).then(user => {
+            console.log(user.data)
             if (user.data.success && user.data.role === "Admin") {
                 dispatch(login({
                     username: user.data.username,
@@ -69,6 +76,9 @@ function Login() {
             getUserPage();
         }
     }, [user, redirect])
+    useEffect(()=>{
+        console.log(errors)
+    },[errors])
     return (
         <main className="d-flex w-100">
             <div className="container d-flex flex-column">
@@ -91,9 +101,17 @@ function Login() {
                                             <input
                                                 className="form-control form-control-lg"
                                                 type="text"
-                                                placeholder="Enter your username"
+                                                placeholder="Enter your username" 
+                                                name="username"
+                                                value={loginUsername}
+                                                {...register("username")}
                                                 onChange={(e) => { setLoginUsername(e.target.value) }}
                                             />
+                                            {errors.username && (
+                                                <Form.Text className="text-danger" style={{fontSize: "1rem"}}>
+                                                    {errors.username.message}
+                                                </Form.Text>
+                                            )}
                                         </div>
                                         <div className="mb-3">
                                             <label className="form-label">Password</label>
@@ -101,14 +119,22 @@ function Login() {
                                                 className="form-control form-control-lg"
                                                 type="password"
                                                 placeholder="Enter your password"
-                                                onChange={(e) => { setLoginPassword(e.target.value); }}
+                                                value={loginPassword}
                                                 onKeyPress={event => {
                                                     if (event.key === 'Enter') {
                                                         loginPage();
                                                     }
                                                 }}
+                                                name="password"
+                                                {...register("password")}
+                                                onChange={(e) => { setLoginPassword(e.target.value); }}
                                             />
-                                            <small>
+                                            {errors.password && (
+                                                <Form.Text className="text-danger" style={{fontSize: "1rem"}}>
+                                                    {errors.password.message}
+                                                </Form.Text>
+                                            )}
+                                            <small style={{display:"block"}}>
                                                 <a href="index.html">Forgot password?</a>
                                             </small>
                                         </div>
@@ -121,7 +147,7 @@ function Login() {
                                             </label>
                                         </div>
                                         <div className="text-center mt-3">
-                                            <button type="submit" className="btn btn-lg btn-primary" onClick={loginPage}>Sign in</button>
+                                            <button type="submit" className="btn btn-lg btn-primary" onClick={handleSubmit(loginPage)}>Sign in</button>
                                         </div>
                                         <div className="text-center">
                                             <span>Don't you have an account </span>
