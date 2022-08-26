@@ -1,44 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './css/sidebar.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice.js';
 function Sidebar({ coll }) {
-    const Navigate = useNavigate()
     const [css, setCss] = useState("")
     const [styles, setStyles] = useState({
     })
     const user = useSelector(selectUser);
     const [clicked, setClicked] = useState(false);
-    const pathName = window.location.pathname
-    let file = document.querySelector(".sidebar-nav")
-    if (file) {
-        for (let i = 0; i < file.childElementCount; i++) {
-            if (file.children[i].firstChild.pathname === "/" && pathName === "/" && file.children[i].firstChild.id !== "auth1") {
-                if (file.children[i].classList.contains("active")) {
-
-                } else {
-                    file.children[i].classList.add("active")
-                }
-            }
-            else if (file.children[i].firstChild.pathname === "/admin/newApplication" && pathName === "/admin/newApplication") {
-
-                if (file.children[i].classList.contains("active")) {
-                } else {
-                    file.children[i].classList.add("active")
-                }
-            }
-            else if (file.children[i].firstChild.pathname === "/" && pathName === "/" && file.children[i].firstChild.id === "auth1") {
-            }
-            else {
-                if (file.children[i].classList.contains("active")) {
-                    file.children[i].classList.remove("active")
-                }
-            }
-        }
+    const getNavLink = (path) =>{
+        return path===window.location.pathname?"sidebar-item active":"sidebar-item"
     }
-
     useEffect(() => {
         if (coll === false) {
             setCss("")
@@ -102,43 +76,44 @@ function Sidebar({ coll }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <ul className="sidebar-nav" >
+                                    <ul className="sidebar-nav">
                                         <li className="sidebar-header">
                                             Pages
                                         </li>
-
-                                        <li className="sidebar-item active" onClick={()=>Navigate("/")} >
-                                            <Link data-bs-target="#dashboards" className="sidebar-link collapsed" aria-current="page" aria-expanded="false" to="/">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span className="align-middle">Dashboards</span>
-                                            </Link>
+                                        <li className={(getNavLink("/"))}>
+                                            <NavLink  className={"sidebar-link collapsed"} to="/">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span className="align-middle">Dashboards</span>
+                                            </NavLink>
                                         </li>
                                         {
-                                            ((user ? user.role==="Admin":null) ?
-                                        <li className="sidebar-item ">
-                                            <Link  className="sidebar-link" to="/admin/newApplication">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span> 
-                                            </Link>
-                                        </li>: null)
-                                        }
+                                            ((user?user.role==="Admin":null) ?
+                                        <li className={(getNavLink("/admin/newApplication"))}>
+                                            <NavLink className="sidebar-link" to="/admin/newApplication">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span> 
+                                            </NavLink>
+                                            
                                         
-                                        {
-                                            ((user?.role!=="Admin") && (user?.role!=="Client"))?<li className="sidebar-item">
-                                            <a id="auth1" href="#auth" data-bs-toggle="collapse" className="sidebar-link" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-users align-middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> <span className="align-middle">Auth</span>
-                                            </a>
-                                            <ul id="auth" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar" >
-                                                <li className="sidebar-item">
-                                                    <Link className="sidebar-link" to="/login" >Sign In </Link>
-                                                </li>
-                                                <li className="sidebar-item">
-                                                    <Link className="sidebar-link" to="/register">Sign Up</Link>
-                                                </li>
-                                            </ul>
                                         </li>:null
+                                            )
                                         }
-                                        
+                                        {
+                                            ((user?.role !== "Admin") && (user?.role !== "Client")) ? <li className="sidebar-item">
+                                                <a id="auth1" href="#auth" data-bs-toggle="collapse" className="sidebar-link" aria-expanded="false">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-users align-middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> <span className="align-middle">Auth</span>
+                                                </a>
+                                                <ul id="auth" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar" >
+                                                    <li className="sidebar-item">
+                                                        <Link className="sidebar-link" to="/login" >Sign In </Link>
+                                                    </li>
+                                                    <li className="sidebar-item">
+                                                        <Link className="sidebar-link" to="/register">Sign Up</Link>
+                                                    </li>
+                                                </ul>
+                                            </li> : null
+                                        }
+
                                     </ul>
-                            
+
                                     <div className='sidebar-cta'></div>
                                 </div>
                             </div>
