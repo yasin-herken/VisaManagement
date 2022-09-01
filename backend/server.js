@@ -8,8 +8,6 @@ import dbCollection from './dbCollection.js';
 import Price from './dbPrices.js';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
-import { body, validationResult } from 'express-validator';
-import {loginUserValidator} from './validators/userValidators.js';
 import dotenv from 'dotenv/config';
 //app config
 const app = express();
@@ -53,9 +51,7 @@ app.get("/", (req, res) => {
 
 });
 app.post("/login",
-    //username must be an string
     (req, res) => {
-        console.log(req.body)
         UserModel.findOne({ username: req.body.username }).then(user => {
             //No user found
             if (!user) {

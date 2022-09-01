@@ -13,7 +13,6 @@ function Home() {
 
   },[user])
    
- 
   return (
     <div className="wrapper">
       <Sidebar coll={collapse} />
