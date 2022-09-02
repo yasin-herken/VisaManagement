@@ -1,47 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Footer from './footer';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../Features/userSlice.js';
 import Flatpickr from "react-flatpickr";
-import Barcode from "react-barcode";
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import cryptoRandomString from 'crypto-random-string';
-import BarcodeReader from 'react-barcode-reader'
+import Barcode from "react-barcode";
 function ApplicationList() {
     const [collapse, setCollapse] = useState(false);
     const [username, setUsername] = useState("");
     const [lastname, setLastname] = useState("");
     const [place, setPlace] = useState("");
     const [gender, setGender] = useState("");
-    const [date,setDate] = useState("");
-    const [text1,setText] = useState("");
+    const [date, setDate] = useState("");
+    const [text1, setText] = useState("");
     const [qrCodeVisible, setQrCodeVisible] = useState(false);
-    const [barcodeVisible,setBarcodeVisible] = useState();
-    const user = useSelector(selectUser);
+    const [barcodeVisible, setBarcodeVisible] = useState(false);
+    const [barcodeNumber, setBarcodeNumber] = useState("");
+    const [data, setData] = useState('No result');
+    const qrRef = useRef(null);
+
     const onGenerateFile = () => {
-        let text2 = cryptoRandomString({length: 11})
+        let text2 = cryptoRandomString({ length: 11 })
         if (qrCodeVisible) {
             setText(text2)
         } else {
             setQrCodeVisible(true)
             setText(text2)
         }
-        console.log(text2)
     };
-    const onScanFile = (event) =>{
-        
+    const onScanFile = () => {
+        qrRef.current?.openImageDialog();
+        setBarcodeVisible(true)
+    }
+    const onSearchFile = () => {
+        console.log(barcodeNumber)
     }
     useEffect(() => {
-    }, [user])
-    useEffect(()=>{
-        console.log(text1)
-    },[text1])
+    }, [username, lastname, place, gender, date])
+    useEffect(() => {
+    }, [text1])
     useEffect(() => {
     }, [qrCodeVisible])
-    useEffect(()=>{
-
-    },[])
+    useEffect(() => {
+    }, [])
+    useEffect(() => {
+        console.log(barcodeVisible)
+    }, [barcodeVisible])
     return (
         <div className="wrapper">
             <Sidebar coll={collapse} />
@@ -86,7 +91,7 @@ function ApplicationList() {
                                             </div>
                                             <div className="mb-3 col-md-4">
                                                 <label htmlFor="inputGender" className="form-label">Gender</label>
-                                                <select class="form-select" data-live-search="true" onClick={
+                                                <select className="form-select form-select-color-blue" data-live-search="true" onClick={
                                                     (event) => {
                                                         setGender(event.target.value)
                                                     }
@@ -108,9 +113,9 @@ function ApplicationList() {
                                                 <button className='btn btn-info' type="button" onClick={onGenerateFile}>
                                                     Generate Barcode Code
                                                 </button>
-                                                {qrCodeVisible?
-                                                    <Barcode value={text1} />
-                                                :null}
+                                                {qrCodeVisible ?
+                                                    <><Barcode value={text1}></Barcode></>
+                                                    : null}
                                             </div>
                                         </div>
                                     </div>
@@ -123,13 +128,32 @@ function ApplicationList() {
                                     </div>
                                     <div className='card-body'>
                                         <div className='row'>
+                                            <div className='mb-3 col-md-6 '>
+                                                <label htmlFor="inputbarcode" className="form-label ">Enter Passport Number</label>
+                                                <div className='input-group mb-3'>
+                                                    <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => { setBarcodeNumber(e.target.value) }} />
+                                                    <button className='btn btn-info' onClick={onScanFile}>Scan</button>
+                                                </div>
+                                                <button className='btn btn-info pt-2' onClick={onSearchFile}>Search</button>
+                                            </div>
                                             <div className='mb-3 col-md-6'>
-                                            <label htmlFor="inputusername" className="form-label">Name</label>
-                                                <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={onScanFile} />
+                                                {barcodeVisible ?
+                                                    <>
+                                                        <BarcodeScannerComponent
+                                                            width={500}
+                                                            height={500}
+                                                            onUpdate={(err, result) => {
+                                                                if (result) setData(result.text);
+                                                                else setData("Not Found");
+                                                            }}
+                                                        />
+                                                        <p>{data}</p>
+                                                    </> : null}
+                                                {barcodeVisible? <button className='btn btn-info pt-2' onClick={()=>setBarcodeVisible(false)}>Close</button>:null}
                                             </div>
                                         </div>
                                     </div>
-                                </div>           
+                                </div>
                             </div>
                         </div>
                     </div>
