@@ -6,7 +6,13 @@ import Flatpickr from "react-flatpickr";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import cryptoRandomString from 'crypto-random-string';
 import Barcode from "react-barcode";
+import { useForm, Controller } from "react-hook-form";
+import "flatpickr/dist/themes/material_green.css";
+import { userRequest } from "../../requests/requestMethod.js";
+import { useSelector } from 'react-redux';
+import { selectUser } from '../Features/userSlice';
 function ApplicationList() {
+    const [identification, setIdentification] = useState("");
     const [collapse, setCollapse] = useState(false);
     const [username, setUsername] = useState("");
     const [lastname, setLastname] = useState("");
@@ -16,28 +22,75 @@ function ApplicationList() {
     const [text1, setText] = useState("");
     const [qrCodeVisible, setQrCodeVisible] = useState(false);
     const [barcodeVisible, setBarcodeVisible] = useState(false);
+    const [errIdentification, setErrIdentification] = useState(false);
     const [barcodeNumber, setBarcodeNumber] = useState("");
-    const [data, setData] = useState('No result');
+    const [showFilter,setShowFilter] = useState(false);
+    const [data, setData] = useState("");
     const qrRef = useRef(null);
+    const [image, setImage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [posts, setPosts] = useState([]);
+    const [searchTitle, setSearchTitle] = useState("");
 
-    const onGenerateFile = () => {
-        let text2 = cryptoRandomString({ length: 11 })
-        if (qrCodeVisible) {
-            setText(text2)
-        } else {
-            setQrCodeVisible(true)
-            setText(text2)
+    const user = useSelector(selectUser);
+    const { control, register, handleSubmit, formState: { errors }, reset } = useForm({
+        defaultValues: {
+            username: "",
+            lastname: "",
+            dateofBirthday: "",
+            validUpTo: "",
+            gender: "",
+            place: ""
         }
+    });
+    const onGenerateFile = async () => {
+        const text2 = cryptoRandomString({ length: 11 });
+        const img = <Barcode value={text2}></Barcode>;
+        setImage(img);
+        try {
+            const res = await userRequest(user.token.split(" ")[1]).post("/barcode", {
+                identification: identification,
+                username: username,
+                lastname: lastname,
+                dateOfBirthday: date,
+                placeOfBirthday: place,
+                gender: gender,
+                barcodeValue: text2,
+            });
+            if (res?.data.success) {
+                reset();
+                const answer = !qrCodeVisible ? setQrCodeVisible(true) : null;
+                setErrIdentification(false);
+            } else if (res?.data.error.code === 11000) {
+                setErrIdentification(true);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        // reset();
+
+
+
     };
+
     const onScanFile = () => {
         qrRef.current?.openImageDialog();
         setBarcodeVisible(true)
     }
-    const onSearchFile = () => {
-        console.log(barcodeNumber)
+    const onSearchFile = (event) => {
+        event.preventDefault();
+        setSearchTitle(event.target.value)
     }
     useEffect(() => {
-    }, [username, lastname, place, gender, date])
+        const loadPosts = async () => {
+            setLoading(true);
+            const response = await userRequest(user.token.split(" ")[1]).get("/barcode");
+            setPosts(response.data);
+            setLoading(false);
+        }
+
+        loadPosts();
+    }, [user.token])
     useEffect(() => {
     }, [text1])
     useEffect(() => {
@@ -45,8 +98,11 @@ function ApplicationList() {
     useEffect(() => {
     }, [])
     useEffect(() => {
-        console.log(barcodeVisible)
-    }, [barcodeVisible])
+        setBarcodeVisible(false)
+    }, [data])
+    useEffect(() => {
+        console.log(errors)
+    }, [errors])
     return (
         <div className="wrapper">
             <Sidebar coll={collapse} />
@@ -62,59 +118,139 @@ function ApplicationList() {
                                     </div>
                                     <div className='card-body'>
                                         <div className='row'>
-                                            <div className='mb-3 col-md-8'>
+                                            <div className='mb-3 col-md-4'>
+                                                <label htmlFor="inputIdentification" className="form-label">Identification</label>
+                                                <input
+                                                    id="inputIdentification"
+                                                    className="form-control"
+                                                    placeholder=""
+                                                    {...register("identification", {
+                                                        required: "This is required.", minLength: {
+                                                            value: 11,
+                                                            message: "Min Length is 11."
+                                                        },
+                                                        maxLength: {
+                                                            value: 11,
+                                                            message: "Max Length is 11."
+                                                        }
+                                                    })
+                                                    }
+                                                    onChange={(e) => {
+                                                        e.preventDefault()
+                                                        setIdentification(e.target.value);
+                                                    }}
+                                                />
+                                                {errors?.identification ? <p>{errors.identification.message}</p> : null}
+                                                {errIdentification ? <p>Identification is already exists</p> : null}
+                                            </div>
+                                            <div className='mb-3 col-md-4'>
                                                 <label htmlFor="inputusername" className="form-label">Name</label>
-                                                <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => {
-                                                    setUsername(e.target.value);
-                                                }} />
+                                                <input
+                                                    id="inputAddress"
+                                                    className="form-control"
+                                                    placeholder=""
+                                                    {...register("username", {
+                                                        required: "This is required.", minLength: {
+                                                            value: 4,
+                                                            message: "Min Length is 4."
+                                                        }
+                                                    })
+                                                    }
+                                                    onChange={(e) => {
+                                                        e.preventDefault()
+                                                        setUsername(e.target.value);
+                                                    }}
+                                                />
+                                                {errors?.username ? <p>{errors.username.message}</p> : null}
                                             </div>
                                             <div className='mb-3 col-md-4'>
                                                 <label htmlFor="inputlastname" className="form-label">Surname</label>
-                                                <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => {
-                                                    setLastname(e.target.value);
-                                                }} />
+                                                <input
+                                                    id="inputAddress"
+                                                    className="form-control"
+                                                    placeholder=""
+                                                    {...register("lastname", {
+                                                        required: "This is required.", minLength: {
+                                                            value: 3,
+                                                            message: "Min Length is 3"
+                                                        }
+                                                    })
+                                                    }
+                                                    onChange={(e) => {
+                                                        setLastname(e.target.value);
+                                                    }}
+                                                />
+                                                {errors?.lastname ? <p>{errors.lastname.message}</p> : null}
                                             </div>
                                         </div>
                                         <div className='row'>
                                             <div className='mb-3 col-md-4'>
                                                 <label htmlFor="inputBirthday" className="form-label">Date of Birthday</label>
-                                                <Flatpickr
-                                                    className='form-control'
-                                                    placeholder='Select Date..'
-                                                    readOnly={"readonly"}
-                                                    onChange={([date]) => {
-                                                        setDate(date);
-                                                    }}
-                                                    style={{ backgroundColor: "white" }}
+                                                <Controller
+                                                    value={date}
+
+                                                    name="validUpTo"
+                                                    control={control}
+                                                    rules={{ required: { value: false, message: "Date is required" } }}
+                                                    render={({ field }) => (
+                                                        <Flatpickr
+                                                            {...field}
+                                                            name="validUpTo"
+                                                            className="form-control"
+                                                            placeholder="Select Date.."
+                                                            style={{ backgroundColor: "white" }}
+                                                            onChange={([date]) => {
+                                                                setDate(date);
+                                                            }}
+                                                        />
+                                                    )
+                                                    }
                                                 />
+                                                {errors?.validUpTo ? <p>{errors.validUpTo.message}</p> : null}
 
                                             </div>
                                             <div className="mb-3 col-md-4">
                                                 <label htmlFor="inputGender" className="form-label">Gender</label>
-                                                <select className="form-select form-select-color-blue" data-live-search="true" onClick={
-                                                    (event) => {
-                                                        setGender(event.target.value)
+                                                <select
+                                                    className="form-select form-select-color-blue"
+                                                    data-live-search="true"
+
+                                                    {...register("gender", { required: { value: true, message: "Gender is required" } })}
+                                                    defaultValue={"default"}
+                                                    onClick={
+                                                        (event) => {
+                                                            setGender(event.target.value)
+                                                        }
                                                     }
-                                                }>
+                                                >
+                                                    <option value="default" disabled hidden >Choose here</option>
                                                     <option data-tokens="Male">Male</option>
                                                     <option data-tokens="Female">Female</option>
                                                 </select>
-
+                                                {errors?.gender ? <p>{errors.gender.message}</p> : null}
                                             </div>
                                             <div className="mb-3 col-md-4">
                                                 <label htmlFor="inputPlace" className="form-label">Place of Birth</label>
-                                                <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => {
-                                                    setPlace(e.target.value);
-                                                }} />
+                                                <input
+                                                    id="inputAddress"
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder=""
+                                                    {...register("place", { required: { value: true, message: "Place is required" } })}
+                                                    onChange={(e) => {
+                                                        setPlace(e.target.value);
+                                                    }}
+                                                />
+                                                {errors?.place ? <p>{errors.place.message}</p> : null}
                                             </div>
                                         </div>
                                         <div className='row'>
                                             <div className='mb-3 col-md-3 pt-2'>
-                                                <button className='btn btn-info' type="button" onClick={onGenerateFile}>
+                                                <button className='btn btn-info' type="button" onClick={handleSubmit(onGenerateFile)}>
                                                     Generate Barcode Code
                                                 </button>
                                                 {qrCodeVisible ?
-                                                    <><Barcode value={text1}></Barcode></>
+                                                    <><img src={image} alt=""></img></>
                                                     : null}
                                             </div>
                                         </div>
@@ -129,9 +265,10 @@ function ApplicationList() {
                                     <div className='card-body'>
                                         <div className='row'>
                                             <div className='mb-3 col-md-6 '>
+
                                                 <label htmlFor="inputbarcode" className="form-label ">Enter Passport Number</label>
                                                 <div className='input-group mb-3'>
-                                                    <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => { setBarcodeNumber(e.target.value) }} />
+                                                    <input id="inputAddress" type="text" className="form-control" value={data} placeholder="" onChange={(e) => { setData(e.target.value); setSearchTitle(e.target.value); setShowFilter(true) }} />
                                                     <button className='btn btn-info' onClick={onScanFile}>Scan</button>
                                                 </div>
                                                 <button className='btn btn-info pt-2' onClick={onSearchFile}>Search</button>
@@ -139,17 +276,44 @@ function ApplicationList() {
                                             <div className='mb-3 col-md-6'>
                                                 {barcodeVisible ?
                                                     <>
+                                                        {barcodeVisible ? <button ref={(el) => { el && el.style.setProperty("display", "flex", "important"); el && el.style.setProperty("text-align", "right", "important") }} className='btn btn-info pt-2' style={{ marginRight: "auto" }} onClick={() => setBarcodeVisible(false)}>Close</button> : null}
                                                         <BarcodeScannerComponent
-                                                            width={500}
-                                                            height={500}
+                                                            delay={300}
                                                             onUpdate={(err, result) => {
-                                                                if (result) setData(result.text);
-                                                                else setData("Not Found");
+                                                                if (result) {
+                                                                    setData(result.text)
+                                                                }
+                                                                else { setData("") }
                                                             }}
                                                         />
-                                                        <p>{data}</p>
                                                     </> : null}
-                                                {barcodeVisible? <button className='btn btn-info pt-2' onClick={()=>setBarcodeVisible(false)}>Close</button>:null}
+
+                                            </div>
+
+                                        </div>
+                                        <div className='row'>
+                                            <div className='mb-3 col-md-6'>
+                                                {loading ? (<h4>Loading ...</h4>) : 
+                                                    (
+                                                        showFilter?posts
+                                                        .filter(
+                                                            (value) => {
+                                                                if (searchTitle === "") {
+                                                                    setShowFilter(false)
+                                                                    return {}
+                                                                } else if (
+                                                                    value.barcodeValue?.toLowerCase().includes(searchTitle?.toLowerCase())
+                                                                ) {
+                                                                    return value;
+                                                                }
+                                                            }
+                                                        ).map((item) =>
+
+                                                            <h5 key={item._id}>{item.barcodeValue}</h5>
+                                                        ):null
+                                                
+                                                    )
+                                                }
                                             </div>
                                         </div>
                                     </div>

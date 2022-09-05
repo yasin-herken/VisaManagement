@@ -9,6 +9,7 @@ import Price from './dbPrices.js';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv/config';
+import dbBarcode from "./dbBarcode.js";
 //app config
 const app = express();
 const port = process.env.PORT || 8001;
@@ -32,8 +33,8 @@ app.use(passport.initialize());
 import './passportConfig.js';
 
 //DB config
-//const connection_url = "mongodb+srv://admin:" + key +"@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
-const connection_url = "mongodb://user:" + process.env.MONGO_PASSWORD + "@194.195.241.214:27017/users"
+const connection_url = "mongodb+srv://admin:" + process.env.MONGO_ATLAS_PASSWORD + "@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
+// const connection_url = "mongodb://user:" + process.env.MONGO_PASSWORD + "@194.195.241.214:27017/users"
 mongoose.connect(connection_url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -123,6 +124,60 @@ app.post("/register", (req, res) => {
     })
 
 });
+app.get("/barcode",(req,res)=>{
+    dbBarcode.find({},(err,data)=>{
+        res.send(data)
+    })
+})
+app.post("/barcode", (req, res) => {
+    dbBarcode.findOne({ barcodeValue: req.body.barcodeValue, identification: req.body.identification }, async (err, data) => {
+        if (err) throw err;
+        if (data) {
+            if (data.identification === req.body.identification && data.barcodeValue === req.body.barcodeValue) {
+                res.send({
+                    success: false,
+                    message: "Barcode value and identification are already exists"
+                });
+            } else if (data.barcodeValue === req.body.barcodeValue) {
+                res.send({
+                    success: false,
+                    message: "Barcode value is already exists"
+                });
+            } else if (data.identification === req.body.identification) {
+                res.send({
+                    success: false,
+                    message: "Identification is already exists"
+                });
+            }
+
+        }
+        if (!data) {
+            const barcode = new dbBarcode({
+                identification: req.body.identification,
+                username: req.body.username,
+                lastname: req.body.lastname,
+                dateOfBirthday: req.body.dateOfBirthday,
+                placeOfBirthday: req.body.placeOfBirthday,
+                gender: req.body.gender,
+                barcodeValue: req.body.barcodeValue,
+            });
+            barcode.save().then(() => {
+                res.send({
+                    success: true,
+                    message: "Barcode created successfully",
+                })
+            }).catch((err) => {
+                res.send({
+                    success: false,
+                    message: "Something went wrong.",
+                    error: err
+                })
+            }
+
+            )
+        }
+    })
+})
 app.get("/getUser", (req, res) => {
     if (req.user !== "" || req.user !== null)
         res.json(req.user)

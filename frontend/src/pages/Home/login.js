@@ -31,7 +31,6 @@ function Login() {
             withCredentials: false,
             url: HOST.url + ":" + PORT.port + "/login"
         }).then(user => {
-            console.log(user.data)
             if (user.data.success && user.data.role === "Admin") {
                 dispatch(login({
                     username: user.data.username,
