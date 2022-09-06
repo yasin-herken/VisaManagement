@@ -7,6 +7,7 @@ const barcodeSchema = mongoose.Schema({
     username: String,
     lastname: String,
     dateOfBirthday: Date,
+    status: String,
     placeOfBirthday: String,
     gender: String,
     barcodeValue: String,

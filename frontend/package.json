@@ -26,6 +26,8 @@
     "react-barcode-reader": "^0.0.2",
     "react-barcode-scanner": "^0.0.4",
     "react-bootstrap": "^2.4.0",
+    "react-data-table-component": "^7.5.3",
+    "react-data-table-component-with-filter": "^7.4.5",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
@@ -42,6 +44,7 @@
     "react-select-search": "^3.0.10",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
+    "styled-components": "^5.3.5",
     "tom-select": "^2.0.3",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"

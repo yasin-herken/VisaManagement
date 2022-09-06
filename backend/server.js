@@ -16,7 +16,7 @@ const port = process.env.PORT || 8001;
 
 //middleware
 app.set("trust proxy", 1);
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000/');
@@ -157,6 +157,7 @@ app.post("/barcode", (req, res) => {
                 username: req.body.username,
                 lastname: req.body.lastname,
                 dateOfBirthday: req.body.dateOfBirthday,
+                status: req.body.status,
                 placeOfBirthday: req.body.placeOfBirthday,
                 gender: req.body.gender,
                 barcodeValue: req.body.barcodeValue,
@@ -268,6 +269,26 @@ app.post("/postPrices", (req, res) => {
         res.send("Acess Denied")
     }
 
+});
+app.delete("/barcode",(req,res)=>{
+    dbBarcode.deleteOne({identification:req.body.identification}, (err,data)=>{
+        console.log(err,data);
+        if(err) throw err;
+        if(data){
+            res.status(200).send({
+                success: true,
+                message: "Barcode successfully deleted"
+            })
+        }
+        if(!data){
+            console.log("bere")
+            res.status(404).send({
+                success: false,
+                message: "Barcode failed deleted"
+            })
+        }
+    })
+    res.send
 })
 //listener
 app.listen(port, () => console.log("Listening on " + port));

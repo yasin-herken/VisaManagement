@@ -11,8 +11,8 @@ function Sidebar({ coll }) {
     })
     const user = useSelector(selectUser);
     const [clicked, setClicked] = useState(false);
-    const getNavLink = (path) =>{
-        return path===window.location.pathname?"sidebar-item active":"sidebar-item"
+    const getNavLink = (path) => {
+        return path === window.location.pathname ? "sidebar-item active" : "sidebar-item"
     }
     useEffect(() => {
         if (coll === false) {
@@ -82,29 +82,30 @@ function Sidebar({ coll }) {
                                             Pages
                                         </li>
                                         <li className={(getNavLink("/"))}>
-                                            <NavLink  className={"sidebar-link collapsed"} to="/">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span className="align-middle">Dashboards</span>
+                                            <NavLink className={"sidebar-link collapsed"} to="/">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span className="align-middle">Dashboards</span>
                                             </NavLink>
                                         </li>
                                         {
-                                            ((user?user.role==="Admin":null) ?
-                                        <li className={(getNavLink("/admin/newApplication"))}>
-                                            <NavLink className="sidebar-link" to="/admin/newApplication">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span> 
-                                            </NavLink>
-                                        </li>:null
+                                            ((user ? user.role === "Admin" : null) ?
+                                                <li className={(getNavLink("/admin/newApplication"))}>
+                                                    <NavLink className="sidebar-link" to="/admin/newApplication">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span>
+                                                    </NavLink>
+                                                </li> : null
                                             )
                                         }
                                         {
-                                            ((user?user.role==="Admin":null) ?
-                                        <li className={(getNavLink("/application"))}>
-                                            <NavLink className="sidebar-link" to="/application">
-                                                    <AppsIcon className="align-middle" fontSize={"small"}></AppsIcon>
-                                                    <span>Application</span>
-                                            </NavLink>
-                                        </li>:null
+                                            ((user ? user.role === "Admin" : null) ?
+                                                <li className={(getNavLink("/application"))}>
+                                                    <NavLink className="sidebar-link" to="/application">
+                                                        <AppsIcon className="align-middle" fontSize={"small"}></AppsIcon>
+                                                        <span>Application</span>
+                                                    </NavLink>
+                                                </li> : null
                                             )
                                         }
+                                    
                                         {
                                             ((user?.role !== "Admin") && (user?.role !== "Client")) ? <li className="sidebar-item">
                                                 <a id="auth1" href="#auth" data-bs-toggle="collapse" className="sidebar-link" aria-expanded="false">

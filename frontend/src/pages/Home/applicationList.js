@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef  } from 'react'
 import Footer from './footer';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
@@ -11,6 +11,8 @@ import "flatpickr/dist/themes/material_green.css";
 import { userRequest } from "../../requests/requestMethod.js";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice';
+import Table from './table';
+
 function ApplicationList() {
     const [identification, setIdentification] = useState("");
     const [collapse, setCollapse] = useState(false);
@@ -23,14 +25,15 @@ function ApplicationList() {
     const [qrCodeVisible, setQrCodeVisible] = useState(false);
     const [barcodeVisible, setBarcodeVisible] = useState(false);
     const [errIdentification, setErrIdentification] = useState(false);
-    const [barcodeNumber, setBarcodeNumber] = useState("");
-    const [showFilter,setShowFilter] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
     const [data, setData] = useState("");
     const qrRef = useRef(null);
     const [image, setImage] = useState("");
     const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState([]);
-    const [searchTitle, setSearchTitle] = useState("");
+
+    const [filterText, setFilterText] = useState('');
+
 
     const user = useSelector(selectUser);
     const { control, register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -53,12 +56,13 @@ function ApplicationList() {
                 username: username,
                 lastname: lastname,
                 dateOfBirthday: date,
+                status: "pending",
                 placeOfBirthday: place,
                 gender: gender,
                 barcodeValue: text2,
             });
             if (res?.data.success) {
-                reset();
+                //reset();
                 const answer = !qrCodeVisible ? setQrCodeVisible(true) : null;
                 setErrIdentification(false);
             } else if (res?.data.error.code === 11000) {
@@ -78,8 +82,7 @@ function ApplicationList() {
         setBarcodeVisible(true)
     }
     const onSearchFile = (event) => {
-        event.preventDefault();
-        setSearchTitle(event.target.value)
+       console.log(event.target.value)
     }
     useEffect(() => {
         const loadPosts = async () => {
@@ -88,9 +91,8 @@ function ApplicationList() {
             setPosts(response.data);
             setLoading(false);
         }
-
         loadPosts();
-    }, [user.token])
+    }, [user.token,posts,filterText])
     useEffect(() => {
     }, [text1])
     useEffect(() => {
@@ -111,10 +113,10 @@ function ApplicationList() {
                 <main className="content">
                     <div className='container-fluid p-0'>
                         <div className='row'>
-                            <div className='col-12 col-lg-7'>
+                            <div className='col-12 col-lg-12'>
                                 <div className='card'>
                                     <div className='card-header'>
-                                        <h5 className='card-title'>Generator</h5>
+                                        <h5 className='card-title'>Add New </h5>
                                     </div>
                                     <div className='card-body'>
                                         <div className='row'>
@@ -257,7 +259,7 @@ function ApplicationList() {
                                     </div>
                                 </div>
                             </div>
-                            <div className='col-12 col-lg-5'>
+                            <div className='col-12 col-lg-12'>
                                 <div className='card'>
                                     <div className='card-header'>
                                         <h5 className='card-title'>Scanner</h5>
@@ -268,7 +270,7 @@ function ApplicationList() {
 
                                                 <label htmlFor="inputbarcode" className="form-label ">Enter Passport Number</label>
                                                 <div className='input-group mb-3'>
-                                                    <input id="inputAddress" type="text" className="form-control" value={data} placeholder="" onChange={(e) => { setData(e.target.value); setSearchTitle(e.target.value); setShowFilter(true) }} />
+                                                    <input id="inputAddress" type="text" className="form-control" value={data} placeholder="" onChange={(e) => { setData(e.target.value); setShowFilter(true) }} />
                                                     <button className='btn btn-info' onClick={onScanFile}>Scan</button>
                                                 </div>
                                                 <button className='btn btn-info pt-2' onClick={onSearchFile}>Search</button>
@@ -293,32 +295,13 @@ function ApplicationList() {
                                         </div>
                                         <div className='row'>
                                             <div className='mb-3 col-md-6'>
-                                                {loading ? (<h4>Loading ...</h4>) : 
-                                                    (
-                                                        showFilter?posts
-                                                        .filter(
-                                                            (value) => {
-                                                                if (searchTitle === "") {
-                                                                    setShowFilter(false)
-                                                                    return {}
-                                                                } else if (
-                                                                    value.barcodeValue?.toLowerCase().includes(searchTitle?.toLowerCase())
-                                                                ) {
-                                                                    return value;
-                                                                }
-                                                            }
-                                                        ).map((item) =>
-
-                                                            <h5 key={item._id}>{item.barcodeValue}</h5>
-                                                        ):null
                                                 
-                                                    )
-                                                }
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <Table />
                         </div>
                     </div>
                 </main>
