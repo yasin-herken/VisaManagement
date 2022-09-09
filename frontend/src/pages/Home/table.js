@@ -18,10 +18,9 @@ function Table() {
         try {
             const res = await userRequest(user.token.split(" ")[1]).delete("/barcode", {
                 data: {
-                    identification: row.identification
+                    
                 }
             });
-            console.log(res)
             if (res?.data.success) {
                 //reset();
                 setPosts(posts.filter((item)=>{

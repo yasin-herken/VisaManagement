@@ -10,6 +10,7 @@ import { useSelector} from 'react-redux';
 import { selectUser} from './pages/Features/userSlice.js';
 import ApplicationList from './pages/Home/applicationList';
 import Table from "./pages/Home/table.js";
+import NewApp from './pages/Home/newApplicationTest';
 function App() {
   const user = useSelector(selectUser);
   useEffect(()=>{
@@ -26,6 +27,7 @@ function App() {
             <Route path="/admin/newApplication" element={user?.role==="Admin"?<Admin path={"newApplication"} />:<Navigate to="/restrictedPage"></Navigate>} />
             <Route path="/application" element={user?.role==="Admin"?<ApplicationList />:<Navigate to="/" />}></Route>
             <Route path="/table" element={<Table />}></Route>
+            <Route path="/admin/test" element={<NewApp />}></Route>
             <Route path="*" element={<ResrictedPage />} />  
         </Routes>
   );

@@ -11,7 +11,6 @@ import "flatpickr/dist/themes/material_green.css";
 import { userRequest } from "../../requests/requestMethod.js";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice';
-import Table from './table';
 
 function ApplicationList() {
     const [identification, setIdentification] = useState("");
@@ -301,7 +300,7 @@ function ApplicationList() {
                                     </div>
                                 </div>
                             </div>
-                            <Table />
+                            
                         </div>
                     </div>
                 </main>

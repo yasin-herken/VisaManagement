@@ -105,7 +105,16 @@ function Sidebar({ coll }) {
                                                 </li> : null
                                             )
                                         }
-                                    
+                                        {
+                                            ((user ? user.role === "Admin" : null) ?
+                                                <li className={(getNavLink("/admin/test"))}>
+                                                    <NavLink className="sidebar-link" to="/admin/test">
+                                                        <AppsIcon className="align-middle" fontSize={"small"}></AppsIcon>
+                                                        <span>Application</span>
+                                                    </NavLink>
+                                                </li> : null
+                                            )
+                                        }
                                         {
                                             ((user?.role !== "Admin") && (user?.role !== "Client")) ? <li className="sidebar-item">
                                                 <a id="auth1" href="#auth" data-bs-toggle="collapse" className="sidebar-link" aria-expanded="false">

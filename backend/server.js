@@ -13,7 +13,6 @@ import dbBarcode from "./dbBarcode.js";
 //app config
 const app = express();
 const port = process.env.PORT || 8001;
-
 //middleware
 app.set("trust proxy", 1);
 app.use(express.json());
@@ -48,8 +47,8 @@ mongoose.connect(connection_url, {
 })
 //app routers
 app.get("/", (req, res) => {
-    res.status(200).send("Hello World");
 
+    res.send("")
 });
 app.post("/login",
     (req, res) => {
@@ -124,58 +123,73 @@ app.post("/register", (req, res) => {
     })
 
 });
-app.get("/barcode",(req,res)=>{
-    dbBarcode.find({},(err,data)=>{
+app.get("/barcode", (req, res) => {
+    dbBarcode.find({}, (err, data) => {
         res.send(data)
     })
 })
 app.post("/barcode", (req, res) => {
-    dbBarcode.findOne({ barcodeValue: req.body.barcodeValue, identification: req.body.identification }, async (err, data) => {
+    dbBarcode.findOne({ barcodeValue: req.body.barcodeValue, passportNo: req.body.passportNo }, async (err, data) => {
         if (err) throw err;
+        var barcodeNumber = null;
         if (data) {
-            if (data.identification === req.body.identification && data.barcodeValue === req.body.barcodeValue) {
-                res.send({
+            if (data.barcodeValue === req.body.barcodeValue) {
+                res.status(200).send({
                     success: false,
-                    message: "Barcode value and identification are already exists"
-                });
-            } else if (data.barcodeValue === req.body.barcodeValue) {
-                res.send({
+                    message: "Barcode Value must be unique."
+                })
+            } else if (data.passportNo === req.body.passportNo) {
+                res.status(200).send({
                     success: false,
-                    message: "Barcode value is already exists"
-                });
-            } else if (data.identification === req.body.identification) {
-                res.send({
-                    success: false,
-                    message: "Identification is already exists"
-                });
+                    message: "PassportNo must be unique."
+                })
             }
-
         }
         if (!data) {
-            const barcode = new dbBarcode({
-                identification: req.body.identification,
-                username: req.body.username,
-                lastname: req.body.lastname,
-                dateOfBirthday: req.body.dateOfBirthday,
-                status: req.body.status,
-                placeOfBirthday: req.body.placeOfBirthday,
-                gender: req.body.gender,
-                barcodeValue: req.body.barcodeValue,
-            });
-            barcode.save().then(() => {
-                res.send({
-                    success: true,
-                    message: "Barcode created successfully",
-                })
-            }).catch((err) => {
-                res.send({
-                    success: false,
-                    message: "Something went wrong.",
-                    error: err
-                })
-            }
 
-            )
+            dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
+                if (err) throw err;
+                if (data) {
+                    let tempBarcode = data.barcodeValue.slice(-6);
+                    tempBarcode = parseInt(tempBarcode) + 1;
+                    tempBarcode = String(tempBarcode).padStart(6, '0');
+                    tempBarcode = "MALI-" + tempBarcode;
+                    barcodeNumber = tempBarcode
+
+                }
+                if (!data) {
+                    barcodeNumber = "MALI-000000";
+                }
+                const barcode = new dbBarcode({
+                    name: req.body.name,
+                    surname: req.body.surname,
+                    telNo: parseInt(req.body.telNo),
+                    passportNo: req.body.passportNo,
+                    travelType: req.body.travelType,
+                    visaType: req.body.visaType,
+                    documentType: req.body.documentType,
+                    entryType: req.body.entryType,
+                    status: req.body.status,
+                    barcodeValue: barcodeNumber,
+                    visaStatus: "In Mission",
+                    result: "Waiting"
+                });
+                barcode.save().then(() => {
+                    res.send({
+                        success: true,
+                        message: "Document created successfully",
+                    })
+                }).catch((err) => {
+                    res.send({
+                        success: false,
+                        message: "Something went wrong.",
+                        error: err
+                    })
+                }
+
+                )
+            }).sort({ barcodeValue: -1 });
+
         }
     })
 })
@@ -241,7 +255,6 @@ app.get("/getData", (req, res) => {
     })
 })
 app.get("/getPrices", (req, res) => {
-
     Price.find({}, async (err, data) => res.json(data))
 })
 app.post("/postPrices", (req, res) => {
@@ -270,17 +283,17 @@ app.post("/postPrices", (req, res) => {
     }
 
 });
-app.delete("/barcode",(req,res)=>{
-    dbBarcode.deleteOne({identification:req.body.identification}, (err,data)=>{
-        console.log(err,data);
-        if(err) throw err;
-        if(data){
+app.delete("/barcode", (req, res) => {
+    dbBarcode.deleteOne({ identification: req.body.identification }, (err, data) => {
+        console.log(err, data);
+        if (err) throw err;
+        if (data) {
             res.status(200).send({
                 success: true,
                 message: "Barcode successfully deleted"
             })
         }
-        if(!data){
+        if (!data) {
             console.log("bere")
             res.status(404).send({
                 success: false,

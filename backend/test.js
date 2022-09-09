@@ -1,11 +1,6 @@
-import express from 'express'
-const app = express()
-const port = 3001
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+let str = "MALI-000123";
+let tempBarcode = str.slice(-6);
+tempBarcode = parseInt(tempBarcode) + 1;
+tempBarcode = String(tempBarcode).padStart(6,'0');
+tempBarcode = "MALI-" + tempBarcode;
+console.log(tempBarcode)

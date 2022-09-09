@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 const barcodeSchema = mongoose.Schema({
-    identification: {
-        type: String, 
-        unique: true
-    },
-    username: String,
-    lastname: String,
-    dateOfBirthday: Date,
+    barcodeValue: {type:String, unique: true},
+    name: String,
+    surname: String,
+    telNo: Number,
+    passportNo:  {type:String, unique: true},
+    travelType: String,
+    visaType: String,
+    documentType: String,
+    entryType: String,
     status: String,
-    placeOfBirthday: String,
-    gender: String,
-    barcodeValue: String,
+    visaStatus: String,
+    result: String
 },{ timestamps : true});
 
 export default mongoose.model("barcodes",barcodeSchema);
