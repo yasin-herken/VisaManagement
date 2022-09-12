@@ -7,9 +7,7 @@ import 'primeflex/primeflex.css';
 import "./css/DataTableDemo.css";
 import "../../index.css";
 import "./css/tables.css";
-import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode } from 'primereact/api';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { userRequest } from '../../requests/requestMethod.js';
@@ -21,46 +19,16 @@ import Table from 'react-bootstrap/Table';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import Barcode from 'react-barcode/lib/react-barcode';
-import { useReactToPrint } from "react-to-print";
-import ComponentToPrint from "../../components/ComponentToPrint.js";
-import { current } from '@reduxjs/toolkit';
 import ComponenToPrintWrapper from '../../components/ComponenToPrintWrapper';
 function PrimeTable() {
     const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
-    const [isOpen, setOverlay] = useState(false);
     const [currentObject, setCurrentObject] = useState({});
     const [position, setPosition] = useState('center');
-    const [displayBasic, setDisplayBasic] = useState(false);
-    const [displayBasic2, setDisplayBasic2] = useState(false);
-    const [displayModal, setDisplayModal] = useState(false);
-    const [displayMaximizable, setDisplayMaximizable] = useState(false);
-    const [displayPosition, setDisplayPosition] = useState(false);
     const [displayResponsive, setDisplayResponsive] = useState(false);
-    const [print, setPrint] = useState(false);
-    const [filters, setFilters] = useState({
-        'status': { value: null, matchMode: FilterMatchMode.EQUALS },
-        'barcodeValue': { value: null, matchMode: FilterMatchMode.CONTAINS },
-        'createdAt': { value: null, matchMode: FilterMatchMode.DATE_IS },
-        'passportNo': { value: null, matchMode: FilterMatchMode.CONTAINS },
-        'result': { value: null, matchMode: FilterMatchMode.EQUALS },
-        'telNo': { value: null, matchMode: FilterMatchMode.CONTAINS },
-
-    });
     const dialogFuncMap = {
-        'displayBasic': setDisplayBasic,
-        'displayBasic2': setDisplayBasic2,
-        'displayModal': setDisplayModal,
-        'displayMaximizable': setDisplayMaximizable,
-        'displayPosition': setDisplayPosition,
         'displayResponsive': setDisplayResponsive
     }
-    const configs = {
-        animate: true,
-        // clickDismiss: false,
-        // escapeDismiss: false,
-        // focusOutline: false,
-    };
     const resultObject = {
         "Rejected": "unqualified",
         "Accepted": "qualified",
@@ -174,9 +142,7 @@ function PrimeTable() {
         return <Dropdown options={commandDropdown} placeholder="Action" onChange={handleCommands} itemTemplate={commandItemTemplate} className="p-column-filter" showClear />;
     }
     const handleCommands = (event) => {
-        if (event.target.value === "Show") {
-            setOverlay(true);
-        }
+        
     }
     useEffect(() => {
         const loadPosts = async () => {
@@ -185,14 +151,11 @@ function PrimeTable() {
         }
         loadPosts();
     }, [user.token]);
-    useEffect(() => {
-        setPrint(true);
-    }, [currentObject])
     return (
         <>
             <div className='datatable-filter-demo'>
                 <div className='card'>
-                    <DataTable paginator value={posts} header={header} filters={filters} stripedRows className="p-datatable-customers" rows={11}
+                    <DataTable paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={11}
                         dataKey="id" filterDisplay="row" responsiveLayout="scroll" emptyMessage="No data found."
                         globalFilterFields={['status', 'barcodeValue', 'date', 'passportNo', 'name', 'surname', 'visaType', 'telNo', 'visaStatus', 'result', 'commands']}
                         onRowClick={(e) => {
@@ -217,7 +180,7 @@ function PrimeTable() {
                             style={{ minWidth: '12rem', width: "12rem" }} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
                         <Column field="commands" header="Commands" body={commandsBodyTemplate} />
                     </DataTable>
-                    <Dialog header="Application Receipt" visible={displayPosition} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayPosition')} onHide={() => onHide('displayPosition')}
+                    <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayPosition')} onHide={() => onHide('displayPosition')}
                         draggable={false} resizable={false}>
                         <Table>
                             <thead>

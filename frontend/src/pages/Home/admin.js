@@ -7,8 +7,6 @@ import NewApplication from './newApplication';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice';
 function Admin({ path }) {
-    const [username, setUsername] = useState("");
-    const [role, setRole] = useState("");
     const [collapse, setCollapse] = useState(false);
     const user = useSelector(selectUser);
     const navigate = useNavigate();
@@ -19,7 +17,7 @@ function Admin({ path }) {
         [navigate]
     );
     useEffect(() => {
-    }, [username, role, collapse])
+    }, [collapse])
     useEffect(() => {
     }, [path])
     useEffect(() => {

@@ -7,7 +7,7 @@ function AdditionalPrices({ setSum, prices }) {
     if (prices) {
         if (checked <= prices.length) {
             prices.map((price, index) => {
-                setChecked(prevState => [...prevState, false])
+                return setChecked(prevState => [...prevState, false])
             })
         }
     }

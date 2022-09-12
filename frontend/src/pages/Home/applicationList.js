@@ -3,9 +3,6 @@ import Footer from './footer';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
 import Flatpickr from "react-flatpickr";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
-import cryptoRandomString from 'crypto-random-string';
-import Barcode from "react-barcode";
 import { useForm, Controller } from "react-hook-form";
 import "flatpickr/dist/themes/material_green.css";
 import { userRequest } from "../../requests/requestMethod.js";
@@ -20,22 +17,14 @@ function ApplicationList() {
     const [place, setPlace] = useState("");
     const [gender, setGender] = useState("");
     const [date, setDate] = useState("");
-    const [text1, setText] = useState("");
-    const [qrCodeVisible, setQrCodeVisible] = useState(false);
-    const [barcodeVisible, setBarcodeVisible] = useState(false);
     const [errIdentification, setErrIdentification] = useState(false);
-    const [showFilter, setShowFilter] = useState(false);
     const [data, setData] = useState("");
     const qrRef = useRef(null);
-    const [image, setImage] = useState("");
-    const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState([]);
-
-    const [filterText, setFilterText] = useState('');
 
 
     const user = useSelector(selectUser);
-    const { control, register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { control, register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             username: "",
             lastname: "",
@@ -46,9 +35,6 @@ function ApplicationList() {
         }
     });
     const onGenerateFile = async () => {
-        const text2 = cryptoRandomString({ length: 11 });
-        const img = <Barcode value={text2}></Barcode>;
-        setImage(img);
         try {
             const res = await userRequest(user.token.split(" ")[1]).post("/barcode", {
                 identification: identification,
@@ -58,12 +44,12 @@ function ApplicationList() {
                 status: "pending",
                 placeOfBirthday: place,
                 gender: gender,
-                barcodeValue: text2,
+                barcodeValue: "1",
             });
             if (res?.data.success) {
                 //reset();
-                const answer = !qrCodeVisible ? setQrCodeVisible(true) : null;
                 setErrIdentification(false);
+                
             } else if (res?.data.error.code === 11000) {
                 setErrIdentification(true);
             }
@@ -78,32 +64,19 @@ function ApplicationList() {
 
     const onScanFile = () => {
         qrRef.current?.openImageDialog();
-        setBarcodeVisible(true)
     }
     const onSearchFile = (event) => {
        console.log(event.target.value)
     }
     useEffect(() => {
         const loadPosts = async () => {
-            setLoading(true);
             const response = await userRequest(user.token.split(" ")[1]).get("/barcode");
             setPosts(response.data);
-            setLoading(false);
         }
         loadPosts();
-    }, [user.token,posts,filterText])
-    useEffect(() => {
-    }, [text1])
-    useEffect(() => {
-    }, [qrCodeVisible])
+    }, [user.token,posts])
     useEffect(() => {
     }, [])
-    useEffect(() => {
-        setBarcodeVisible(false)
-    }, [data])
-    useEffect(() => {
-        console.log(errors)
-    }, [errors])
     return (
         <div className="wrapper">
             <Sidebar coll={collapse} />
@@ -250,9 +223,6 @@ function ApplicationList() {
                                                 <button className='btn btn-info' type="button" onClick={handleSubmit(onGenerateFile)}>
                                                     Generate Barcode Code
                                                 </button>
-                                                {qrCodeVisible ?
-                                                    <><img src={image} alt=""></img></>
-                                                    : null}
                                             </div>
                                         </div>
                                     </div>
@@ -269,28 +239,13 @@ function ApplicationList() {
 
                                                 <label htmlFor="inputbarcode" className="form-label ">Enter Passport Number</label>
                                                 <div className='input-group mb-3'>
-                                                    <input id="inputAddress" type="text" className="form-control" value={data} placeholder="" onChange={(e) => { setData(e.target.value); setShowFilter(true) }} />
+                                                    <input id="inputAddress" type="text" className="form-control" value={data} placeholder="" onChange={(e) => { setData(e.target.value); }} />
                                                     <button className='btn btn-info' onClick={onScanFile}>Scan</button>
                                                 </div>
                                                 <button className='btn btn-info pt-2' onClick={onSearchFile}>Search</button>
                                             </div>
                                             <div className='mb-3 col-md-6'>
-                                                {barcodeVisible ?
-                                                    <>
-                                                        {barcodeVisible ? <button ref={(el) => { el && el.style.setProperty("display", "flex", "important"); el && el.style.setProperty("text-align", "right", "important") }} className='btn btn-info pt-2' style={{ marginRight: "auto" }} onClick={() => setBarcodeVisible(false)}>Close</button> : null}
-                                                        <BarcodeScannerComponent
-                                                            delay={300}
-                                                            onUpdate={(err, result) => {
-                                                                if (result) {
-                                                                    setData(result.text)
-                                                                }
-                                                                else { setData("") }
-                                                            }}
-                                                        />
-                                                    </> : null}
-
                                             </div>
-
                                         </div>
                                         <div className='row'>
                                             <div className='mb-3 col-md-6'>

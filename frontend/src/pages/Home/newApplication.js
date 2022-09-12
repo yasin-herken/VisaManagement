@@ -24,8 +24,6 @@ import Gender from '../../Variables/gender';
 import Married from '../../Variables/married';
 import { PORT, HOST } from '../../Variables/host.js';
 function NewApplication() {
-    const [username, setUsername] = useState("")
-    const [role, setRole] = useState("")
     const [PNR, setPNR] = useState("")
     const [status, setStatus] = useState();
     const [gender, setGender] = useState();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useReducer } from 'react';
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useSelector } from 'react-redux';
 import Footer from './footer';
 import Navbar from './navbar';
@@ -9,11 +9,9 @@ import "./css/application.css";
 import Select from 'react-select';
 import { userRequest } from '../../requests/requestMethod';
 import Status from "../../Variables/status.js";
-import Barcode from "react-barcode";
 import TableTest from './tableTest';
 import PrimeTable from './primeTable';
 import TotalTable from '../../components/TotalTable';
-import VisaTable from '../../components/VisaTable';
 import VisaTables from '../../components/visaTables';
 import AdditionalPrices from '../../components/AdditionalPrices';
 import axios from 'axios';
@@ -79,7 +77,7 @@ function NewApp() {
     const [optionVisa, setOptionVisa] = useState([]);
     const [optionDoc, setOptionDoc] = useState([]);
     const [entryType, setEntryType] = useState({ value: "single", label: "Single" });
-    const { control, register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             name: "",
             lastname: "",
@@ -182,12 +180,14 @@ function NewApp() {
         if (state.state.includes("Visa")) {
             services?.map((service, index) => {
                 if (index === state.value[0].value) {
-                    service.visaTypes.map((visaType, index) => {
+                    return service.visaTypes.map((visaType, index) => {
                         return visaDoc.push({
                             value: index,
                             label: visaType.name
                         })
                     })
+                }else{
+                    return "";
                 }
             })
             setOptionVisa(visaDoc);
@@ -195,24 +195,25 @@ function NewApp() {
         if (state.state.includes("Document")) {
             services.map((service, index) => {
                 if (index === state.value[0]?.value) {
-                    service.visaTypes.map((visaType, index1) => {
+                    return service.visaTypes.map((visaType, index1) => {
                         if (index1 === state.value[1]?.value) {
-                            visaType.documentTypes.map((documents, index) => {
+                            return visaType.documentTypes.map((documents, index) => {
                                 return documentType.push({
                                     value: index,
                                     label: documents.name
                                 })
                             })
+                        }else {
+                            return "";
                         }
                     })
+                }else{
+                    return "";
                 }
             })
             setOptionDoc(documentType);
         }
     }, [services, state]);
-    useEffect(() => {
-        // console.log(errors)
-    }, [errors])
     useEffect(() => {
     }, [optionDoc, optionVisa])
     return (
@@ -453,7 +454,7 @@ function NewApp() {
                         </div>
                         <div className='row'>
                             <div className='col-12 col-lg-12'>
-                                <PrimeTable />
+                                <PrimeTable sum={sum} />
                             </div>
                         </div>
                     </div>

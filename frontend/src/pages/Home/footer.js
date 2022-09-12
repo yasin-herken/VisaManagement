@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
@@ -7,22 +8,22 @@ function Footer() {
         <div className="row text-muted">
             <div className="col-6 text-start">
                 <p className="mb-0">
-                    <a className="text-muted" href="https://adminkit.io/" target=""><strong>Visa Management</strong></a> &copy;
+                    <Link className="text-muted" to="#" target=""><strong>Visa Management</strong></Link> &copy;
                 </p>
             </div>
             <div className="col-6 text-end">
                 <ul className="list-inline">
                     <li className="list-inline-item">
-                        <a className="text-muted" href="https://adminkit.io/" target="">Support</a>
+                        <Link className="text-muted" to="#" target="">Support</Link>
                     </li>
                     <li className="list-inline-item">
-                        <a className="text-muted" href="https://adminkit.io/" target="">Help Center</a>
+                        <Link className="text-muted" to="#" target="">Help Center</Link>
                     </li>
                     <li className="list-inline-item">
-                        <a className="text-muted" href="https://adminkit.io/" target="">Privacy</a>
+                        <Link className="text-muted" to="#" target="">Privacy</Link>
                     </li>
                     <li className="list-inline-item">
-                        <a className="text-muted" href="https://adminkit.io/" target="">Terms</a>
+                        <Link className="text-muted" to="#" target="">Terms</Link>
                     </li>
                 </ul>
             </div>

@@ -149,6 +149,8 @@ function Table() {
         }, 2000);
         return () => clearTimeout(timeout);
     }, [filterText, posts]);
+    useEffect(()=>{
+    },[pending])
     return (
         <div className="col-12">
             <div className='card'>

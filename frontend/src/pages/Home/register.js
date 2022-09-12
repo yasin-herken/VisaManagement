@@ -6,7 +6,6 @@ function Register() {
     const [registerUsername, setRegisterUsername] = useState("")
     const [registerPassword, setRegisterPassword] = useState("")
     const [registerEmail, setRegisterEmail] = useState("")
-    const [msg, setMsg] = useState("")
     const navigate = useNavigate()
     const registerPage = async (event) => {
         event.preventDefault()
@@ -26,7 +25,6 @@ function Register() {
             } else if (res.data.user.role === "Client") {
                 navigate("/")
             }
-            setMsg(res.data.message)
         })
             .catch((err) => {
                 console.log("register Page")
