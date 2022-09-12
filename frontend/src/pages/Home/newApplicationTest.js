@@ -12,6 +12,11 @@ import Status from "../../Variables/status.js";
 import Barcode from "react-barcode";
 import TableTest from './tableTest';
 import PrimeTable from './primeTable';
+import TotalTable from '../../components/TotalTable';
+import VisaTable from '../../components/VisaTable';
+import VisaTables from '../../components/visaTables';
+import AdditionalPrices from '../../components/AdditionalPrices';
+import axios from 'axios';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -68,6 +73,8 @@ function NewApp() {
     const [status, setStatus] = useState("");
     const [options, setOptions] = useState([
     ]);
+    const [prices,setPrices] = useState();
+    const [sum, setSum] = useState(0);
     const [errType, setErrType] = useState([false, false, false]);
     const [optionVisa, setOptionVisa] = useState([]);
     const [optionDoc, setOptionDoc] = useState([]);
@@ -128,6 +135,20 @@ function NewApp() {
         }
 
     }
+    useEffect(()=>{
+        const getAdditionalPrices = async (event) => {
+            if (event && event.preventDefault)
+                event.preventDefault();
+            await axios({
+                method: "GET",
+                withCredentials: false,
+                url: "http://localhost:8001/getPrices"
+            }).then(res => {
+                setPrices(res.data)
+            }).catch(err => console.log(err))
+        }
+        getAdditionalPrices()
+    },[prices])
     useEffect(() => {
     }, [errType])
     useEffect(() => {
@@ -384,6 +405,38 @@ function NewApp() {
                                     </div>
                                 </div>
 
+                            </div>
+                            <div className='col-6 col-lg-6'>
+                                <div className='card'>
+                                    <div className='card-header'>
+                                        <div className='row'>
+                                            <h4 className='card-title'>Visa Prices</h4>
+                                        </div>
+                                    </div>
+                                    <div className='card-body'>
+                                        <VisaTables entryType={entryType} visaType={state.value[1].label} docType={state.value[2].label} />
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <div className="card-header">
+                                        <div className="row">
+                                            <h4 className="card-title">Additional Prices</h4>
+                                        </div>
+                                    </div>
+                                    <div className='card-body'>
+                                        <AdditionalPrices setSum={setSum} prices={prices} />
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <div className="card-header">
+                                        <div className="row">
+                                            <h4 className="card-title">Total</h4>
+                                        </div>
+                                    </div>
+                                    <div className='card-body'>
+                                        <TotalTable sum={sum} entrytype={entryType} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className='row'>

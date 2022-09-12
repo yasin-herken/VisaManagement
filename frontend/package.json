@@ -46,6 +46,7 @@
     "react-select": "^5.4.0",
     "react-select-country-list": "^2.2.3",
     "react-select-search": "^3.0.10",
+    "react-to-print": "^2.14.7",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "styled-components": "^5.3.5",

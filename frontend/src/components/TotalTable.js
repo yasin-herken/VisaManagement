@@ -3,9 +3,9 @@ import React, { useEffect ,useState} from 'react'
 function TotalTable({sum,entrytype}) {
     const [fee,setFee] = useState(0);
     useEffect(()=>{
-        if(entrytype==="single")
+        if(entrytype.value==="single")
             setFee(40000)
-        else if(entrytype==="multiple")
+        else if(entrytype.value==="multiple")
             setFee(115000)
     },[sum,entrytype])
   return (
