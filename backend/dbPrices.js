@@ -6,5 +6,4 @@ const priceSchema = mongoose.Schema({
         price: Number
     }
 });
-
 export default mongoose.model("additionalPrices",priceSchema);

@@ -195,7 +195,7 @@ app.post("/barcode", (req, res) => {
 })
 app.get("/getUser", (req, res) => {
     if (req.user !== "" || req.user !== null)
-        res.json(req.user)
+        res.status(200).json(req.user)
 });
 app.get("/admin", passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.status(200).send({
@@ -251,11 +251,11 @@ app.get("/findbyName", (req, res) => {
 app.get("/getData", (req, res) => {
     dbCollection.find({}, (err, data) => {
         if (err) throw err;
-        res.json(data)
+        res.status(200).json(data)
     })
 })
 app.get("/getPrices", (req, res) => {
-    Price.find({}, async (err, data) => res.json(data))
+    Price.find({}, async (err, data) => res.status(200).json(data))
 })
 app.post("/postPrices", (req, res) => {
 

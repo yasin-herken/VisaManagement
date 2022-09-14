@@ -137,16 +137,17 @@ function NewApp() {
         const getAdditionalPrices = async (event) => {
             if (event && event.preventDefault)
                 event.preventDefault();
-            await axios({
-                method: "GET",
-                withCredentials: false,
-                url: "http://localhost:8001/getPrices"
-            }).then(res => {
-                setPrices(res.data)
-            }).catch(err => console.log(err))
+                try {
+                    const res = await userRequest(user.token.split(" ")[1]).get("/getData");
+                    if(res.status===200){
+                        setPrices(res.data)
+                    }
+                } catch(err){
+                    console.log(err);
+                }  
         }
         getAdditionalPrices()
-    },[prices])
+    },[user.token])
     useEffect(() => {
     }, [errType])
     useEffect(() => {
