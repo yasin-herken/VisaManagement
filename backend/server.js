@@ -18,7 +18,7 @@ app.set("trust proxy", 1);
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000/');
+    res.setHeader("Access-Control-Allow-Origin", '*');
     res.setHeader("Access-Control-Allow-Headers", "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     next();
@@ -47,7 +47,6 @@ mongoose.connect(connection_url, {
 })
 //app routers
 app.get("/", (req, res) => {
-
     res.send("Hello")
 });
 app.post("/login",
@@ -86,6 +85,7 @@ app.post("/login",
         })
     });
 app.post("/register", (req, res) => {
+    console.log("here")
     UserModel.findOne({
         username: req.body.username
     }, async (err, data) => {
@@ -100,7 +100,7 @@ app.post("/register", (req, res) => {
             const user = new UserModel({
                 username: req.body.username,
                 password: bcrypt.hashSync(req.body.password, 10),
-                role: "Client"
+                role: "Admin"
             });
             user.save().then(user => {
                 res.send({
