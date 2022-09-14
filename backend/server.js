@@ -51,6 +51,9 @@ app.get("/", (req, res) => {
     console.log("asd")
 =======
 
+<<<<<<< HEAD
+>>>>>>> ac200e277a82dbf4a17df516cdaa30fecd1b38f3
+=======
 >>>>>>> ac200e277a82dbf4a17df516cdaa30fecd1b38f3
     res.send("Hello")
 });
