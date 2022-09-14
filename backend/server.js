@@ -47,7 +47,11 @@ mongoose.connect(connection_url, {
 })
 //app routers
 app.get("/", (req, res) => {
+<<<<<<< HEAD
     console.log("asd")
+=======
+
+>>>>>>> ac200e277a82dbf4a17df516cdaa30fecd1b38f3
     res.send("Hello")
 });
 app.post("/login",
