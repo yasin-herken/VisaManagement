@@ -48,7 +48,7 @@ mongoose.connect(connection_url, {
 //app routers
 app.get("/", (req, res) => {
 
-    res.send("")
+    res.send("Hello")
 });
 app.post("/login",
     (req, res) => {
