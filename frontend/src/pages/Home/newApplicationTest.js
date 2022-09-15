@@ -71,12 +71,12 @@ function NewApp() {
     const [status, setStatus] = useState("");
     const [options, setOptions] = useState([
     ]);
-    const [prices,setPrices] = useState();
-    const [sum, setSum] = useState(0);
+    const [prices,setPrices] = useState([]);
+    const [sum, setSum] = useState([]);
     const [errType, setErrType] = useState([false, false, false]);
     const [optionVisa, setOptionVisa] = useState([]);
     const [optionDoc, setOptionDoc] = useState([]);
-    const [entryType, setEntryType] = useState({ value: "single", label: "Single" });
+    const [entryType, setEntryType] = useState([{ value: "single", label: "Single" }]);
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             name: "",
@@ -138,7 +138,7 @@ function NewApp() {
             if (event && event.preventDefault)
                 event.preventDefault();
                 try {
-                    const res = await userRequest(user.token.split(" ")[1]).get("/getData");
+                    const res = await userRequest(user.token.split(" ")[1]).get("/getPrices");
                     if(res.status===200){
                         setPrices(res.data)
                     }
@@ -155,6 +155,7 @@ function NewApp() {
             try {
                 const res = await userRequest(user.token.split(" ")[1]).get("/getData");
                 if (res.status === 200) {
+                    console.log(res.data)
                     setServices(res.data);
                 }
             } catch (err) {
@@ -173,7 +174,7 @@ function NewApp() {
             services?.map((element, index) => {
                 return travelDoc.push({
                     value: index,
-                    label: element.name
+                    label: element?.name
                 });
             });
             setOptions(travelDoc)
@@ -181,14 +182,14 @@ function NewApp() {
         if (state.state.includes("Visa")) {
             services?.map((service, index) => {
                 if (index === state.value[0].value) {
-                    return service.visaTypes.map((visaType, index) => {
+                    service?.visaTypes?.map((visaType, index) => {
                         return visaDoc.push({
                             value: index,
-                            label: visaType.name
+                            label: visaType?.name
                         })
                     })
                 }else{
-                    return "";
+                    return [];
                 }
             })
             setOptionVisa(visaDoc);
@@ -201,15 +202,15 @@ function NewApp() {
                             return visaType.documentTypes.map((documents, index) => {
                                 return documentType.push({
                                     value: index,
-                                    label: documents.name
+                                    label: documents?.name
                                 })
                             })
                         }else {
-                            return "";
+                            return [];
                         }
                     })
                 }else{
-                    return "";
+                    return [];
                 }
             })
             setOptionDoc(documentType);

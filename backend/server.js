@@ -85,7 +85,6 @@ app.post("/login",
         })
     });
 app.post("/register", (req, res) => {
-    console.log("here")
     UserModel.findOne({
         username: req.body.username
     }, async (err, data) => {
@@ -237,7 +236,6 @@ app.put("/updateData", (req, res) => {
             "visaTypes.name": 'IHB'
         }, { $set: { "visaTypes.$": { name: "IHB Saglik" } } }, (err, data) => {
             res.send(data)
-            console.log(err)
         })
     } else {
         res.send("Acess Denied");
@@ -255,7 +253,9 @@ app.get("/getData", (req, res) => {
     })
 })
 app.get("/getPrices", (req, res) => {
-    Price.find({}, async (err, data) => res.status(200).json(data))
+    Price.find({}, async (err, data) => {
+        res.status(200).json(data)
+    })
 })
 app.post("/postPrices", (req, res) => {
 

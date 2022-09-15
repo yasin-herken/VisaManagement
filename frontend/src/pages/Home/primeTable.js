@@ -20,14 +20,16 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import Barcode from 'react-barcode/lib/react-barcode';
 import ComponenToPrintWrapper from '../../components/ComponenToPrintWrapper';
-function PrimeTable() {
+function PrimeTable({sum}) {
     const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
     const [currentObject, setCurrentObject] = useState({});
     const [position, setPosition] = useState('center');
+    const [displayPosition, setDisplayPosition] = useState(false);
     const [displayResponsive, setDisplayResponsive] = useState(false);
     const dialogFuncMap = {
-        'displayResponsive': setDisplayResponsive
+        'displayResponsive': setDisplayResponsive,
+        'displayPosition': setDisplayPosition,
     }
     const resultObject = {
         "Rejected": "unqualified",
@@ -88,7 +90,7 @@ function PrimeTable() {
     const barcodeBodyTemplate = (rowData) => {
 
         return <>
-            <ComponenToPrintWrapper 
+            <ComponenToPrintWrapper
                 rowData={rowData}
             />
         </>
@@ -136,14 +138,18 @@ function PrimeTable() {
         return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />
     }
     const commandItemTemplate = (option) => {
-        return <Button label={option} icon="pi pi-arrow-down" onClick={() => onClick('displayPosition', 'top')} className="p-button-warning" />
+        return <Button label={option} icon="pi pi-arrow-down" onClick={() => onClick('displayResponsive', 'top')} className="p-button-warning" />
     }
     const commandsBodyTemplate = (options, rowData) => {
         return <Dropdown options={commandDropdown} placeholder="Action" onChange={handleCommands} itemTemplate={commandItemTemplate} className="p-column-filter" showClear />;
     }
     const handleCommands = (event) => {
-        
+        if (event.target.value === "Show") {
+
+        }
     }
+    useEffect(()=>{
+    },[sum])
     useEffect(() => {
         const loadPosts = async () => {
             const response = await userRequest(user.token.split(" ")[1]).get("/barcode");
@@ -180,8 +186,12 @@ function PrimeTable() {
                             style={{ minWidth: '12rem', width: "12rem" }} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
                         <Column field="commands" header="Commands" body={commandsBodyTemplate} />
                     </DataTable>
-                    <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayPosition')} onHide={() => onHide('displayPosition')}
-                        draggable={false} resizable={false}>
+                    <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayResponsive')}
+                        onHide={() => { onHide('displayResponsive'); console.log("Heree") }}
+
+                        draggable={false}
+                        resizable={false}
+                    >
                         <Table>
                             <thead>
                                 <tr></tr>
@@ -228,11 +238,17 @@ function PrimeTable() {
                                     <td>50000</td>
                                     <td>CFA</td>
                                 </tr>
-                                <tr>
-                                    <td>SIGORTA,1 Month</td>
-                                    <td>25000</td>
-                                    <td>CFA</td>
-                                </tr>
+                                {
+                                    sum && sum.map((element)=>{
+                                        return <>
+                                            <tr>
+                                                <td>SIGORTA {element.service}</td>
+                                                <td>{element.sum}</td>
+                                                <td>CFA</td>
+                                            </tr>
+                                        </>
+                                    })
+                                }
                                 <tr>
                                     <td>VIZE,Touristic/Businesspers</td>
                                     <td>40000</td>

@@ -15,7 +15,7 @@ function Register() {
                 username: registerUsername,
                 password: registerPassword,
                 email: registerEmail,
-                role: "Client"
+                role: "Admin"
             },
             withCredentials: false,
             url: HOST.url + ":" + PORT.port + "/register"
@@ -27,7 +27,6 @@ function Register() {
             }
         })
             .catch((err) => {
-                console.log("register Page")
                 console.log(err)
             })
     }

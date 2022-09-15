@@ -5,31 +5,31 @@ import AppsIcon from '@mui/icons-material/Apps';
 import { NavLink, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice.js';
+import styled from 'styled-components';
+const Nav = styled.nav`
+id: "sidebar";
+class: ${props => (props.active ? "sidebar js-sidebar" : "sidebar js-sidebar collapse")};
+transition: all 0.5s ease;
+margin-left: ${props => (props.active ? "-256px" : "0px")};
+`;
 function Sidebar({ coll }) {
-    const [css, setCss] = useState("")
-    const [styles, setStyles] = useState({
-    })
+    const [active, setActive] = useState(false);
     const user = useSelector(selectUser);
     const [clicked, setClicked] = useState(false);
     const getNavLink = (path) => {
         return path === window.location.pathname ? "sidebar-item active" : "sidebar-item"
     }
+
     useEffect(() => {
         if (coll === false) {
-            setCss("")
-            setStyles({
-                marginLeft: "0px"
-            })
+            setActive(false)
         }
         else {
-            setCss("collapse")
-            setStyles({
-                marginLeft: "-256px"
-            })
+            setActive(true)
         }
     }, [coll])
     return (
-        <nav id="sidebar" className={"sidebar js-sidebar " + css} style={styles}>
+        <Nav active={active}>
             <div className="sidebar-content js-simplebar" data-simplebar="init">
                 <div className="simplebar-wrapper" style={{ margin: "0px" }}>
                     <div className="simplebar-height-auto-observer-wrapper">
@@ -53,7 +53,7 @@ function Sidebar({ coll }) {
                                                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxCnbayQIq0SLjq7bdjeYI4R14mT7RiGbuhw&usqp=CAU" className="avatar img-fluid rounded me-1" alt="Not found" />
                                             </div>
                                             <div className="flex-grow-1 ps-2" >
-                                                <Link className="sidebar-user-title dropdown-toggle" to="#" data-bs-toggle="dropdown" aria-expanded="false" role="button" id="dropdownMenuLink" onClick={() => {
+                                                <Link className="sidebar-user-title" to="#" data-bs-toggle="dropdown" aria-expanded="false" role="button" id="dropdownMenuLink" onClick={() => {
                                                     if (clicked) {
                                                         setClicked(false)
                                                     } else {
@@ -86,15 +86,6 @@ function Sidebar({ coll }) {
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span className="align-middle">Dashboards</span>
                                             </NavLink>
                                         </li>
-                                        {
-                                            ((user ? user.role === "Admin" : null) ?
-                                                <li className={(getNavLink("/admin/newApplication"))}>
-                                                    <NavLink className="sidebar-link" to="/admin/newApplication">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-file align-middle me-2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span className="align-middle">Make New Application</span>
-                                                    </NavLink>
-                                                </li> : null
-                                            )
-                                        }
                                         {
                                             ((user ? user.role === "Admin" : null) ?
                                                 <li className={(getNavLink("/application"))}>
@@ -149,7 +140,7 @@ function Sidebar({ coll }) {
                     </div>
                 </div>
             </div>
-        </nav>
+        </Nav>
     )
 }
 
