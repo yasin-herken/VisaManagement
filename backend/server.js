@@ -102,16 +102,24 @@ app.post("/register", (req, res) => {
                 role: "Admin"
             });
             user.save().then(user => {
+                const payload = {
+                    username: user.username,
+                    id: user._id
+                }
+                const secretOrKey = 'jwt_secret_key'
+                const token = jwt.sign(payload, secretOrKey, { expiresIn: "24h" })
                 res.send({
                     success: true,
                     message: "User created successfully",
                     user: {
                         id: user._id,
                         username: user.username,
+                        token: token,
                         role: user.role
                     }
                 })
             }).catch(err => {
+                console.log(err);
                 res.send({
                     success: false,
                     message: "Something went wrong",

@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { HOST, PORT } from '../../Variables/host.js';
+import { useDispatch } from 'react-redux';
+import { login } from '../Features/userSlice.js';
 function Register() {
     const [registerUsername, setRegisterUsername] = useState("")
     const [registerPassword, setRegisterPassword] = useState("")
     const [registerEmail, setRegisterEmail] = useState("")
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const registerPage = async (event) => {
         event.preventDefault()
         await axios({
@@ -20,10 +23,15 @@ function Register() {
             withCredentials: false,
             url: HOST.url + ":" + PORT.port + "/register"
         }).then((res) => {
-            if (res.data.user.role === "Admin") {
-                navigate("/admin")
-            } else if (res.data.user.role === "Client") {
-                navigate("/")
+            console.log(res)
+            if (res.data.success){
+                dispatch(login({
+                    username: res.data.user.username,
+                    role: res.data.user.role,
+                    token: res.data.user.token,
+                    loggedIn: true
+                }));
+                navigate("/");
             }
         })
             .catch((err) => {

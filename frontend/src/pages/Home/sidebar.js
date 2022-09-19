@@ -7,10 +7,10 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice.js';
 import styled from 'styled-components';
 const Nav = styled.nav`
-id: "sidebar";
-class: ${props => (props.active ? "sidebar js-sidebar" : "sidebar js-sidebar collapse")};
-transition: all 0.5s ease;
-margin-left: ${props => (props.active ? "-256px" : "0px")};
+    id: "sidebar";
+    class: ${props => (props.active ? "sidebar js-sidebar" : "sidebar js-sidebar collapse")};
+    transition: all 0.5s ease;
+    margin-left: ${props => (props.active ? "-256px" : "0px")};
 `;
 function Sidebar({ coll }) {
     const [active, setActive] = useState(false);
@@ -47,37 +47,8 @@ function Sidebar({ coll }) {
                                             <path d="M20 16L12 20L4 16"></path>
                                         </svg>
                                     </Link>
-                                    <div className="sidebar-user" >
-                                        <div className='m-4 d-flex justify-content-center' >
-                                            <div className='flex-shrink-0'>
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxCnbayQIq0SLjq7bdjeYI4R14mT7RiGbuhw&usqp=CAU" className="avatar img-fluid rounded me-1" alt="Not found" />
-                                            </div>
-                                            <div className="flex-grow-1 ps-2" >
-                                                <Link className="sidebar-user-title" to="#" data-bs-toggle="dropdown" aria-expanded="false" role="button" id="dropdownMenuLink" onClick={() => {
-                                                    if (clicked) {
-                                                        setClicked(false)
-                                                    } else {
-                                                        setClicked(true)
-                                                    }
-                                                }} >
-                                                    {user ? user.username.toUpperCase() : null}
-                                                    <ChevronLeftIcon className={clicked ? "dropdown-after" : ""} style={{ transform: "rotate(-90deg)" }} />
-                                                </Link>
-                                                <div className="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownMenuLink">
-                                                    <Link className="dropdown-item" to="pages-profile.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-user align-middle me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Profile</Link>
-                                                    <Link className="dropdown-item" to="#1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-pie-chart align-middle me-1"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Analytics</Link>
-                                                    <div className="dropdown-divider"></div>
-                                                    <Link className="dropdown-item" to="pages-settings.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-settings align-middle me-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings &amp;
-                                                        Privacy</Link>
-                                                    <Link className="dropdown-item" to="#1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-help-circle align-middle me-1"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Help Center</Link>
-                                                    <div className="dropdown-divider"></div>
-                                                    <Link className="dropdown-item" to="#1">Log out</Link>
-                                                </div>
-                                                <div className="sidebar-user-subtitle" style={{ color: "white" }}>{user ? user.role : null}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ul className="sidebar-nav">
+
+                                    <ul className="sidebar-nav" style={{marginTop:"80px"}}>
                                         <li className="sidebar-header">
                                             Pages
                                         </li>

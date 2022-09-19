@@ -1,6 +1,5 @@
 import React, { useEffect, useState} from 'react';
 import Sidebar from './sidebar';
-import Footer from './footer';
 import Navbar from './navbar';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice.js';
@@ -18,7 +17,6 @@ function Home() {
       <div className="main">
         <Navbar setColl={setCollapse} />
         <main className="content"></main>
-        <Footer />
       </div>
     </div>
   )

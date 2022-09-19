@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef  } from 'react'
-import Footer from './footer';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
 import Flatpickr from "react-flatpickr";
@@ -259,7 +258,6 @@ function ApplicationList() {
                         </div>
                     </div>
                 </main>
-                <Footer />
             </div>
         </div>
     )

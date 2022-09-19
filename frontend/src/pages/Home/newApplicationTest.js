@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { useForm } from "react-hook-form";
 import { useSelector } from 'react-redux';
-import Footer from './footer';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
 import { selectUser } from '../Features/userSlice';
@@ -14,7 +13,6 @@ import PrimeTable from './primeTable';
 import TotalTable from '../../components/TotalTable';
 import VisaTables from '../../components/visaTables';
 import AdditionalPrices from '../../components/AdditionalPrices';
-import axios from 'axios';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -461,7 +459,6 @@ function NewApp() {
                         </div>
                     </div>
                 </main>
-                <Footer />
             </div>
         </div>
     )

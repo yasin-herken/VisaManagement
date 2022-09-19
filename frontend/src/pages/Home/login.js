@@ -57,21 +57,10 @@ function Login() {
         [navigate]
     );
     useEffect(() => {
-        const getAdminPage = async () => {
-            await axios.get(HOST.url + ":" + PORT.port + "/admin", {
-                headers: {
-                    'Authorization': user.token
-                }
-            }).then(res => {
-                redirect("/admin");
-            }).catch(err => console.log(err))
-        }
         const getUserPage = async () => {
             redirect("/")
         }
         if (user?.role === "Admin") {
-            getAdminPage();
-        } else if (user?.role === "Client") {
             getUserPage();
         }
     }, [user, redirect])

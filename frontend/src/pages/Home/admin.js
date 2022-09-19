@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './sidebar';
-import Footer from './footer';
 import Navbar from './navbar';
 import NewApplication from './newApplication';
 import { useSelector } from 'react-redux';
@@ -34,7 +33,6 @@ function Admin({ path }) {
                     {user?.role === "Admin" && path === "newApplication" ? <NewApplication /> : null}
                     {user?.role === "Admin" && path === "/" ? null : null}
                 </main>
-                <Footer />
             </div>
         </div>
     )
