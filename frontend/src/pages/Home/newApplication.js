@@ -23,8 +23,9 @@ import Select from 'react-select';
 import Gender from '../../Variables/gender';
 import Married from '../../Variables/married';
 import { publicRequest } from '../../requests/requestMethod.js';
+import { duration } from '@mui/material';
 function NewApplication() {
-    const [PNR, setPNR] = useState("")
+    const [pnr, setPnr] = useState("")
     const [status, setStatus] = useState();
     const [gender, setGender] = useState();
     const [name, setName] = useState();
@@ -57,19 +58,69 @@ function NewApplication() {
     const [treeDoc, setTreeDoc] = useState([]);
     const [sum, setSum] = useState([])
     const [prices, setPrices] = useState();
-
-
-    const handleSubmit = () => {
-        console.log(PNR, status, gender, name, surname, married, bcountry, bdate, nationality, job, fname, lname, bcity)
+    const [airport, setAirport] = useState("");
+    const [hotel, setHotel] = useState("");
+    const [description, setDescription] = useState("");
+    const [durationOfStay, setDurationOfStay] = useState("");
+    const handleSubmit = async () => {
+        try {
+            const res = await publicRequest.post("/barcode", {
+                personal: {
+                    pnr: pnr,
+                    status: status,
+                    title: gender,
+                    name: name,
+                    surname: surname,
+                    birthCountry: bcountry,
+                    birthDate: bdate,
+                    birthCity: bcity,
+                    nationality: nationality,
+                    occupation: job,
+                    fatherName: fname,
+                    motherName: lname,
+                    married: married,
+                },
+                passport: {
+                    passportNo: pnumber,
+                    passportIssueDate: pissue,
+                    passportExpiryDate: pexpiry,
+                    passportAuthority: pauthority,
+                    passportIssueState: pistate,
+                    travelType: treeDoc[0],
+                    visaType: treeDoc[1],
+                    documentType: treeDoc[2],
+                    entryType: entrytype
+                },
+                contact: {
+                    telNo: phone,
+                    email: email,
+                    country: country,
+                    city: city,
+                    address: address,
+                    postalCode: postal
+                },
+                travel: {
+                    tripStartDate: tripstart,
+                    insuranceExpiryDate: insuranceExp,
+                    airportName: airport,
+                    durationOfStay: durationOfStay,
+                    hotelName: hotel,
+                    description: description
+                },
+                services: {
+                    service: sum.map((element)=>{
+                        return element;
+                    })
+                }
+            });
+            console.log(res)
+        } catch (err) {
+            console.log(err);
+        }
     }
-    //Contact Info Update Render
-    useEffect(() => {
-        console.log(status)
-    }, [status, gender, PNR, name, surname, married, bcountry, bdate, nationality, job, fname, lname, bcity])
-    // Visa Passport Details
-    useEffect(() => {
-        console.log(pnumber)
-    }, [pnumber, pissue, pexpiry, pauthority, pistate])
+    useEffect(()=>{
+        console.log(sum)
+    },[sum])
     useEffect(() => {
         const getData = async (event) => {
             if (event && event.preventDefault)
@@ -100,9 +151,6 @@ function NewApplication() {
         getAdditionalPrices();
         getData();
     }, [])
-    useEffect(()=>{
-        console.log(sum)
-    },[sum])
     return (
         <div className="container-fluid p-0">
             <div className="row">
@@ -114,9 +162,9 @@ function NewApplication() {
                         <div className="card-body">
                             <div className="row">
                                 <div className="mb-3 col-md-8">
-                                    <label htmlFor="inputEmail4" className="form-label">If there is a linked PNR, please enter:</label>
+                                    <label htmlFor="inputEmail4" className="form-label">If there is a linked pnr, please enter:</label>
                                     <input id="inputAddress" type="text" className="form-control" placeholder="" onChange={(e) => {
-                                        setPNR(e.target.value);
+                                        setPnr(e.target.value);
                                     }} />
                                 </div>
                                 <div className="mb-3 col-md-4">
@@ -378,17 +426,17 @@ function NewApplication() {
                             <div className='row'>
                                 <div className="mb-3 col-md-6">
                                     <label htmlFor="inputEmail4" className="form-label">Airport Name*</label>
-                                    <AirportName />
+                                    <AirportName setAirport={setAirport} />
                                 </div>
                                 <div className="mb-3 col-md-6">
                                     <label htmlFor="inputEmail4" className="form-label">Duration of Stay</label>
-                                    <DurationStay />
+                                    <DurationStay setDuration={setDurationOfStay} />
                                 </div>
                             </div>
                             <div className='row'>
                                 <div className="mb-3 col-md-9">
                                     <label htmlFor="inputEmail4" className="form-label">Hotel Name</label>
-                                    <input type="text" className="form-control" placeholder="Search for..." />
+                                    <input type="text" className="form-control" placeholder="Search for..." onChange={(e) => setHotel(e.target.value)} />
                                 </div>
                                 <div className='mb3 mt-2 col-md-3'>
                                     <label className='form-label' />
@@ -398,7 +446,7 @@ function NewApplication() {
                             <div className='row'>
                                 <div className="mb-3 col-md-12">
                                     <label htmlFor="inputEmail4" className="form-label">Description</label>
-                                    <textarea className='form-control' rows="" placeholder='Text area'></textarea>
+                                    <textarea className='form-control' rows="" placeholder='Text area' onChange={(e) => setDescription(e.target.value)} ></textarea>
                                 </div>
                             </div>
                         </div>

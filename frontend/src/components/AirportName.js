@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Select from 'react-select'
-function AirportName() {
-    const options = [
-        { value: "ISTANBUL", label:"ISTANBUL AIRPORT"},
-    ]
+function AirportName({setAirport}) {
+  const [selected,setSelected] = useState("");
+  const options = [
+    { value: "ISTANBUL", label: "ISTANBUL AIRPORT" },
+  ]
   return (
-    <Select 
-    options={options}
-        placeholder="Select Travel Type"
+    <Select
+      value={selected}
+      options={options}
+      placeholder="Select Travel Type"
+      onChange={(value)=>{
+        setAirport(value.label);
+        setSelected(value);
+      }}
     />
   )
 }

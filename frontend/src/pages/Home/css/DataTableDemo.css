@@ -3,7 +3,7 @@
 }
 
 .datatable-filter-demo .p-progressbar {
-    height: 0.5rem;
+    height: 1rem;
     background-color: #d8dadc;
 }
 
@@ -22,11 +22,11 @@
 .datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-header {
     padding: 1rem;
     text-align: left;
-    font-size: 1.5rem;
+    font-size: 1.0rem;
 }
 
 .datatable-filter-demo .p-datatable.p-datatable-customers .p-paginator {
-    padding: 1rem;
+    padding: 2rem;
 }
 
 .datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-thead>tr>th {
@@ -39,4 +39,8 @@
 
 .datatable-filter-demo .p-datatable.p-datatable-customers .p-dropdown-label:not(.p-placeholder) {
     text-transform: uppercase;
+}
+
+.p-dropdown .p-dropdown-label {
+    overflow:visible;
 }

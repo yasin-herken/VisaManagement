@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv/config';
 import dbBarcode from "./dbBarcode.js";
+import fs from 'fs';
 //app config
 const app = express();
 const port = process.env.PORT || 8001;
@@ -136,69 +137,105 @@ app.get("/barcode", (req, res) => {
     })
 })
 app.post("/barcode", (req, res) => {
-    dbBarcode.findOne({ barcodeValue: req.body.barcodeValue, passportNo: req.body.passportNo }, async (err, data) => {
-        if (err) throw err;
-        var barcodeNumber = null;
-        if (data) {
-            if (data.barcodeValue === req.body.barcodeValue) {
-                res.status(200).send({
-                    success: false,
-                    message: "Barcode Value must be unique."
+
+    dbBarcode.findOne({
+        barcodeValue: req.body.barcodeValue,
+        passport: {
+            passportNo: req.body.passport.passportNo
+        }
+    }
+    , async (err, data) => {
+    if (err) throw err;
+    var barcodeNumber = null;
+    if (data) {
+        if (data.barcodeValue === req.body.barcodeValue) {
+            res.status(200).send({
+                success: false,
+                message: "Barcode Value must be unique."
+            })
+        } else if (data.passportNo === req.body.passportNo) {
+            res.status(200).send({
+                success: false,
+                message: "PassportNo must be unique."
+            })
+        }
+    }
+    if (!data) {
+        
+        dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
+            if (err) throw err;
+            if (data) {
+                let tempBarcode = data.barcodeValue.slice(-6);
+                tempBarcode = parseInt(tempBarcode) + 1;
+                tempBarcode = String(tempBarcode).padStart(6, '0');
+                tempBarcode = "MALI-" + tempBarcode;
+                barcodeNumber = tempBarcode
+
+            }
+            if (!data) {
+                barcodeNumber = "MALI-000000";
+            }
+            const barcode = new dbBarcode({
+                contact: {
+                    telNo: req.body.contact.telNo,
+                    email: req.body.contact.email,
+                    country: req.body.contact.country,
+                    city: req.body.contact.city,
+                    address: req.body.contact.address,
+                    postalCode: req.body.contact.postalCode
+                },
+                passport: {
+                    passportNo: req.body.passport.passportNo,
+                    travelType: req.body.passport.travelType,
+                    visaType: req.body.passport.visaType,
+                    documentType: req.body.passport.documentType,
+                    entryType: req.body.passport.entryType.label,
+                    passportIssueDate: req.body.passport.passportIssueDate,
+                    passportExpiryDate: req.body.passport.passportExpiryDate,
+                    passportAuthority: req.body.passport.passportAuthority,
+                    passportIssueState: req.body.passport.passportIssueState,
+
+                },
+                personal: {
+                    status: req.body.personal.status.label,
+                    pnr: req.body.personal.pnr,
+                    name: req.body.personal.name,
+                    surname: req.body.personal.surname,
+                    title: req.body.personal.title.label,
+                    birthDate: req.body.personal.birthDate,
+                    birthCountry: req.body.personal.birthCountry,
+                    birthCity: req.body.personal.birthCity,
+                    nationality: req.body.personal.nationality,
+                    occupation: req.body.personal.occupation,
+                    fatherName: req.body.personal.fatherName,
+                    motherName: req.body.personal.motherName,
+                    married: req.body.personal.married.label,
+                },
+                services: {
+                    service: req.body.services.service
+                },
+                barcodeValue: barcodeNumber,
+                visaStatus: "In Mission",
+                result: "Waiting"
+            });
+            barcode.save().then(() => {
+                res.send({
+                    success: true,
+                    message: "Document created successfully",
                 })
-            } else if (data.passportNo === req.body.passportNo) {
-                res.status(200).send({
+            }).catch((err) => {
+                res.send({
                     success: false,
-                    message: "PassportNo must be unique."
+                    message: "Something went wrong.",
+                    error: err
                 })
             }
-        }
-        if (!data) {
 
-            dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
-                if (err) throw err;
-                if (data) {
-                    let tempBarcode = data.barcodeValue.slice(-6);
-                    tempBarcode = parseInt(tempBarcode) + 1;
-                    tempBarcode = String(tempBarcode).padStart(6, '0');
-                    tempBarcode = "MALI-" + tempBarcode;
-                    barcodeNumber = tempBarcode
+            )
+        }).sort({ barcodeValue: -1 });
 
-                }
-                if (!data) {
-                    barcodeNumber = "MALI-000000";
-                }
-                const barcode = new dbBarcode({
-                    name: req.body.name,
-                    surname: req.body.surname,
-                    telNo: parseInt(req.body.telNo),
-                    passportNo: req.body.passportNo,
-                    travelType: req.body.travelType,
-                    visaType: req.body.visaType,
-                    documentType: req.body.documentType,
-                    entryType: req.body.entryType,
-                    status: req.body.status,
-                    barcodeValue: barcodeNumber,
-                    visaStatus: "In Mission",
-                    result: "Waiting"
-                });
-                barcode.save().then(() => {
-                    res.send({
-                        success: true,
-                        message: "Document created successfully",
-                    })
-                }).catch((err) => {
-                    res.send({
-                        success: false,
-                        message: "Something went wrong.",
-                        error: err
-                    })
-                }
-
-                )
-            }).sort({ barcodeValue: -1 });
-
-        }
-    })
+    }
+})
 })
 app.get("/getUser", (req, res) => {
     if (req.user !== "" || req.user !== null)

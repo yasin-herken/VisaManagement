@@ -7,6 +7,7 @@ import "./css/index.css";
 import { useLocation } from 'react-router-dom';
 import NewApplication from './newApplication';
 import ApplicationList from './applicationList';
+import Dashboard from './dashboard';
 function Home() {
   const [collapse, setCollapse] = useState(false)
   const user = useSelector(selectUser);
@@ -21,6 +22,7 @@ function Home() {
       <div className="main">
         <Navbar setColl={setCollapse} />
         <main className="content">
+        {location.pathname==="/"?<Dashboard />:null}
         {location.pathname==="/makeNewApplication"?<NewApplication />:null}
         {location.pathname==="/applicationList"?<ApplicationList />:null}
         </main>

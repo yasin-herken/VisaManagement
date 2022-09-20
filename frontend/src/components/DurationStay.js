@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-function DurationStay() {
+function DurationStay({setDuration}) {
     const options = [
         { value: "Companion", label:"Companion (90 days)"},
         { value: "Education", label:"Education (90 days)"},
@@ -12,8 +12,11 @@ function DurationStay() {
     ]
   return (
     <Select 
-    options={options}
+        options={options}
         placeholder="Select Travel Type"
+        onChange={(value)=>{
+          setDuration(value.label);
+        }}
     />
   )
 }
