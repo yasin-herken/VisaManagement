@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
-function TotalTable({ sum, entrytype }) {
+function TotalTable({ sum, entrytype}) {
     const [fee, setFee] = useState(0);
     useEffect(() => {
-        console.log(sum)
-        if (entrytype.value === "single")
+        if (entrytype?.value === "single")
             setFee(40000)
-        else if (entrytype.value === "multiple")
+        else if (entrytype?.value === "multiple")
             setFee(115000)
-    }, [sum, entrytype])
+    }, [entrytype]);
     return (
         <table className="table table-striped">
             <thead>
@@ -20,17 +19,26 @@ function TotalTable({ sum, entrytype }) {
             </thead>
             <tbody>
                 <tr>
-                    <td>Ministry Fee</td>
+                    <td>{entrytype?entrytype.label+" Type":"Ministry Fee: "}</td>
                     <td>:</td>
                     <td style={{ textAlign: "right" }} >{fee} CFA</td>
                 </tr>
                 <tr>
-                    <td>Additinal & Service Fee</td>
-                    <td>:</td>
-                    <td style={{ textAlign: "right" }}>{sum && sum.reduce((element, a) => {
-                        return element + a.sum
-                    }, 0)} CFA</td>
+                    <td rowSpan={1}>Additinal & Service Fee</td>
+                    <td rowSpan={1}>:</td>
+                    <td rowSpan={1} style={{ textAlign: "right" }}>CFA</td>
                 </tr>
+                {
+                    sum && sum.map((service,index)=>{
+                        return (
+                            <tr key={index}>
+                                <td>{service.service}</td>
+                                <td></td>
+                                <td style={{ textAlign: "right" }}>{service.sum} CFA</td>
+                            </tr>
+                        )
+                    })
+                }
                 <tr>
                     <td style={{ fontWeight: "bold" }} >Total</td>
                     <td>:</td>

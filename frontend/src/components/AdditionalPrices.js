@@ -12,15 +12,12 @@ function AdditionalPrices({ setSum, prices }) {
         }
     }
     useEffect(()=>{
-        console.log(prices)
         if(typeof prices==="object"){
             setShow(true);
         }else{
             setShow(false);
         }
     },[prices])
-    useEffect(() => {
-    }, [checked])
     useEffect(() => {
         setSum(sum)
     }, [sum,setSum])

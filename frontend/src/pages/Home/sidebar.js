@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './css/sidebar.css';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AppsIcon from '@mui/icons-material/Apps';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { NavLink, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice.js';
@@ -59,20 +59,20 @@ function Sidebar({ coll }) {
                                         </li>
                                         {
                                             ((user ? user.role === "Admin" : null) ?
-                                                <li className={(getNavLink("/application"))}>
-                                                    <NavLink className="sidebar-link" to="/application">
-                                                        <AppsIcon className="align-middle" fontSize={"small"}></AppsIcon>
-                                                        <span>Application</span>
+                                                <li className={(getNavLink("/makeNewApplication"))}>
+                                                    <NavLink className="sidebar-link" to="/makeNewApplication">
+                                                        <ChatBubbleOutlineOutlinedIcon className="align-middle" fontSize={"small"}></ChatBubbleOutlineOutlinedIcon>
+                                                        <span>Make New Application</span>
                                                     </NavLink>
                                                 </li> : null
                                             )
                                         }
                                         {
                                             ((user ? user.role === "Admin" : null) ?
-                                                <li className={(getNavLink("/admin/test"))}>
-                                                    <NavLink className="sidebar-link" to="/admin/test">
+                                                <li className={(getNavLink("/applicationList"))}>
+                                                    <NavLink className="sidebar-link" to="/applicationList">
                                                         <AppsIcon className="align-middle" fontSize={"small"}></AppsIcon>
-                                                        <span>Application</span>
+                                                        <span>Application List</span>
                                                     </NavLink>
                                                 </li> : null
                                             )

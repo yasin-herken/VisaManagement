@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://www.stvisaglobal.com:8001/";
+const BASE_URL = "http://localhost:8001/";
 
 export const publicRequest = axios.create({
     baseURL: BASE_URL

@@ -24,9 +24,9 @@ function App() {
           <>
             <Route path="/login" element={<Home />} />
             <Route exact path="/" element={<Home />} />
-            <Route path="/application" element={user?.role === "Admin" ? <ApplicationList /> : <Navigate to="/" />}></Route>
+            <Route path="/makeNewApplication" element={<Home />}></Route>
             <Route path="/table" element={<Table />}></Route>
-            <Route path="/admin/test" element={<NewApp />}></Route>
+            <Route path="/applicationList" element={<Home />}></Route>
             <Route path="/register" element={<Home />} />
           </>
           : <>

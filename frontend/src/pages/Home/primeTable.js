@@ -20,7 +20,7 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import Barcode from 'react-barcode/lib/react-barcode';
 import ComponenToPrintWrapper from '../../components/ComponenToPrintWrapper';
-function PrimeTable({sum}) {
+function PrimeTable({ sum }) {
     const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
     const [currentObject, setCurrentObject] = useState({});
@@ -81,10 +81,9 @@ function PrimeTable({sum}) {
     }
     const renderFooter = (name) => {
         return (
-            <div>
-                <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
-                <Button label="Yes" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
-            </div>
+            <>
+                <Button label="Print" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
+            </>
         );
     }
     const barcodeBodyTemplate = (rowData) => {
@@ -108,7 +107,7 @@ function PrimeTable({sum}) {
         return <span className={`customer-badge status-${visaObject[option]}`}>{option}</span>;
     }
     const visaStatusRowFilterTemplate = (options) => {
-        return <Dropdown value={options.value} options={visaStatus} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={visaStatusItemTemplate} placeholder="Visa Status" className="p-column-filter" showClear />;
+        return <Dropdown value={options.value} options={visaStatus} onChange={(e) => options.filterApplyCallback(e.value)} style={{ width: "80px" }} itemTemplate={visaStatusItemTemplate} placeholder="Visa Status" className="p-column-filter" showClear />;
     }
     const visaStatusBodyTemplate = (rowData) => {
         return <span className={`customer-badge status-${visaObject[rowData.visaStatus]}`}>{rowData.visaStatus}</span>;
@@ -117,7 +116,7 @@ function PrimeTable({sum}) {
         return <span className={`customer-badge status-${resultObject[option]}`}>{option}</span>;
     }
     const resultRowFilterTemplate = (options) => {
-        return <Dropdown value={options.value} options={result} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={resultItemTemplate} placeholder="Result" className="p-column-filter" showClear />;
+        return <Dropdown value={options.value} options={result} style={{ width: "75px" }} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={resultItemTemplate} placeholder="Result" className="p-column-filter" showClear />;
     }
     const resultBodyTemplate = (rowData) => {
         return <span className={`customer-badge status-${resultObject[rowData.result]}`}>{rowData.result}</span>;
@@ -135,7 +134,7 @@ function PrimeTable({sum}) {
     }
 
     const dateFilterTemplate = (options) => {
-        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />
+        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="Date" mask="99/99/9999" />
     }
     const commandItemTemplate = (option) => {
         return <Button label={option} icon="pi pi-arrow-down" onClick={() => onClick('displayResponsive', 'top')} className="p-button-warning" />
@@ -148,8 +147,8 @@ function PrimeTable({sum}) {
 
         }
     }
-    useEffect(()=>{
-    },[sum])
+    useEffect(() => {
+    }, [sum])
     useEffect(() => {
         const loadPosts = async () => {
             const response = await userRequest(user.token.split(" ")[1]).get("/barcode");
@@ -161,30 +160,31 @@ function PrimeTable({sum}) {
         <>
             <div className='datatable-filter-demo'>
                 <div className='card'>
-                    <DataTable paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={11}
+                    <DataTable size='small' paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={8} reorderableColumns
                         dataKey="id" filterDisplay="row" responsiveLayout="scroll" emptyMessage="No data found."
                         globalFilterFields={['status', 'barcodeValue', 'date', 'passportNo', 'name', 'surname', 'visaType', 'telNo', 'visaStatus', 'result', 'commands']}
                         onRowClick={(e) => {
                             setCurrentObject(e.data);
                         }}
+                        resizableColumns
                     >
-                        <Column field="status" header="#" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }}
-                            style={{ minWidth: '12rem', width: "12rem", }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate}
+                        <Column field="status" header="#" showFilterMenu={false} filterMenuStyle={{ width: '8%', }}
+                            style={{ width: "8%" }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate}
                             className="text-center"
                         />
-                        <Column field="barcodeValue" header="File Code" body={barcodeBodyTemplate} filter filterPlaceholder="Search by barcode" style={{ minWidth: '16rem', width: "16rem" }} />
-                        <Column header="Date" filterField="createdAt" dataType="date" style={{ minWidth: '12rem' }} body={dateBodyTemplate}
-                            filter filterElement={dateFilterTemplate} />
-                        <Column field="passportNo" header="Pass.No" filter filterPlaceholder='Pass.No' style={{ minWidth: '12rem', width: "16rem" }} />
-                        <Column field="name" header="Name" filter filterPlaceholder='Name' style={{ minWidth: '12rem', width: "16rem" }} />
-                        <Column field="surname" header="Surname" filter filterPlaceholder='SurName' style={{ minWidth: '12rem', width: "16rem" }} />
-                        <Column field="visaType" header="Visa Type" filter filterPlaceholder='Types' style={{ minWidth: '12rem', width: "16rem" }} />
-                        <Column field="telNo" header="Gsm Tel" filter filterPlaceholder='Tel' style={{ minWidth: '12rem', width: "16rem" }} />
-                        <Column field="visaStatus" header="Visa Status" showFilterMenu={false} filterMenuStyle={{ width: '12rem' }}
-                            style={{ minWidth: '12rem', width: "12rem" }} body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} className="text-center" />
-                        <Column field="result" header="Result" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} className="text-center"
-                            style={{ minWidth: '12rem', width: "12rem" }} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
-                        <Column field="commands" header="Commands" body={commandsBodyTemplate} />
+                        <Column field="barcodeValue" showFilterMenu={false} header="File Code" body={barcodeBodyTemplate} filter filterPlaceholder="Barcode" style={{ width: "12%" }} />
+                        <Column header="Date" showFilterMenu={false} filterField="createdAt" dataType="date" style={{ width: "10%" }} body={dateBodyTemplate}
+                            filter filterElement={dateFilterTemplate}
+                            field="Date"
+                        />
+                        <Column field="passportNo" showFilterMenu={false} header="Pass.No" filter filterPlaceholder='Pass.No' style={{ width: "16%" }} />
+                        <Column field="name" header="Name" showFilterMenu={false} filter filterPlaceholder='Name' style={{ width: "12%" }} />
+                        <Column field="surname" header="Surname" showFilterMenu={false} filter filterPlaceholder='Surname' style={{ width: "16%" }} />
+                        <Column field="visaType" header="Visa Type" showFilterMenu={false} filter filterPlaceholder='Types' style={{ width: "12%" }} />
+                        <Column field="telNo" header="Gsm Tel" showFilterMenu={false} filter filterPlaceholder='Tel No' style={{ width: "12%" }} />
+                        <Column field="visaStatus" header="Visa Status" showFilterMenu={false} filterMenuStyle={{ width: '8%' }} body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} />
+                        <Column field="result" header="Result" showFilterMenu={false} filterMenuStyle={{ width: '8%' }} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
+                        <Column field="commands" header="Commands" body={commandsBodyTemplate} style={{ width: "8%" }} />
                     </DataTable>
                     <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayResponsive')}
                         onHide={() => { onHide('displayResponsive'); console.log("Heree") }}
@@ -239,7 +239,7 @@ function PrimeTable({sum}) {
                                     <td>CFA</td>
                                 </tr>
                                 {
-                                    sum && sum.map((element)=>{
+                                    sum && sum.map((element) => {
                                         return <>
                                             <tr>
                                                 <td>SIGORTA {element.service}</td>

@@ -22,7 +22,7 @@ import Status from '../../Variables/status';
 import Select from 'react-select';
 import Gender from '../../Variables/gender';
 import Married from '../../Variables/married';
-import { PORT, HOST } from '../../Variables/host.js';
+import { publicRequest } from '../../requests/requestMethod.js';
 function NewApplication() {
     const [PNR, setPNR] = useState("")
     const [status, setStatus] = useState();
@@ -55,55 +55,58 @@ function NewApplication() {
     const [documentValue, setDocumentValue] = useState();
     const [entrytype, setEntryType] = useState();
     const [treeDoc, setTreeDoc] = useState([]);
-    const [sum, setSum] = useState(0)
+    const [sum, setSum] = useState([])
     const [prices, setPrices] = useState();
-    const getData = async (event) => {
-        if (event && event.preventDefault)
-            event.preventDefault()
-        await axios({
-            method: "GET",
-            withCredentials: false,
-            url: HOST.url + ":" + PORT.port + "/getData"
-        }).then((res) => {
-            setData(res.data)
-        }).catch((err) => console.log("error in new application"))
-    }
-    const getAdditionalPrices = async (event) => {
-        if (event && event.preventDefault)
-            event.preventDefault();
-        await axios({
-            method: "GET",
-            withCredentials: false,
-            url: HOST.url + ":" + PORT.port + "/getPrices"
-        }).then(res => {
-            setPrices(res.data)
-        }).catch(err => console.log(err))
-    }
+
+
     const handleSubmit = () => {
         console.log(PNR, status, gender, name, surname, married, bcountry, bdate, nationality, job, fname, lname, bcity)
     }
     //Contact Info Update Render
     useEffect(() => {
+        console.log(status)
     }, [status, gender, PNR, name, surname, married, bcountry, bdate, nationality, job, fname, lname, bcity])
     // Visa Passport Details
     useEffect(() => {
+        console.log(pnumber)
     }, [pnumber, pissue, pexpiry, pauthority, pistate])
     useEffect(() => {
-    }, [entrytype])
-    // Contact Details
-    useEffect(() => {
-    }, [phone, email, country, city, address, postal])
-    // Travel Details
-    useEffect(() => {
-        getData()
-    }, [tripstart, insuranceExp, visaValue])
-    useEffect(() => {
-        getAdditionalPrices()
-    }, [prices])
+        const getData = async (event) => {
+            if (event && event.preventDefault)
+                event.preventDefault()
+            try {
+                const res = await publicRequest("/getData");
+                if (res.status === 200) {
+                    setData(res.data);
+                    console.log("getData")
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        const getAdditionalPrices = async (event) => {
+            if (event && event.preventDefault)
+                event.preventDefault();
+            try {
+                const res = await publicRequest("/getPrices");
+                if (res.status === 200) {
+                    setPrices(res.data);
+                    console.log("getPrices")
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        getAdditionalPrices();
+        getData();
+    }, [])
+    useEffect(()=>{
+        console.log(sum)
+    },[sum])
     return (
         <div className="container-fluid p-0">
             <div className="row">
-                <div className="col-12 col-lg-7">
+                <div className="col-7 col-lg-7">
                     <div className="card">
                         <div className="card-header">
                             <h5 className="card-title">Personal Details</h5>
@@ -406,7 +409,7 @@ function NewApplication() {
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-lg-5">
+                <div className="col-5 col-lg-5">
                     <div className="card">
                         <div className="card-header">
                             <div className="row">

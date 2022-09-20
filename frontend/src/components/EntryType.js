@@ -10,7 +10,7 @@ function EntryType({setEntryType,treeDoc}) {
   return (
     <Select 
     onChange={(value)=>{
-      setEntryType(value.value)
+      setEntryType(value)
     }}
         options={options}
         placeholder="Select Entry Type"
