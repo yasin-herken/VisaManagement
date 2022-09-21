@@ -74,7 +74,7 @@ app.post("/login",
                 id: user._id
             }
             const secretOrKey = 'jwt_secret_key'
-            const token = jwt.sign(payload, secretOrKey, { expiresIn: "10s" })
+            const token = jwt.sign(payload, secretOrKey, { expiresIn: "24h" })
 
             return res.status(200).send({
                 success: true,
