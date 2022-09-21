@@ -11,12 +11,29 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv/config';
 import dbBarcode from "./dbBarcode.js";
 import fs from 'fs';
+import path from "path";
+import * as url from 'url';
+import https from "https";
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 //app config
 const app = express();
 const port = process.env.PORT || 8001;
 //middleware
 app.set("trust proxy", 1);
 app.use(express.json());
+app.use('/static', express.static(path.join(__dirname, 'public')))
+https
+  .createServer(
+    {
+      key: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/key.pem'),
+      cert: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/cert.pem'),
+      ca: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/chain.pem'),
+    },
+    app
+  )
+  .listen(443, () => {
+    console.log('Listening...')
+  })
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", '*');
