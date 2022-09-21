@@ -124,7 +124,6 @@ function NewApp() {
                     entryType: entryType.label,
                     status: status.label
                 })
-                console.log(res.data)
             } catch (err) {
 
             }

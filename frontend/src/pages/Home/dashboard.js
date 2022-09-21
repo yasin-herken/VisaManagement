@@ -1,5 +1,70 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { faker } from '@faker-js/faker';
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+export const options = {
+    responsive: true,
+    elements: {
+        line: {
+            tension: 0,
+        }
+    },
+    scales: {
+        y: {
+            suggestedMin: 1000,
+            suggestedMax: 4000,
+        }
+    },
+    plugins: {
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'Annual Sales',
+        },
+    },
+};
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+export const data = {
+    labels,
+    datasets: [
+        {
+            label: 'Dataset 1',
+            data: [2115, 1562, 1584, 1892, 1587, 1923, 2556, 2448, 2805, 3438, 2917, 3327],
+            borderColor: 'rgb(30,144,255)',
+            backgroundColor: 'rgb(30,144,255)',
+            lineTension: 0.3,
+            fill: true,
+            options: {
+                scales: {
+                    y: {
+                        labels: [1000, 2000, 3000, 4000]
+                    }
+                }
+            }
+        },
+    ],
+};
 function Dashboard() {
     return (
         <div className='container-fluid p-0'>
@@ -9,8 +74,8 @@ function Dashboard() {
                 </div>
 
                 <div class="col-auto ms-auto text-end mt-n1">
-                    <a href="#" class="btn btn-light bg-white me-2">Invite a Friend</a>
-                    <a href="#" class="btn btn-primary">New Project</a>
+                    <Link to="#" class="btn btn-light bg-white me-2">Invite Link Friend</Link>
+                    <Link to="#" class="btn btn-primary">New Project</Link>
                 </div>
             </div>
             <div className="row">
@@ -121,9 +186,7 @@ function Dashboard() {
                             <h5 className="card-title mb-0">Recent Movement</h5>
                         </div>
                         <div className="card-body pt-2 pb-3">
-                            <div className="chart chart-sm"><div className="chartjs-size-monitor"><div className="chartjs-size-monitor-expand"><div className /></div><div className="chartjs-size-monitor-shrink"><div className /></div></div>
-                                <canvas id="chartjs-dashboard-line" style={{ display: 'block', width: '806px', height: '250px' }} width={806} height={250} className="chartjs-render-monitor" />
-                            </div>
+                            <Line options={options} data={data} />
                         </div>
                     </div>
                 </div>

@@ -77,7 +77,7 @@ class ApplicationReceiptPrint extends React.Component {
                             }
                             <tr>
                                 <td>SAIR TAHSILAT</td>
-                                <td>{calculateSum(this.props?.currentObject)}</td>
+                                <td>{calculateSum(this.props?.currentObject)+this.props?.entryType}</td>
                                 <td className='text-end'>CFA</td>
                             </tr>
                         </tbody>
