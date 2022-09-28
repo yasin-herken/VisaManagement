@@ -176,7 +176,7 @@ function NewApplication() {
     return (
         <>
             {
-                <div className="container-fluid p-0">
+                <div className="container-fluid p-0" style={{fontFamily:"Open Sans"}}>
                     <div className="row">
                         <div className="col-7 col-lg-7">
                             <div className="card">

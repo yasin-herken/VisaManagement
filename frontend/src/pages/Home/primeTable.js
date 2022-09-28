@@ -102,7 +102,7 @@ function PrimeTable() {
         </>
     }
     const statusItemTemplate = (option) => {
-        return <span className={`customer-badge status-${statusObject[option]} text-center`}>{option}</span>;
+        return <span className={`customer-badge status-${statusObject[option]} text-center fontfamily`}>{option}</span>;
     }
     const statusRowFilterTemplate = (options) => {
         return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} className="p-column-filter" showClear />;
