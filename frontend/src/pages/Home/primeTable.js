@@ -183,7 +183,6 @@ function PrimeTable() {
                         dataKey="id" filterDisplay="row" responsiveLayout="scroll" emptyMessage="No data found."
                         globalFilterFields={['status', 'barcodeValue', 'date', 'passportNo', 'name', 'surname', 'visaType', 'telNo', 'visaStatus', 'result', 'commands']}
                         onRowClick={(e) => {
-                            console.log(e);
                             setCurrentObject(e.data);
                         }}
                         resizableColumns
@@ -277,13 +276,7 @@ function PrimeTable() {
                                             <td>{entryType}</td>
                                             <td>CFA</td>
                                         </tr> : null
-
                                 }
-                                <tr>
-                                    <td>SAIR TAHSILAT</td>
-                                    <td>{calculateSum()}</td>
-                                    <td>CFA</td>
-                                </tr>
                             </tbody>
                         </Table>
                         <br />

@@ -32,12 +32,13 @@ if (process.platform === "linux") {
             },
             app
         )
-        .listen(443, () => {
+        .listen(port, () => {
             console.log('Listening...')
         })
 }
 else {
-    console.log(process.platform)
+    //listener
+    app.listen(port, () => console.log("Listening on " + port));
 }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -159,9 +160,8 @@ app.get("/barcode", (req, res) => {
     })
 })
 app.post("/barcode", (req, res) => {
-
     dbBarcode.findOne({
-        barcodeValue: req.body.barcodeValue,
+        pnr: req.body.personal.pnr,
         passport: {
             passportNo: req.body.passport.passportNo
         }
@@ -183,7 +183,6 @@ app.post("/barcode", (req, res) => {
                 }
             }
             if (!data) {
-
                 dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
                     if (err) throw err;
                     if (data) {
@@ -211,7 +210,7 @@ app.post("/barcode", (req, res) => {
                             travelType: req.body.passport.travelType,
                             visaType: req.body.passport.visaType,
                             documentType: req.body.passport.documentType,
-                            entryType: req.body.passport.entryType.label,
+                            entryType: req.body.passport.entryType?.label,
                             passportIssueDate: req.body.passport.passportIssueDate,
                             passportExpiryDate: req.body.passport.passportExpiryDate,
                             passportAuthority: req.body.passport.passportAuthority,
@@ -223,7 +222,7 @@ app.post("/barcode", (req, res) => {
                             pnr: req.body.personal.pnr,
                             name: req.body.personal.name,
                             surname: req.body.personal.surname,
-                            title: req.body.personal.title.label,
+                            title: req.body.personal.title?.label,
                             birthDate: req.body.personal.birthDate,
                             birthCountry: req.body.personal.birthCountry,
                             birthCity: req.body.personal.birthCity,
@@ -370,5 +369,4 @@ app.delete("/barcode", (req, res) => {
     })
     res.send
 })
-//listener
-app.listen(port, () => console.log("Listening on " + port));
+

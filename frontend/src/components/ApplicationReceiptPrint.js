@@ -75,11 +75,6 @@ class ApplicationReceiptPrint extends React.Component {
                                     </tr> : null
 
                             }
-                            <tr>
-                                <td>SAIR TAHSILAT</td>
-                                <td>{calculateSum(this.props?.currentObject)+this.props?.entryType}</td>
-                                <td className='text-end'>CFA</td>
-                            </tr>
                         </tbody>
                     </Table>
                     <br />
@@ -94,7 +89,7 @@ class ApplicationReceiptPrint extends React.Component {
                         <tbody>
                             <tr>
                                 <td>CFA Total</td>
-                                <td className='text-end'>{calculateSum(this.props?.currentObject)} CFA</td>
+                                <td className='text-end'>{calculateSum(this.props?.currentObject,this.props?.entryType)} CFA</td>
                             </tr>
                         </tbody>
                     </Table>
@@ -110,10 +105,13 @@ class ApplicationReceiptPrint extends React.Component {
 
 export default ApplicationReceiptPrint;
 
-const calculateSum = (currentObject) => {
+const calculateSum = (currentObject,entryType) => {
+    console.log(currentObject?.services?.service.reduce((previousValue, currentValue) => {
+        return previousValue + currentValue.sum;
+    }, entryType))
     const sum = <>{
         currentObject?.services?.service.reduce((previousValue, currentValue) => {
             return previousValue + currentValue.sum;
-        }, 0)}</>
+        }, entryType)}</>
     return sum;
 }

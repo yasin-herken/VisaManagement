@@ -39,7 +39,7 @@ function Sidebar({ coll }) {
                         <div className='simplebar-offset' style={{ right: "0px", bottom: "0px" }}>
                             <div className="simplebar-content-wrapper" tabIndex="0" role="region" aria-label="scrollable content" style={{ height: "100%", overflow: "hidden scroll" }}>
                                 <div className="simplebar-content" style={{ padding: "0px" }}>
-                                    <Link className="sidebar-brand" to="#">
+                                    <Link className="sidebar-brand" to="#" style={{ textDecoration: "none" }}>
                                         <span className="sidebar-brand-text align-middle">VisaManagement</span>
                                         <svg className="sidebar-brand-icon align-middle" width="32px" height="32px" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" color="#FFFFFF" style={{ marginLeft: " -3px" }}>
                                             <path d="M12 4L20 8.00004L12 12L4 8.00004L12 4Z"></path>
@@ -47,8 +47,7 @@ function Sidebar({ coll }) {
                                             <path d="M20 16L12 20L4 16"></path>
                                         </svg>
                                     </Link>
-
-                                    <ul className="sidebar-nav" style={{marginTop:"80px"}}>
+                                    <ul className="sidebar-nav" style={{ marginTop: "80px" }}>
                                         <li className="sidebar-header">
                                             Pages
                                         </li>

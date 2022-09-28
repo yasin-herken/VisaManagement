@@ -72,11 +72,6 @@ function Dashboard() {
                 <div class="col-auto d-none d-sm-block">
                     <h3><strong>Analytics</strong> Dashboard</h3>
                 </div>
-
-                <div class="col-auto ms-auto text-end mt-n1">
-                    <Link to="#" class="btn btn-light bg-white me-2">Invite Link Friend</Link>
-                    <Link to="#" class="btn btn-primary">New Project</Link>
-                </div>
             </div>
             <div className="row">
                 <div className="col-xl-6 col-xxl-5 d-flex">

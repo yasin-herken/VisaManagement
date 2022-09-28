@@ -1,5 +1,5 @@
 const HOST = {
-    url:"https://stvisaglobal.com"
+    url:"http://localhost"
 }
 
 const PORT = {
