@@ -26,7 +26,7 @@ if (process.platform === "linux") {
     https
         .createServer(
             {
-                key: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/key.pem'),
+                key: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/privkey.pem'),
                 cert: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/cert.pem'),
                 ca: fs.readFileSync('/etc/letsencrypt/live/stvisaglobal.com/chain.pem'),
             },
