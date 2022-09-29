@@ -130,7 +130,6 @@ function NewApplication() {
             }
         } catch (err) {
             setShowErr(true);
-            console.log("here")
             toast(err);
         }
         setLoading(false);
