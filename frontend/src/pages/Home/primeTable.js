@@ -22,6 +22,7 @@ import Barcode from 'react-barcode/lib/react-barcode';
 import ComponenToPrintWrapper from '../../components/ComponenToPrintWrapper';
 import { useReactToPrint } from 'react-to-print';
 import ApplicationReceiptPrint from '../../components/ApplicationReceiptPrint';
+import { Link } from 'react-router-dom';
 function PrimeTable() {
     const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
@@ -73,10 +74,20 @@ function PrimeTable() {
         'Waiting', 'Accepted', 'Rejected'
     ]
     const commandDropdown = [
-        'Show'
+        "Fill Interview",
+        "Finger File Upload",
+        "Take Payment",
+        "Ticket Print",
+        "Change Status",
+        "Save for BlackList",
+        "Apply Docs Upload",
+        "Delete All Document",
+        "Toggle Lock/Unlock",
     ]
 
     const onClick = (name, position) => {
+        console.log(name);
+        console.log(position)
         dialogFuncMap[`${name}`](true);
 
         if (position) {
@@ -144,10 +155,32 @@ function PrimeTable() {
         return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" mask="99/99/9999" />
     }
     const commandItemTemplate = (option) => {
-        return <Button label={option} icon="pi pi-arrow-down" onClick={() => onClick('displayResponsive', 'top')} className="p-button-warning" />
+        return <Button label={option} icon="pi pi-arrow-down" onClick={() => {
+            switch (option) {
+                case "Fill Interview":
+                    break;
+                case "Finger File Upload":
+                    break;
+                case "Take Payment":
+                    break;
+                case "Ticket Print":
+                    break;
+                case "Change Status":
+                    break;
+                case "Save for BlackList":
+                    break;
+                case "Apply Docs Upload":
+                    break;
+                case "Delete All Document":
+                    break;
+                case "Toggle Lock/Unlock":
+                    break;
+                default:
+            }
+        }} className="p-button-warning p-button-sm" />
     }
     const commandsBodyTemplate = (options, rowData) => {
-        return <Dropdown options={commandDropdown} onChange={handleCommands} itemTemplate={commandItemTemplate} className="p-column-filter" showClear />;
+        return <Dropdown options={commandDropdown} onChange={handleCommands} itemTemplate={commandItemTemplate} className="p-column-filter" showClear placeholder='Action' scrollHeight='100%' />;
     }
     const handleCommands = (event) => {
         if (event.target.value === "Show") {
@@ -179,9 +212,9 @@ function PrimeTable() {
         <>
             <div className='datatable-filter-demo'>
                 <div className='card'>
-                    <DataTable size='small' paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={8} reorderableColumns 
+                    <DataTable size='small' paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={8} reorderableColumns
                         responsiveLayout="stack" breakpoint="960px"
-                        dataKey="id" filterDisplay="row"  emptyMessage="No data found."
+                        dataKey="id" filterDisplay="row" emptyMessage="No data found."
                         globalFilterFields={['status', 'barcodeValue', 'date', 'passportNo', 'name', 'surname', 'visaType', 'telNo', 'visaStatus', 'result', 'commands']}
                         onRowClick={(e) => {
                             setCurrentObject(e.data);
@@ -192,18 +225,18 @@ function PrimeTable() {
                             className="text-center"
                         />
                         <Column field="barcodeValue" showFilterMenu={false} header="File Code" body={barcodeBodyTemplate} filter />
-                        <Column header="Date" showFilterMenu={false} filterField="createdAt" dataType="date"  body={dateBodyTemplate}
+                        <Column header="Date" showFilterMenu={false} filterField="createdAt" dataType="date" body={dateBodyTemplate}
                             filter filterElement={dateFilterTemplate}
                             field="Date"
                         />
-                        <Column field="passport.passportNo" showFilterMenu={false} header="Pass.No" filter  />
-                        <Column field="personal.name" header="Name" showFilterMenu={false} filter  />
-                        <Column field="personal.surname" header="Surname" showFilterMenu={false} filter  />
+                        <Column field="passport.passportNo" showFilterMenu={false} header="Pass.No" filter />
+                        <Column field="personal.name" header="Name" showFilterMenu={false} filter />
+                        <Column field="personal.surname" header="Surname" showFilterMenu={false} filter />
                         <Column field="passport.visaType" header="Visa Type" showFilterMenu={false} filter />
-                        <Column field="contact.telNo" header="Gsm Tel" showFilterMenu={false} filter/>
-                        <Column field="passport.visaStatus" header="Visa Status" showFilterMenu={false}  body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} />
-                        <Column field="result" header="Result" showFilterMenu={false}  body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
-                        <Column field="commands" header="Commands" body={commandsBodyTemplate}  />
+                        <Column field="contact.telNo" header="Gsm Tel" showFilterMenu={false} filter />
+                        <Column field="passport.visaStatus" header="Visa Status" showFilterMenu={false} body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} />
+                        <Column field="result" header="Result" showFilterMenu={false} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
+                        <Column field="commands" header="Commands" body={commandsBodyTemplate}/>
                     </DataTable>
                     <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayResponsive')}
                         onHide={() => { onHide('displayResponsive'); }}

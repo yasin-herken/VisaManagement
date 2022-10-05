@@ -1,21 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './css/sidebar.css';
 import AppsIcon from '@mui/icons-material/Apps';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { NavLink, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../Features/userSlice.js';
-import styled from 'styled-components';
-const Nav = styled.nav`
+import { AiFillFolder } from "react-icons/ai";
+import { BsChevronDown } from "react-icons/bs";
+import styled, { css } from 'styled-components';
+import { CSSTransition } from 'react-transition-group';
+
+const Navs = styled.nav`
     id: "sidebar";
-    class: ${props => (props.active ? "sidebar js-sidebar" : "sidebar js-sidebar collapse")};
     transition: all 0.5s ease;
     margin-left: ${props => (props.active ? "-256px" : "0px")};
 `;
+
+const Ul = styled.ul`
+    class: ${props => props.active ? "" : "collapse"};
+    transition: all 0.5s ease;
+    opacity: ${props => props.active ? 0 : 1};;
+    ${({ show }) => show && css`
+        transition: all 0.5s ease;
+    `}
+`;
 function Sidebar({ coll }) {
     const [active, setActive] = useState(false);
+    const [reportsCollapse, setReportsCollapse] = useState(false);
     const user = useSelector(selectUser);
-    const [clicked, setClicked] = useState(false);
+    const nodeRef = useRef(null);
+    const selectRef = useRef(null);
     const getNavLink = (path) => {
         return path === window.location.pathname ? "sidebar-item active" : "sidebar-item"
     }
@@ -29,7 +43,7 @@ function Sidebar({ coll }) {
         }
     }, [coll])
     return (
-        <Nav active={active}>
+        <Navs active={active}>
             <div className="sidebar-content js-simplebar" data-simplebar="init">
                 <div className="simplebar-wrapper" style={{ margin: "0px" }}>
                     <div className="simplebar-height-auto-observer-wrapper">
@@ -91,7 +105,44 @@ function Sidebar({ coll }) {
                                                 </ul>
                                             </li> : null
                                         }
+                                        {
+                                            ((user ? user.role === "Admin" : null) ?
+                                                <li className={(getNavLink("/changeStatus"))}>
+                                                    <NavLink className="sidebar-link" to="/changeStatus">
+                                                        <AppsIcon className="align-middle" fontSize={"small"}></AppsIcon>
+                                                        <span>Scan-Change Status</span>
+                                                    </NavLink>
+                                                </li> : null
+                                            )
+                                        }
+                                        {
+                                            user?.role === "Admin" ?
+                                                <li className={`sidebar-item `} onClick={() => setReportsCollapse(p => !p)} >
+                                                    <Link className="sidebar-link box" to="#" width="100%">
+                                                        <AiFillFolder className="align-middle" />
+                                                        <span>Reports</span>
+                                                        <BsChevronDown className={`afterIcon`} style={{ transform: `${reportsCollapse ? "rotate(0deg)" : "rotate(180deg)"}` }} ref={selectRef} />
+                                                    </Link>
+                                                    {
+                                                        reportsCollapse ? null :
+                                                            <CSSTransition nodeRef={nodeRef} in={reportsCollapse} timeout={300} classNames="my-node">
+                                                                <Ul active={reportsCollapse} className={`sidebar-dropdown list-unstyled`} ref={nodeRef}>
+                                                                    <li className="sidebar-item">
+                                                                        <Link className="sidebar-link" to="/passportDeliveryList" >Passport Delivery List</Link>
+                                                                    </li>
+                                                                    <li className="sidebar-item">
+                                                                        <Link className="sidebar-link" to="/customerReturnList">Customer Return List</Link>
+                                                                    </li>
+                                                                    <li className="sidebar-item">
+                                                                        <Link className="sidebar-link" to="/appReportToExcel">App. Report to Excel</Link>
+                                                                    </li>
+                                                                </Ul>
+                                                            </CSSTransition>
+                                                    }
 
+                                                </li>
+                                                : null
+                                        }
                                     </ul>
 
                                     <div className='sidebar-cta'></div>
@@ -110,7 +161,7 @@ function Sidebar({ coll }) {
                     </div>
                 </div>
             </div>
-        </Nav>
+        </Navs>
     )
 }
 

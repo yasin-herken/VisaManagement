@@ -28,6 +28,7 @@ function App() {
             <Route path="/table" element={<Table />}></Route>
             <Route path="/applicationList" element={<Home />}></Route>
             <Route path="/register" element={<Home />} />
+            <Route path="/changeStatus" element={<Home />} />
           </>
           : <>
             <Route path="/login" element={<Login />} />

@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Flatpickr from "react-flatpickr";
-import { useForm, Controller } from "react-hook-form";
+import React, { useEffect, useState } from 'react';
 import "flatpickr/dist/themes/material_green.css";
 import { userRequest } from "../../requests/requestMethod.js";
 import { useSelector } from 'react-redux';

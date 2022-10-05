@@ -7,6 +7,7 @@ import "./css/index.css";
 import { useLocation } from 'react-router-dom';
 import NewApplication from './newApplication';
 import ApplicationList from './applicationList';
+import ChangeStatus from './changeStatus';
 import Dashboard from './dashboard';
 function Home() {
   const [collapse, setCollapse] = useState(false)
@@ -25,6 +26,7 @@ function Home() {
         {location.pathname==="/"?<Dashboard />:null}
         {location.pathname==="/makeNewApplication"?<NewApplication />:null}
         {location.pathname==="/applicationList"?<ApplicationList />:null}
+        {location.pathname==="/changeStatus"?<ChangeStatus />:null}
         </main>
       </div>
     </div>

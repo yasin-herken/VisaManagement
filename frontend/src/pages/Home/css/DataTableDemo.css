@@ -44,3 +44,7 @@
 .p-dropdown .p-dropdown-label {
     overflow:visible;
 }
+
+.p-dropdown-items-wrapper{
+    max-height: "1000px"!important;
+}
