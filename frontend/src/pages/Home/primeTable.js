@@ -179,31 +179,31 @@ function PrimeTable() {
         <>
             <div className='datatable-filter-demo'>
                 <div className='card'>
-                    <DataTable size='small' paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={8} reorderableColumns
-                        dataKey="id" filterDisplay="row" responsiveLayout="scroll" emptyMessage="No data found."
+                    <DataTable size='small' paginator value={posts} header={header} stripedRows className="p-datatable-customers" rows={8} reorderableColumns 
+                        responsiveLayout="stack" breakpoint="960px"
+                        dataKey="id" filterDisplay="row"  emptyMessage="No data found."
                         globalFilterFields={['status', 'barcodeValue', 'date', 'passportNo', 'name', 'surname', 'visaType', 'telNo', 'visaStatus', 'result', 'commands']}
                         onRowClick={(e) => {
                             setCurrentObject(e.data);
                         }}
                         resizableColumns
                     >
-                        <Column field="personal.status" header="#" showFilterMenu={false} filterMenuStyle={{ width: '8%', }}
-                            style={{ width: "8%" }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate}
+                        <Column field="personal.status" header="#" showFilterMenu={false} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate}
                             className="text-center"
                         />
-                        <Column field="barcodeValue" showFilterMenu={false} header="File Code" body={barcodeBodyTemplate} filter style={{ width: "12%" }} />
-                        <Column header="Date" showFilterMenu={false} filterField="createdAt" dataType="date" style={{ width: "10%" }} body={dateBodyTemplate}
+                        <Column field="barcodeValue" showFilterMenu={false} header="File Code" body={barcodeBodyTemplate} filter />
+                        <Column header="Date" showFilterMenu={false} filterField="createdAt" dataType="date"  body={dateBodyTemplate}
                             filter filterElement={dateFilterTemplate}
                             field="Date"
                         />
-                        <Column field="passport.passportNo" showFilterMenu={false} header="Pass.No" filter style={{ width: "16%" }} />
-                        <Column field="personal.name" header="Name" showFilterMenu={false} filter style={{ width: "12%" }} />
-                        <Column field="personal.surname" header="Surname" showFilterMenu={false} filter style={{ width: "16%" }} />
-                        <Column field="passport.visaType" header="Visa Type" showFilterMenu={false} filter style={{ width: "12%" }} />
-                        <Column field="contact.telNo" header="Gsm Tel" showFilterMenu={false} filter style={{ width: "12%" }} />
-                        <Column field="passport.visaStatus" header="Visa Status" showFilterMenu={false} filterMenuStyle={{ width: '8%' }} body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} />
-                        <Column field="result" header="Result" showFilterMenu={false} filterMenuStyle={{ width: '8%' }} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
-                        <Column field="commands" header="Commands" body={commandsBodyTemplate} style={{ width: "8%" }} />
+                        <Column field="passport.passportNo" showFilterMenu={false} header="Pass.No" filter  />
+                        <Column field="personal.name" header="Name" showFilterMenu={false} filter  />
+                        <Column field="personal.surname" header="Surname" showFilterMenu={false} filter  />
+                        <Column field="passport.visaType" header="Visa Type" showFilterMenu={false} filter />
+                        <Column field="contact.telNo" header="Gsm Tel" showFilterMenu={false} filter/>
+                        <Column field="passport.visaStatus" header="Visa Status" showFilterMenu={false}  body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} />
+                        <Column field="result" header="Result" showFilterMenu={false}  body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
+                        <Column field="commands" header="Commands" body={commandsBodyTemplate}  />
                     </DataTable>
                     <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayResponsive')}
                         onHide={() => { onHide('displayResponsive'); }}
