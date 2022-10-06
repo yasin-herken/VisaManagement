@@ -13,30 +13,30 @@ function Table() {
     const [showTable, setShowTable] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [pending, setPending] = useState(true);
-    const handleDelete = async(event,row) =>{
+    const handleDelete = async (event, row) => {
         event.preventDefault();
         try {
             const res = await userRequest(user.token.split(" ")[1]).delete("/barcode", {
                 data: {
-                    
+
                 }
             });
             if (res?.data.success) {
                 //reset();
-                setPosts(posts.filter((item)=>{
+                setPosts(posts.filter((item) => {
                     return item.identification !== row.identification;
                 }))
-            } 
+            }
         } catch (err) {
             console.log(err);
         }
     }
-    const columns = [
+    const columns = useMemo([
         {
             name: 'Id',
             sortable: true,
             selector: row => row._id,
-    
+
         },
         {
             name: 'Identification',
@@ -72,14 +72,14 @@ function Table() {
             name: "Edit",
             cell: (row) => (
                 <>
-                    <button className="btn btn-primary" onClick={()=>{console.log(row)}}>Show</button>
-                    <button className="btn btn-danger" onClick={(event)=>{handleDelete(event,row)}}>Delete</button>
+                    <button className="btn btn-primary" onClick={() => { console.log(row) }}>Show</button>
+                    <button className="btn btn-danger" onClick={(event) => { handleDelete(event, row) }}>Delete</button>
                 </>
             )
         }
-    ];
-    
-    const customStyles = {
+    ], []);
+
+    const customStyles = useMemo({
         row: {
             style: {
                 fontWeight: 400,
@@ -101,7 +101,7 @@ function Table() {
             }
         }
 
-    }
+    }, [])
     const subHeaderComponentMemo = useMemo(() => {
         const handleClear = () => {
             if (filterText) {
@@ -134,12 +134,6 @@ function Table() {
         }
     }, [posts, filterText]);
     useEffect(() => {
-        //console.log(filteredItems)
-    }, [filteredItems]);
-    useEffect(()=>{
-        
-    },[posts])
-    useEffect(() => {
         const timeout = setTimeout(() => {
             const data = posts.filter(item => {
                 return item?.barcodeValue.toLowerCase().includes(filterText.toLowerCase())
@@ -149,8 +143,6 @@ function Table() {
         }, 2000);
         return () => clearTimeout(timeout);
     }, [filterText, posts]);
-    useEffect(()=>{
-    },[pending])
     return (
         <div className="col-12">
             <div className='card'>

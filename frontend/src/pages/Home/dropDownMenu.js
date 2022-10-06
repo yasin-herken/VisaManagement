@@ -18,7 +18,7 @@ function DropDownMenu({ username }) {
 	return (
 		<li className="nav-item dropdown">
 			<Link className="nav-icon pe-md-0 dropdown-toggle" to="#" data-bs-toggle="dropdown">
-				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxCnbayQIq0SLjq7bdjeYI4R14mT7RiGbuhw&usqp=CAU" className="avatar img-fluid rounded" alt="Charles Hall" />
+				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxCnbayQIq0SLjq7bdjeYI4R14mT7RiGbuhw&usqp=CAU" className="avatar img-fluid rounded" alt="Avatar not found" height={"24px"} width={"24px"} />
 			</Link>
 			<div className="dropdown-menu dropdown-menu-end" data-bs-toggle="none">
 				<Link className="dropdown-item" to="pages-profile.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-user align-middle me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Profile</Link>

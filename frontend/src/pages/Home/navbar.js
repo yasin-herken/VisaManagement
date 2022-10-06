@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import DropDownMenu from './dropDownMenu.js';
 function Navbar({ username, role, setColl }) {
     const [condition, setCondition] = useState(false)
-    useEffect(() => {
-    }, [username, role, setColl])
+
     return (
         <nav className="navbar navbar-expand navbar-light navbar-bg">
             <div onClick={() => {

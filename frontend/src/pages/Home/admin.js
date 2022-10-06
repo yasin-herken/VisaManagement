@@ -16,10 +16,6 @@ function Admin({ path }) {
         [navigate]
     );
     useEffect(() => {
-    }, [collapse])
-    useEffect(() => {
-    }, [path])
-    useEffect(() => {
         if(user?.role!=="Admin"){
             redirect("/");
         }

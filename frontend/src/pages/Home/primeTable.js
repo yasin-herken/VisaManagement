@@ -1,5 +1,3 @@
-
-
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
@@ -7,7 +5,7 @@ import 'primeflex/primeflex.css';
 import "./css/DataTableDemo.css";
 import "../../index.css";
 import "./css/tables.css";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { userRequest } from '../../requests/requestMethod.js';
@@ -22,7 +20,67 @@ import Barcode from 'react-barcode/lib/react-barcode';
 import ComponenToPrintWrapper from '../../components/ComponenToPrintWrapper';
 import { useReactToPrint } from 'react-to-print';
 import ApplicationReceiptPrint from '../../components/ApplicationReceiptPrint';
-import { Link } from 'react-router-dom';
+import { IoHandRightOutline } from "react-icons/io5";
+import { BsCash, BsToggleOff, BsFillFunnelFill } from "react-icons/bs";
+import { AiOutlinePrinter, AiOutlineDelete } from "react-icons/ai";
+import { CgArrowsExchangeAlt } from "react-icons/cg";
+import { FiUpload } from "react-icons/fi";
+const resultObject = {
+    "Rejected": "unqualified",
+    "Accepted": "qualified",
+    "Waiting": "negotiation",
+}
+const visaObject = {
+    "In Mission": "negotiation",
+    "Documents Ok": "qualified",
+    "Returned": "new",
+    "Ministry Entry Ok": "renewal",
+    "Istizan": "proposal",
+    "Returned from Mission": "unqualified",
+    "Returned to Customer": "renewal",
+}
+const statusObject = {
+    "Normal": "qualified",
+    "VIP": "negotiation",
+    "URGENT": "unqualified",
+}
+const header = (
+    <div className="table-header">
+        Application
+    </div>
+);
+const statuses = [
+    'Normal', 'VIP', 'URGENT'
+];
+const visaStatus = [
+    'In Mission', 'Documents Ok', 'Returned', 'Ministry Entry Ok', 'Istizan', 'Returned from Mission', 'Returned to Customer'
+]
+
+const result = [
+    'Waiting', 'Accepted', 'Rejected'
+]
+const commandDropdown = [
+    "Fill Interview",
+    "Finger File Upload",
+    "Take Payment",
+    "Ticket Print",
+    "Change Status",
+    "Save for BlackList",
+    "Apply Docs Upload",
+    "Delete All Document",
+    "Toggle Lock/Unlock",
+]
+const commandIcon = {
+    "Fill Interview": <BsFillFunnelFill />,
+    "Finger File Upload": <IoHandRightOutline />,
+    "Take Payment": <BsCash />,
+    "Ticket Print": <AiOutlinePrinter />,
+    "Change Status": <CgArrowsExchangeAlt />,
+    "Save for BlackList": <CgArrowsExchangeAlt />,
+    "Apply Docs Upload": <FiUpload />,
+    "Delete All Document": <AiOutlineDelete />,
+    "Toggle Lock/Unlock": <BsToggleOff />,
+}
 function PrimeTable() {
     const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
@@ -35,127 +93,81 @@ function PrimeTable() {
     const handlePrint = useReactToPrint({
         content: () => componentRef.current
     });
-    const dialogFuncMap = {
-        'displayResponsive': setDisplayResponsive,
-        'displayPosition': setDisplayPosition,
-    }
-    const resultObject = {
-        "Rejected": "unqualified",
-        "Accepted": "qualified",
-        "Waiting": "negotiation",
-    }
-    const visaObject = {
-        "In Mission": "negotiation",
-        "Documents Ok": "qualified",
-        "Returned": "new",
-        "Ministry Entry Ok": "renewal",
-        "Istizan": "proposal",
-        "Returned from Mission": "unqualified",
-        "Returned to Customer": "renewal",
-    }
-    const statusObject = {
-        "Normal": "qualified",
-        "VIP": "negotiation",
-        "URGENT": "unqualified",
-    }
-    const header = (
-        <div className="table-header">
-            Application
-        </div>
-    );
-    const statuses = [
-        'Normal', 'VIP', 'URGENT'
-    ];
-    const visaStatus = [
-        'In Mission', 'Documents Ok', 'Returned', 'Ministry Entry Ok', 'Istizan', 'Returned from Mission', 'Returned to Customer'
-    ]
 
-    const result = [
-        'Waiting', 'Accepted', 'Rejected'
-    ]
-    const commandDropdown = [
-        "Fill Interview",
-        "Finger File Upload",
-        "Take Payment",
-        "Ticket Print",
-        "Change Status",
-        "Save for BlackList",
-        "Apply Docs Upload",
-        "Delete All Document",
-        "Toggle Lock/Unlock",
-    ]
 
-    const onClick = (name, position) => {
-        console.log(name);
-        console.log(position)
-        dialogFuncMap[`${name}`](true);
+    // const onClick = (name, position) => {
+    //     dialogFuncMap[`${name}`](true);
 
-        if (position) {
-            setPosition(position);
+    //     if (position) {
+    //         setPosition(position);
+    //     }
+    // }
+    const onHide = useCallback((name) => {
+        const dialogFuncMap = {
+            'displayResponsive': setDisplayResponsive,
+            'displayPosition': setDisplayPosition,
         }
-    }
-    const onHide = (name) => {
         dialogFuncMap[`${name}`](false);
-    }
-    const renderFooter = (name) => {
+    }, [])
+    const renderFooter = useCallback((name) => {
         return (
             <>
                 <Button label="Print" icon="pi pi-check" onClick={handlePrint} autoFocus />
                 <div style={{ display: "none" }}><ApplicationReceiptPrint ref={componentRef} currentObject={currentObject} entryType={entryType} /> </div>
             </>
         );
-    }
-    const barcodeBodyTemplate = (rowData) => {
+    }, [currentObject, entryType, handlePrint])
+    const barcodeBodyTemplate = useCallback((rowData) => {
         return <>
             <ComponenToPrintWrapper
                 rowData={rowData}
             />
         </>
-    }
-    const statusItemTemplate = (option) => {
+    }, [])
+    const statusItemTemplate = useCallback((option) => {
         return <span className={`customer-badge status-${statusObject[option]} text-center fontfamily`}>{option}</span>;
-    }
-    const statusRowFilterTemplate = (options) => {
+    }, [])
+    const statusRowFilterTemplate = useCallback((options) => {
         return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} className="p-column-filter" showClear />;
-    }
-    const statusBodyTemplate = (rowData) => {
+    }, [statusItemTemplate])
+    const statusBodyTemplate = useCallback((rowData) => {
         return <span className={`customer-badge status-${statusObject[rowData.personal.status]} text-center`}>{rowData.personal.status}</span>;
-    }
-    const visaStatusItemTemplate = (option) => {
+    }, [])
+    const visaStatusItemTemplate = useCallback((option) => {
         return <span className={`customer-badge status-${visaObject[option]}`}>{option}</span>;
-    }
-    const visaStatusRowFilterTemplate = (options) => {
+    }, [])
+    const visaStatusRowFilterTemplate = useCallback((options) => {
         return <Dropdown value={options.value} options={visaStatus} onChange={(e) => options.filterApplyCallback(e.value)} style={{ width: "125px" }} itemTemplate={visaStatusItemTemplate} className="p-column-filter" showClear />;
-    }
-    const visaStatusBodyTemplate = (rowData) => {
+    }, [visaStatusItemTemplate])
+    const visaStatusBodyTemplate = useCallback((rowData) => {
         return <span className={`customer-badge status-${visaObject[rowData.visaStatus]}`}>{rowData.visaStatus}</span>;
-    }
-    const resultItemTemplate = (option) => {
+    }, [])
+    const resultItemTemplate = useCallback((option) => {
         return <span className={`customer-badge status-${resultObject[option]}`}>{option}</span>;
-    }
-    const resultRowFilterTemplate = (options) => {
+    }, [])
+    const resultRowFilterTemplate = useCallback((options) => {
         return <Dropdown value={options.value} options={result} style={{ width: "80px" }} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={resultItemTemplate} className="p-column-filter" showClear />;
-    }
-    const resultBodyTemplate = (rowData) => {
+    }, [resultItemTemplate])
+    const resultBodyTemplate = useCallback((rowData) => {
         return <span className={`customer-badge status-${resultObject[rowData.result]}`}>{rowData.result}</span>;
-    }
-    const formatDate = (value) => {
+    }, [])
+    const formatDate = useCallback((value) => {
         const date = new Date(value);
         return date.toLocaleDateString('en-US', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
         });
-    }
-    const dateBodyTemplate = (rowData) => {
+    }, [])
+    const dateBodyTemplate = useCallback((rowData) => {
         return formatDate(rowData.createdAt);
-    }
+    }, [formatDate])
 
-    const dateFilterTemplate = (options) => {
+    const dateFilterTemplate = useCallback((options) => {
         return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" mask="99/99/9999" />
-    }
-    const commandItemTemplate = (option) => {
-        return <Button label={option} icon="pi pi-arrow-down" onClick={() => {
+    }, [])
+    const commandItemTemplate = useCallback((option) => {
+        return <Button label={option} icon={commandIcon[option]} onClick={() => {
             switch (option) {
                 case "Fill Interview":
                     break;
@@ -177,11 +189,11 @@ function PrimeTable() {
                     break;
                 default:
             }
-        }} className="p-button-warning p-button-sm" />
-    }
-    const commandsBodyTemplate = (options, rowData) => {
-        return <Dropdown options={commandDropdown} onChange={handleCommands} itemTemplate={commandItemTemplate} className="p-column-filter" showClear placeholder='Action' scrollHeight='100%' />;
-    }
+        }} className="p-button-sm p-individual" />
+    }, [])
+    const commandsBodyTemplate = useCallback((options, rowData) => {
+        return <Dropdown options={commandDropdown} onChange={handleCommands} itemTemplate={commandItemTemplate} showClear placeholder='Action' scrollHeight='100%' />;
+    }, [commandItemTemplate])
     const handleCommands = (event) => {
         if (event.target.value === "Show") {
 
@@ -201,13 +213,13 @@ function PrimeTable() {
         }
         loadPosts();
     }, [user.token]);
-    const calculateSum = () => {
+    const calculateSum = useCallback(() => {
         const sum = <>{
             currentObject?.services?.service.reduce((previousValue, currentValue) => {
                 return previousValue + currentValue.sum;
             }, 0) + (entryType && entryType)}</>
         return sum;
-    }
+    }, [currentObject?.services?.service, entryType])
     return (
         <>
             <div className='datatable-filter-demo'>

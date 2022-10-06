@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,7 +10,6 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
 ChartJS.register(
     CategoryScale,
     LinearScale,

@@ -19,7 +19,7 @@ const Navs = styled.nav`
 const Ul = styled.ul`
     class: ${props => props.active ? "" : "collapse"};
     transition: all 0.5s ease;
-    opacity: ${props => props.active ? 0 : 1};;
+    opacity: ${props => props.active ? 1 : 0};;
     ${({ show }) => show && css`
         transition: all 0.5s ease;
     `}
@@ -29,7 +29,6 @@ function Sidebar({ coll }) {
     const [reportsCollapse, setReportsCollapse] = useState(false);
     const user = useSelector(selectUser);
     const nodeRef = useRef(null);
-    const selectRef = useRef(null);
     const getNavLink = (path) => {
         return path === window.location.pathname ? "sidebar-item active" : "sidebar-item"
     }
@@ -121,10 +120,10 @@ function Sidebar({ coll }) {
                                                     <Link className="sidebar-link box" to="#" width="100%">
                                                         <AiFillFolder className="align-middle" />
                                                         <span>Reports</span>
-                                                        <BsChevronDown className={`afterIcon`} style={{ transform: `${reportsCollapse ? "rotate(0deg)" : "rotate(180deg)"}` }} ref={selectRef} />
+                                                        <BsChevronDown className={`afterIcon`} style={{ transform: `${reportsCollapse ? "rotate(0deg)" : "rotate(180deg)"}` }} />
                                                     </Link>
                                                     {
-                                                        reportsCollapse ? null :
+                                                        reportsCollapse ?
                                                             <CSSTransition nodeRef={nodeRef} in={reportsCollapse} timeout={300} classNames="my-node">
                                                                 <Ul active={reportsCollapse} className={`sidebar-dropdown list-unstyled`} ref={nodeRef}>
                                                                     <li className="sidebar-item">
@@ -138,8 +137,8 @@ function Sidebar({ coll }) {
                                                                     </li>
                                                                 </Ul>
                                                             </CSSTransition>
+                                                            : null
                                                     }
-
                                                 </li>
                                                 : null
                                         }
