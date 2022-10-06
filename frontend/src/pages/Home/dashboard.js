@@ -66,8 +66,8 @@ export const data = {
 function Dashboard() {
     return (
         <div className='container-fluid p-0'>
-            <div class="row mb-2 mb-xl-3">
-                <div class="col-auto d-none d-sm-block">
+            <div className="row mb-2 mb-xl-3">
+                <div className="col-auto d-none d-sm-block">
                     <h3><strong>Analytics</strong> Dashboard</h3>
                 </div>
             </div>

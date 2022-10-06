@@ -21,7 +21,7 @@ import Status from '../../Variables/status';
 import Select from 'react-select';
 import Gender from '../../Variables/gender';
 import Married from '../../Variables/married';
-import { publicRequest } from '../../requests/requestMethod.js';
+import { publicRequest, userRequest } from '../../requests/requestMethod.js';
 import "./css/newApplication.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -72,7 +72,7 @@ function NewApplication() {
         event?.preventDefault();
         setLoading(true);
         try {
-            const res = await publicRequest.post("/barcode", {
+            const res = await userRequest.post("/barcode", {
                 personal: {
                     pnr: pnr,
                     status: status,
@@ -129,6 +129,7 @@ function NewApplication() {
                 toast(res.data.error.message.split(",")[0]);
             }
         } catch (err) {
+            console.log(err);
             setShowErr(true);
             toast(err);
         }

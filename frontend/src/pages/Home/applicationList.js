@@ -13,7 +13,7 @@ function ApplicationList() {
     useEffect(() => {
         const loadPosts = async () => {
             try{
-                const response = await userRequest(user.token.split(" ")[1]).get("/barcode");
+                const response = await userRequest.get("/barcode");
                 setPosts(response.data);
             }catch(err){
                 console.log(err)

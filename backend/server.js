@@ -14,13 +14,17 @@ import fs from 'fs';
 import path from "path";
 import * as url from 'url';
 import https from "https";
+import {
+    verifyToken,
+    verifyTokenAndAuthorization,
+    verifyTokenAndAdmin,
+} from "./verifyToken.js";
+
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 //app config
 const app = express();
 const port = process.env.PORT || 8001;
 //middleware
-app.set("trust proxy", 1);
-app.use(express.json());
 app.use('/static', express.static(path.join(__dirname, 'public')))
 if (process.platform === "linux") {
     https
@@ -52,8 +56,7 @@ app.use(cors({
     credentials: false,
     origin: "*"
 }));
-app.use(passport.initialize());
-import './passportConfig.js';
+app.use(express.json());
 
 //DB config
 const connection_url = "mongodb+srv://admin:" + process.env.MONGO_ATLAS_PASSWORD + "@cluster0.mj82ul2.mongodb.net/users?retryWrites=true&w=majority";
@@ -70,15 +73,11 @@ mongoose.connect(connection_url, {
 
 })
 //app routers
-app.get("/", (req, res) => {
-    res.send("Hello")
-});
 app.post("/login",
     (req, res) => {
         UserModel.findOne({ username: req.body.username }).then(user => {
             //No user found
             if (!user) {
-                console.log("!user")
                 return res.status(401).send({
                     success: false,
                     message: "Could not find the user"
@@ -94,11 +93,11 @@ app.post("/login",
 
             const payload = {
                 username: user.username,
-                id: user._id
+                id: user._id,
+                role: user.role,
             }
-            const secretOrKey = 'jwt_secret_key'
-            const token = jwt.sign(payload, secretOrKey, { expiresIn: "24h" })
-
+            const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "24h" })
+            console.log(token)
             return res.status(200).send({
                 success: true,
                 message: "Logged in successfully",
@@ -126,24 +125,16 @@ app.post("/register", (req, res) => {
                 role: "Admin"
             });
             user.save().then(user => {
-                const payload = {
-                    username: user.username,
-                    id: user._id
-                }
-                const secretOrKey = 'jwt_secret_key'
-                const token = jwt.sign(payload, secretOrKey, { expiresIn: "24h" })
                 res.send({
                     success: true,
                     message: "User created successfully",
                     user: {
                         id: user._id,
                         username: user.username,
-                        token: token,
                         role: user.role
                     }
                 })
             }).catch(err => {
-                console.log(err);
                 res.send({
                     success: false,
                     message: "Something went wrong",
@@ -159,110 +150,116 @@ app.get("/barcode", (req, res) => {
         res.send(data)
     })
 })
-app.post("/barcode", (req, res) => {
-    dbBarcode.findOne({
-        pnr: req.body.personal.pnr,
-        passport: {
-            passportNo: req.body.passport.passportNo
+app.post("/barcode", verifyTokenAndAdmin, (req, res) => {
+    console.log("here")
+    if (req.body?.personal && req.body?.passport) {
+        dbBarcode.findOne({
+            pnr: req.body.personal.pnr,
+            passport: {
+                passportNo: req.body.passport.passportNo
+            }
         }
-    }
-        , async (err, data) => {
-            if (err) throw err;
-            var barcodeNumber = null;
-            if (data) {
-                if (data.barcodeValue === req.body.barcodeValue) {
-                    res.status(200).send({
-                        success: false,
-                        message: "Barcode Value must be unique."
-                    })
-                } else if (data.passportNo === req.body.passportNo) {
-                    res.status(200).send({
-                        success: false,
-                        message: "PassportNo must be unique."
-                    })
-                }
-            }
-            if (!data) {
-                dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
-                    if (err) throw err;
-                    if (data) {
-                        let tempBarcode = data.barcodeValue.slice(-6);
-                        tempBarcode = parseInt(tempBarcode) + 1;
-                        tempBarcode = String(tempBarcode).padStart(6, '0');
-                        tempBarcode = "MALI-" + tempBarcode;
-                        barcodeNumber = tempBarcode
-
-                    }
-                    if (!data) {
-                        barcodeNumber = "MALI-000000";
-                    }
-                    const barcode = new dbBarcode({
-                        contact: {
-                            telNo: req.body.contact.telNo,
-                            email: req.body.contact.email,
-                            country: req.body.contact.country,
-                            city: req.body.contact.city,
-                            address: req.body.contact.address,
-                            postalCode: req.body.contact.postalCode
-                        },
-                        passport: {
-                            passportNo: req.body.passport.passportNo,
-                            travelType: req.body.passport.travelType,
-                            visaType: req.body.passport.visaType,
-                            documentType: req.body.passport.documentType,
-                            entryType: req.body.passport.entryType?.label,
-                            passportIssueDate: req.body.passport.passportIssueDate,
-                            passportExpiryDate: req.body.passport.passportExpiryDate,
-                            passportAuthority: req.body.passport.passportAuthority,
-                            passportIssueState: req.body.passport.passportIssueState,
-
-                        },
-                        personal: {
-                            status: req.body.personal.status.label,
-                            pnr: req.body.personal.pnr,
-                            name: req.body.personal.name,
-                            surname: req.body.personal.surname,
-                            title: req.body.personal.title?.label,
-                            birthDate: req.body.personal.birthDate,
-                            birthCountry: req.body.personal.birthCountry,
-                            birthCity: req.body.personal.birthCity,
-                            nationality: req.body.personal.nationality,
-                            occupation: req.body.personal.occupation,
-                            fatherName: req.body.personal.fatherName,
-                            motherName: req.body.personal.motherName,
-                            married: req.body.personal.married.label,
-                        },
-                        services: {
-                            service: req.body.services.service
-                        },
-                        barcodeValue: barcodeNumber,
-                        visaStatus: "In Mission",
-                        result: "Waiting"
-                    });
-                    barcode.save().then(() => {
-                        res.send({
-                            success: true,
-                            message: "Document created successfully",
-                        })
-                    }).catch((err) => {
-                        res.send({
+            , async (err, data) => {
+                if (err) throw err;
+                var barcodeNumber = null;
+                if (data) {
+                    if (data.barcodeValue === req.body.barcodeValue) {
+                        res.status(200).send({
                             success: false,
-                            message: "Something went wrong.",
-                            error: err
+                            message: "Barcode Value must be unique."
+                        })
+                    } else if (data.passportNo === req.body.passportNo) {
+                        res.status(200).send({
+                            success: false,
+                            message: "PassportNo must be unique."
                         })
                     }
+                }
+                if (!data) {
+                    dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
+                        if (err) res.status(403).json(err);
+                        if (data) {
+                            let tempBarcode = data.barcodeValue.slice(-6);
+                            tempBarcode = parseInt(tempBarcode) + 1;
+                            tempBarcode = String(tempBarcode).padStart(6, '0');
+                            tempBarcode = "MALI-" + tempBarcode;
+                            barcodeNumber = tempBarcode
 
-                    )
-                }).sort({ barcodeValue: -1 });
+                        }
+                        if (!data) {
+                            barcodeNumber = "MALI-000000";
+                        }
+                        const barcode = new dbBarcode({
+                            contact: {
+                                telNo: req.body.contact.telNo,
+                                email: req.body.contact.email,
+                                country: req.body.contact.country,
+                                city: req.body.contact.city,
+                                address: req.body.contact.address,
+                                postalCode: req.body.contact.postalCode
+                            },
+                            passport: {
+                                passportNo: req.body.passport.passportNo,
+                                travelType: req.body.passport.travelType,
+                                visaType: req.body.passport.visaType,
+                                documentType: req.body.passport.documentType,
+                                entryType: req.body.passport.entryType?.label,
+                                passportIssueDate: req.body.passport.passportIssueDate,
+                                passportExpiryDate: req.body.passport.passportExpiryDate,
+                                passportAuthority: req.body.passport.passportAuthority,
+                                passportIssueState: req.body.passport.passportIssueState,
 
-            }
-        })
+                            },
+                            personal: {
+                                status: req.body.personal.status.label,
+                                pnr: req.body.personal.pnr,
+                                name: req.body.personal.name,
+                                surname: req.body.personal.surname,
+                                title: req.body.personal.title?.label,
+                                birthDate: req.body.personal.birthDate,
+                                birthCountry: req.body.personal.birthCountry,
+                                birthCity: req.body.personal.birthCity,
+                                nationality: req.body.personal.nationality,
+                                occupation: req.body.personal.occupation,
+                                fatherName: req.body.personal.fatherName,
+                                motherName: req.body.personal.motherName,
+                                married: req.body.personal.married.label,
+                            },
+                            services: {
+                                service: req.body.services.service
+                            },
+                            barcodeValue: barcodeNumber,
+                            visaStatus: "In Mission",
+                            result: "Waiting"
+                        });
+                        barcode.save().then(() => {
+                            res.send({
+                                success: true,
+                                message: "Document created successfully",
+                            })
+                        }).catch((err) => {
+                            res.send({
+                                success: false,
+                                message: "Something went wrong.",
+                                error: err
+                            })
+                        }
+
+                        )
+                    }).sort({ barcodeValue: -1 });
+
+                }
+            })
+    } else {
+        res.status(403).json("Empty Body");
+    }
+
 })
 app.get("/getUser", (req, res) => {
     if (req.user !== "" || req.user !== null)
         res.status(200).json(req.user)
 });
-app.get("/admin", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get("/admin", verifyTokenAndAdmin, (req, res) => {
     return res.status(200).send({
         success: true,
         user: {
@@ -281,31 +278,27 @@ app.post("/logout", (req, res) => {
     }
     res.json(msg)
 })
-app.post("/postData", (req, res) => {
-    if (req.isAuthenticated() && req.user.role === "Admin") {
-        data.forEach((singleData) => {
-            dbCollection.findOne({
-                name: singleData.name
-            }, async (err, data) => {
-                if (!data) {
-                    console.log(singleData)
-                    const newData = new dbCollection(singleData);
-                    await newData.save()
-                }
-            }).then(res => console.log(res)).catch(err => console.log(err))
-        })
-    }
+app.post("/postData", verifyTokenAndAdmin, (req, res) => {
+    data.forEach((singleData) => {
+        dbCollection.findOne({
+            name: singleData.name
+        }, async (err, data) => {
+            if (!data) {
+                console.log(singleData)
+                const newData = new dbCollection(singleData);
+                await newData.save()
+            }
+        }).then(res => console.log(res)).catch(err => console.log(err))
+    })
+
 })
-app.put("/updateData", (req, res) => {
-    if (req.isAuthenticated() && req.user.role === "admin") {
-        dbCollection.updateMany({
-            "visaTypes.name": 'IHB'
-        }, { $set: { "visaTypes.$": { name: "IHB Saglik" } } }, (err, data) => {
-            res.send(data)
-        })
-    } else {
-        res.send("Acess Denied");
-    }
+app.put("/updateData", verifyTokenAndAdmin, (req, res) => {
+    dbCollection.updateMany({
+        "visaTypes.name": 'IHB'
+    }, { $set: { "visaTypes.$": { name: "IHB Saglik" } } }, (err, data) => {
+        res.send(data)
+    })
+
 })
 app.get("/findbyName", (req, res) => {
     dbCollection.find({
