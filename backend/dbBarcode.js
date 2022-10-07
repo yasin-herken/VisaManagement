@@ -50,6 +50,9 @@ const servicesSchema = mongoose.Schema({
         sum: Number,
         service: String
     }]
+});
+const adminSchema = mongoose.Schema({
+    admin: { type: mongoose.Types.ObjectId, required: true }
 })
 const barcodeSchema = mongoose.Schema({
     barcodeValue: { type: String, unique: true },
@@ -60,6 +63,8 @@ const barcodeSchema = mongoose.Schema({
     services: servicesSchema,
     visaStatus: { type: String, required: true },
     result: { type: String, required: true },
+    adminSchema,
+    country: { type: String, required: true, enum: ["MALI", "SIERRA", "GANA", "GINE", "GAMBIA", "ALL"] }
 }, { timestamps: true });
 
 

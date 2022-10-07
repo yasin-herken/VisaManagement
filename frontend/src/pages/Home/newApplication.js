@@ -26,6 +26,8 @@ import "./css/newApplication.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import userSlice, { selectUser } from '../Features/userSlice.js';
+import { useSelector } from 'react-redux';
 function NewApplication() {
     const [pnr, setPnr] = useState("")
     const [status, setStatus] = useState("");
@@ -67,6 +69,7 @@ function NewApplication() {
     const [loading, setLoading] = useState(false);
     const [succedd, setSuccedd] = useState(false);
     const [showErr, setShowErr] = useState(false);
+    const user = useSelector(selectUser);
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event?.preventDefault();
@@ -119,14 +122,16 @@ function NewApplication() {
                     service: sum.map((element) => {
                         return element;
                     })
-                }
+                },
+                country: user?.country,
+                admin: user?.id
             });
             if (res.data?.success) {
                 setSuccedd(true);
                 toast(res.data?.message);
             } else {
                 setShowErr(true);
-                toast(res.data.error.message.split(",")[0]);
+                toast(res.data.error?.message.split(",")[0]);
             }
         } catch (err) {
             console.log(err);
@@ -177,7 +182,7 @@ function NewApplication() {
     return (
         <>
             {
-                <div className="container-fluid p-0" style={{fontFamily:"Open Sans"}}>
+                <div className="container-fluid p-0" style={{ fontFamily: "Open Sans" }}>
                     <div className="row">
                         <div className="col-7 col-lg-7">
                             <div className="card">
@@ -392,7 +397,7 @@ function NewApplication() {
                                                 type="email"
                                                 className="form-control"
                                                 placeholder="Email"
-                                                onChange={(e) => { setEmail(e.target.value);}}
+                                                onChange={(e) => { setEmail(e.target.value); }}
                                             />
                                         </div>
                                     </div>

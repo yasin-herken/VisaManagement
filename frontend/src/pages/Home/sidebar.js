@@ -125,7 +125,7 @@ function Sidebar({ coll }) {
                                                     {
                                                         reportsCollapse ?
                                                             <CSSTransition nodeRef={nodeRef} in={reportsCollapse} timeout={300} classNames="my-node">
-                                                                <Ul active={reportsCollapse} className={`sidebar-dropdown list-unstyled`} ref={nodeRef}>
+                                                                <Ul active={reportsCollapse} className={`sidebar-dropdown list-unstyled ml-5`} ref={nodeRef}>
                                                                     <li className="sidebar-item">
                                                                         <Link className="sidebar-link" to="/passportDeliveryList" >Passport Delivery List</Link>
                                                                     </li>

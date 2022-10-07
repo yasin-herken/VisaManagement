@@ -7,7 +7,7 @@ import { selectUser, login } from '../Features/userSlice.js';
 import userSchema from '../../Validations/userValidation.js';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {Form} from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 function Login() {
     const [loginUsername, setLoginUsername] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
@@ -33,16 +33,20 @@ function Login() {
         }).then(user => {
             if (user.data.success && user.data.role === "Admin") {
                 dispatch(login({
+                    id: user.data.id,
                     username: user.data.username,
                     role: user.data.role,
                     token: user.data.token,
+                    country: user.data.country,
                     loggedIn: true
                 }));
             } else if (user.data.success && user.data.role === "Client") {
                 dispatch(login({
+                    id: user.data.id,
                     username: user.data.username,
                     role: user.data.role,
                     token: user.data.token,
+                    country: user.data.country,
                     loggedIn: true
                 }));
             }
@@ -64,9 +68,9 @@ function Login() {
             getUserPage();
         }
     }, [user, redirect])
-    useEffect(()=>{
+    useEffect(() => {
         console.log(errors)
-    },[errors])
+    }, [errors])
     return (
         <main className="d-flex w-100">
             <div className="container d-flex flex-column">
@@ -89,14 +93,14 @@ function Login() {
                                             <input
                                                 className="form-control form-control-lg"
                                                 type="text"
-                                                placeholder="Enter your username" 
+                                                placeholder="Enter your username"
                                                 name="username"
                                                 value={loginUsername}
                                                 {...register("username")}
                                                 onChange={(e) => { setLoginUsername(e.target.value) }}
                                             />
                                             {errors.username && (
-                                                <Form.Text className="text-danger" style={{fontSize: "1rem"}}>
+                                                <Form.Text className="text-danger" style={{ fontSize: "1rem" }}>
                                                     {errors.username.message}
                                                 </Form.Text>
                                             )}
@@ -118,11 +122,11 @@ function Login() {
                                                 onChange={(e) => { setLoginPassword(e.target.value); }}
                                             />
                                             {errors.password && (
-                                                <Form.Text className="text-danger" style={{fontSize: "1rem"}}>
+                                                <Form.Text className="text-danger" style={{ fontSize: "1rem" }}>
                                                     {errors.password.message}
                                                 </Form.Text>
                                             )}
-                                            <small style={{display:"block"}}>
+                                            <small style={{ display: "block" }}>
                                                 <a href="index.html">Forgot password?</a>
                                             </small>
                                         </div>

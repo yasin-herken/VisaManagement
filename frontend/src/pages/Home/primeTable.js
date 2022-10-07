@@ -189,10 +189,10 @@ function PrimeTable() {
                     break;
                 default:
             }
-        }} className="p-button-sm p-individual" />
+        }} className="p-button-sm p-individual-button" />
     }, [])
     const commandsBodyTemplate = useCallback((options, rowData) => {
-        return <Dropdown options={commandDropdown} onChange={handleCommands} itemTemplate={commandItemTemplate} showClear placeholder='Action' scrollHeight='100%' />;
+        return <Dropdown options={commandDropdown} onChange={handleCommands} itemTemplate={commandItemTemplate} showClear placeholder='Action' scrollHeight='100%' className='p-invidiual-dropdown' />;
     }, [commandItemTemplate])
     const handleCommands = (event) => {
         if (event.target.value === "Show") {
@@ -208,11 +208,16 @@ function PrimeTable() {
     }, [currentObject])
     useEffect(() => {
         const loadPosts = async () => {
-            const response = await userRequest.get("/barcode");
+            const response = await userRequest.get("/barcode", {
+                params: {
+                    country: user.country,
+                    admin: user.id
+                }
+            });
             setPosts(response.data);
         }
         loadPosts();
-    }, [user.token]);
+    }, [user.token, user.country, user.id]);
     const calculateSum = useCallback(() => {
         const sum = <>{
             currentObject?.services?.service.reduce((previousValue, currentValue) => {
@@ -248,7 +253,7 @@ function PrimeTable() {
                         <Column field="contact.telNo" header="Gsm Tel" showFilterMenu={false} filter />
                         <Column field="passport.visaStatus" header="Visa Status" showFilterMenu={false} body={visaStatusBodyTemplate} filter filterElement={visaStatusRowFilterTemplate} />
                         <Column field="result" header="Result" showFilterMenu={false} body={resultBodyTemplate} filter filterElement={resultRowFilterTemplate} />
-                        <Column field="commands" header="Commands" body={commandsBodyTemplate}/>
+                        <Column field="commands" header="Commands" body={commandsBodyTemplate} />
                     </DataTable>
                     <Dialog header="Application Receipt" visible={displayResponsive} position={position} modal style={{ width: '450px' }} footer={renderFooter('displayResponsive')}
                         onHide={() => { onHide('displayResponsive'); }}
