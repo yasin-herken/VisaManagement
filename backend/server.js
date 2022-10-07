@@ -182,7 +182,7 @@ app.post("/barcode", verifyTokenAndAdmin, (req, res) => {
                 }
             }
             if (!data) {
-                dbBarcode.findOne({}, { barcodeValue: 1 }, (err, data) => {
+                dbBarcode.findOne({ country: req.body.country }, { barcodeValue: 1 }, (err, data) => {
                     if (err) res.status(403).json(err);
                     if (data) {
                         let tempBarcode = data.barcodeValue.slice(-6);
