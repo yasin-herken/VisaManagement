@@ -1,0 +1,10 @@
+node_modules
+frontend/node_modules
+
+.vscode
+build
+./build
+/build
+/frontend/build
+!spec/*.jpeg
+**.jpeg

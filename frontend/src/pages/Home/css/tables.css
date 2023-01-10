@@ -1,0 +1,6 @@
+.ui-datatable .ui-sortable-column-icon {
+    display: none !important;
+}
+.p-datatable {
+    font-family: 'Open Sans', sans-serif !important;
+}

@@ -1,0 +1,85 @@
+.datatable-filter-demo .p-paginator .p-paginator-current {
+    margin-left: auto;
+}
+
+.datatable-filter-demo .p-progressbar {
+    height: 1rem;
+    background-color: #d8dadc;
+}
+
+.datatable-filter-demo .p-progressbar .p-progressbar-value {
+    background-color: #607d8b;
+}
+
+.datatable-filter-demo .p-datepicker {
+    min-width: 25rem;
+}
+
+.datatable-filter-demo .p-datepicker td {
+    font-weight: 400;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-header {
+    padding: 1rem;
+    text-align: left;
+    font-size: 1.0rem;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-paginator {
+    padding: 2rem;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-thead>tr>th {
+    text-align: left;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-tbody>tr>td {
+    cursor: auto;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-dropdown-label:not(.p-placeholder) {
+    text-transform: uppercase;
+}
+
+/* .p-dropdown .p-dropdown-label {
+    overflow: visible;
+} */
+
+
+.p-dropdown-items {
+    padding: 10px !important;
+}
+
+.p-dropdown-items .p-dropdown-item {
+    padding: 2px 0px !important;
+}
+.p-dropdown-items .p-dropdown-item:has(button) {
+    display: flex ;
+    flex-direction: column ;
+}
+
+/* .p-individual-button {
+    padding: 2px 10px !important;
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: 10px;
+} */
+.p-fluid{
+    width: 100%;
+}
+.p-column-filter-row .p-column-filter-menu-button, .p-column-filter-row .p-column-filter-clear-button{
+    display: none;
+}
+
+.p-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 0rem;
+}
+
+.p-dropdown .p-dropdown-trigger{
+    width: 0rem;
+    display: none;
+}
